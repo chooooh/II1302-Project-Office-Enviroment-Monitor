@@ -1,9 +1,9 @@
 /**
- * unit_test.h
- *
- *  Created on: Mar 26, 2021
- *      Authors: Jonatan Lundqvist Silins,  jonls@kth.se
- *      		 Sebastian Divander, 		sdiv@kth.se
- **/
+******************************************************************************
+@brief Header for the project unit test
+@file unit_test.h
+@author Jonatan Lundqvist Silins, jonls@kth.se
+******************************************************************************
+*/
 
 void unit_test(void);

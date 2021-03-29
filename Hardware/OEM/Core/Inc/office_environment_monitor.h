@@ -1,9 +1,9 @@
 /**
- * office_environment_monitor.h
- *
- *  Created on: Mar 26, 2021
- *      Authors: Jonatan Lundqvist Silins, jonls@kth.se
- *      		 Sebastian Divander,       sdiv@kth.se
- **/
+******************************************************************************
+@brief Header for the office environment monitor main program
+@file office_environment_monitor.h
+@author Jonatan Lundqvist Silins, jonls@kth.se
+******************************************************************************
+*/
 
 void office_environment_monitor(void);
