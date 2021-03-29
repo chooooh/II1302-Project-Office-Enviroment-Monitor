@@ -1,0 +1,13 @@
+/*
+ * office_environment_monitor.c
+ *
+ *  Created on: Mar 26, 2021
+ *      Author: Jonatan Lundqvist Silins, jonls@kth.se
+ */
+
+#include <office_environment_monitor.h>
+
+void office_environment_monitor(void){
+
+
+}

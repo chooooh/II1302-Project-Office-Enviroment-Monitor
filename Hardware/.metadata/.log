@@ -1,0 +1,39 @@
+!SESSION 2021-03-26 18:35:50.214 -----------------------------------------------
+eclipse.buildId=Version 1.6.0
+java.version=11.0.9.1
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=sv_SE
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-03-26 18:36:16.573
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-03-26 18:36:16.652
+!MESSAGE Log4j initialized with config file G:\embedded\stm\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-03-26 18:36:19.023
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-03-26 18:36:19.757
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-03-26 18:42:14.593
+!MESSAGE Indexed 'OEM' (23 sources, 82 headers) in 2.26 sec: 5,583 declarations; 31,568 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0054%)
+!SESSION 2021-03-29 17:36:46.860 -----------------------------------------------
+eclipse.buildId=Version 1.6.0
+java.version=11.0.9.1
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=sv_SE
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-03-29 17:36:55.895
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-03-29 17:36:55.979
+!MESSAGE Log4j initialized with config file G:\embedded\stm\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-03-29 17:37:00.326
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-03-29 17:37:00.855
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
