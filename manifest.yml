@@ -1,4 +1,4 @@
 applications:
-- name: node-hello-world
+- name: II1302-Project-Office-Enviroment-Monitor
   memory: 128M
   buildpack: sdk-for-nodejs
