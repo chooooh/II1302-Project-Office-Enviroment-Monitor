@@ -16,9 +16,12 @@ var cfenv = require('cfenv');
 // create a new express server
 var app = express();
 
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
+app.get('/user', (req, res) => {
+    res.json({"user": "John"});
+});
 
+// serve the files out of ./public as our main files
+app.use(express.static(`${__dirname}/client/build`));
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
