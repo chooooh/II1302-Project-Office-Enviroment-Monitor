@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "node app.js",
 		"test-unit": "mocha test/unit-test.js --reporter json --reporter-options output=test/unit-test.json | tee test/unit-test.json",
-        "dev": "nodemon app.js"
+		"dev": "nodemon app.js"
 	},
 	"dependencies": {
 		"express": "4.17.x",
