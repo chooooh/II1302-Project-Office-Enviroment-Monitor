@@ -8,10 +8,10 @@ import { HomePage } from "./presenters/homePage.js";
 function App() {
     const [val, setVal] = React.useState(0);
     React.useEffect(() => {
-        fetch('/user')
+        fetch('/api/sensor')
         .then(res => res.json())
         .then(json => {
-            setVal(json.user);
+            setVal(json.data);
         })
     }, [])
 
