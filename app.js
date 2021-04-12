@@ -17,7 +17,7 @@ var cfenv = require('cfenv');
 var app = express();
 
 app.get('/user', (req, res) => {
-    res.json({"user": "oog"});
+    res.json({"user": "Hello world"});
 });
 
 // serve the files out of ./public as our main files
