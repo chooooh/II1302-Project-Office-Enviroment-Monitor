@@ -1,24 +1,22 @@
 /*eslint-env node*/
+/**
+ * @fileoverview This file is the server. It is also designated as starting point
+ * for IBM Cloud.
+ * Dependencies are Express, cfenv (IBM Cloud), and local modules such as utils.
+ * @package
+ */
 
-//------------------------------------------------------------------------------
-// hello world app is based on node.js starter application for Bluemix
-//------------------------------------------------------------------------------
-
-// This application uses express as its web server
-// for more info, see: http://expressjs.com
-var express = require('express');
+const express = require('express');
 const message = require('./utils');
+const sensor = require('./routes/api/sensor');
 
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
-var cfenv = require('cfenv');
+const cfenv = require('cfenv');
 
 // create a new express server
-var app = express();
-
-app.get('/user', (req, res) => {
-    res.json({"user": "Hello world"});
-});
+const app = express();
+app.use('/api/sensor', sensor);
 
 // serve the files out of ./public as our main files
 app.use(express.static(`${__dirname}/client/build`));
