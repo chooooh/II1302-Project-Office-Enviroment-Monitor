@@ -61,8 +61,8 @@ all: main-build
 main-build: OEM.elf secondary-outputs
 
 # Tool invocations
-OEM.elf: $(OBJS) $(USER_OBJS) G:\embedded\stm\OEM\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "OEM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"G:\embedded\stm\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+OEM.elf: $(OBJS) $(USER_OBJS) C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "OEM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

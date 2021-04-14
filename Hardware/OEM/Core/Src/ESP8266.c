@@ -9,28 +9,52 @@
 *******************************************************************************/
 #include "ESP8266.h"
 
+static uint8_t rx_variable;
 static char rx_buffer[RX_BUFFER_SIZE];
+static uint8_t rx_buffer_index = 0;
 
-static return_type selected_return_type;
+void init_uart_interrupt(void){
+	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
+}
 
-char* ESP8266_send_command(const char* command, return_type type){
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
 
-	selected_return_type = type;
+   if (huart->Instance == UART4) {
+      rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to Rx_Buffer
+    }
+      HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
+}
+
+char* uart_send(const char* command, AT_RETURN_TYPE type){
+	rx_buffer_index = 0;
+	ERROR_FLAG = false;
+	FAIL_FLAG = false;
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
-	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 1);
-	HAL_UART_Receive(&huart4, (uint8_t*) rx_buffer, RX_BUFFER_SIZE, 100);
+	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
 
-	switch (selected_return_type) {
-		case return_simple:
-			if (strstr(rx_buffer, "OK\r\n") == NULL) {
+	// wait for OK
+	while((strstr(rx_buffer, "OK\r\n") == NULL)){
+		if(strstr(rx_buffer, "ERROR") != NULL){
+			ERROR_FLAG = true;
+			break; 									// implement flag here
+		}
+		if(strstr(rx_buffer, "FAIL") != NULL){
+			FAIL_FLAG = true;
+			break; 									// implement flag here
+		}
+	}
+
+	switch (type) {
+		case RETURN_AT_STATUS:
+			if(ERROR_FLAG)
 				return "ERROR";
-			}
 			return "OK";
 
-		case return_full:
+		case RETURN_FULL_BUFFER:
 			return rx_buffer;
 
-		case return_cw_mode:
+		case RETURN_CW_MODE_STATUS:
 			if (strstr(rx_buffer, "CWMODE_CUR:1") != NULL)
 				return "CWMODE:1";
 			else if(strstr(rx_buffer, "CWMODE_CUR:2") != NULL)
@@ -40,13 +64,8 @@ char* ESP8266_send_command(const char* command, return_type type){
 			else
 				return "CWMODE:?";
 
-		case return_connection:
-			if(strstr(rx_buffer, "NO AP") != NULL)
-				return "NO AP";
-			else if(strstr(rx_buffer, "OK") != NULL)
-				return "OK";
-			else {
-
+		case RETURN_CONNECTION_STATUS:
+			if(FAIL_FLAG)
 				if (strstr(rx_buffer, "CWJAP:1") != NULL)
 					return "CWJAP:1 - connection timeout";
 				else if((strstr(rx_buffer, "CWJAP:2") != NULL))
@@ -57,9 +76,15 @@ char* ESP8266_send_command(const char* command, return_type type){
 					return "CWJAP:4 - connection failed";
 				else
 					return "CWJAP:?";
+			else {												// add connected return....
+				if(strstr(rx_buffer, "No AP\r\n") != NULL)
+					return "NO AP";
+				else
+					return "OK";
 			}
 		default:
-			return "No return type";
+			return "not implemented";
+			break;
 	}
 }
 
@@ -74,11 +99,3 @@ void ESP8266_get_cwjap_command(char* ref){
 	//sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
 }
 
-
-
-/*
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart){
-	HAL_UART_Receive_IT(&huart2, (uint8_t*) rxx_buffer, 256);
-}
-*/

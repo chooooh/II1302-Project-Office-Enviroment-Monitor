@@ -10,27 +10,32 @@
 @version 1.0
 *******************************************************************************/
 
-/* */
+/*----------Includes------------*/
 #include <usart.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
-#define RX_BUFFER_SIZE 1280
+/*----------Defines------------*/
+#define RX_BUFFER_SIZE 1024
 
-/* return types/settings for ESP8266_send_command */
+/*----------Types------------*/
 typedef enum{
-	return_simple,		// return either "OK" or "ERROR"
-	return_full,		// return full rx buffer
-	return_cw_mode,		// return set cw mode
-	return_connection
-} return_type;
+	RETURN_AT_STATUS,
+	RETURN_FULL_BUFFER,
+	RETURN_CW_MODE_STATUS,
+	RETURN_CONNECTION_STATUS
+} AT_RETURN_TYPE;
 
 /* ssid and password for access point */
 static const char SSID[] = "test";
 static const char PWD[]  = "test";
 
-static const char CRLF[]               = "\r\n";
 
+static bool ERROR_FLAG = false;
+static bool FAIL_FLAG = false;
+
+static const char CRLF[]               = "\r\n";
 
 /* AT Commands for the ESP8266, see
  * https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf
@@ -52,6 +57,7 @@ static const char CRLF[]               = "\r\n";
  * Returns: OK
  */
 static const char ESP8266_AT[]						= "AT\r\n";
+
 
 /*Restarts the module.
  *
@@ -98,6 +104,9 @@ static const char ESP8266_AT_CWJAP_SET[]			= "AT+CWJAP="; // add "ssid","pwd" + 
 /*Disconnect connected AP*/
 static const char ESP8266_AT_CWQAP[]				= "AT+CWQAP\r\n";
 
+/*Disable auto connect to AP*/
+static const char ESP8266_AT_CWAUTOCONN[]			= "AT+CWAUTOCONN=0";
+
 /*Set single TCP connection*/
 static const char ESP8266_AT_CIPMUX[]				= "AT+CIPMUX=0\r\n";
 
@@ -114,11 +123,25 @@ static const char ESP8266_AT_START[]				= "AT+START=\"TCP\",";
 /*Send data of desired length*/
 static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
 
-uint8_t return_22(void);
-char* return_char(void);
+
+/*============================================================================
+	FUNCTIONS FOR ESP8266
+==============================================================================*/
 
 /**
- * doc
+ *
  */
-char* ESP8266_send_command(const char*, return_type);
-void ESP8266_get_cwjap_command(char* ref);
+void ESP8266_get_cwjap_command(char*);
+/**
+ *
+ */
+void init_uart_interrupt(void);
+/**
+ *
+ */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+/**
+ *
+ */
+char* uart_send(const char*, AT_RETURN_TYPE);
+
