@@ -10,9 +10,9 @@ const express = require('express');
 const message = require('./utils');
 const sensor = require('./routes/api/sensor');
 require('dotenv').config()
+const cfenv = require('cfenv');
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
-const cfenv = require('cfenv');
 
 // create a new express server
 const app = express();
@@ -41,7 +41,7 @@ cloudant.db.create('alice').then(() => {
     });
   }).catch((err) => {
     console.log(err);
-  });
+});
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function () {
