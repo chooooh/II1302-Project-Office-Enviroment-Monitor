@@ -19,6 +19,7 @@
 /*----------Defines------------*/
 #define RX_BUFFER_SIZE 1024
 
+
 /* djb2 hash keys */
 /* TODO: implement as enum */
 #define ESP8266_AT_KEY 	 	 				2088901425
@@ -151,3 +152,5 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 char* uart_send(const char*);
 
 const unsigned long hash(const char*);
+
+char* evaluate(bool, bool);

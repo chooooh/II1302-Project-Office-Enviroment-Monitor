@@ -58,19 +58,19 @@ char* uart_send(const char* command){
 	switch (hash(command)) {
 
 		case ESP8266_AT_KEY:
-			if(ERROR_FLAG)
-				return "ERROR";
-			return "OK";
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_GMR_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
-			return "OK";
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_RST_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
-			return "OK";
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
+
+		case ESP8266_AT_CWMODE_STATION_MODE_KEY:
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
+
+		case ESP8266_AT_CWQAP_KEY:
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_DEBUG_KEY:
 			return rx_buffer;
@@ -89,11 +89,6 @@ char* uart_send(const char* command){
 					return "CWMODE:?";
 			}
 
-		case ESP8266_AT_CWMODE_STATION_MODE_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
-			return "OK";
-
 		case ESP8266_AT_CWJAP_TEST_KEY:
 			if(ERROR_FLAG || FAIL_FLAG)
 				return "ERROR";
@@ -103,11 +98,6 @@ char* uart_send(const char* command){
 				else
 					return "CONNECTED";
 			}
-
-		case ESP8266_AT_CWQAP_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
-			return "OK";
 
 		/* needs dynamic key; todo
 
@@ -129,6 +119,12 @@ char* uart_send(const char* command){
 			return "not implemented";
 			break;
 	}
+}
+
+char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
+	if(ERROR_FLAG || FAIL_FLAG)
+		return "ERROR";
+	return "OK";
 }
 
 void ESP8266_get_cwjap_command(char* ref){
