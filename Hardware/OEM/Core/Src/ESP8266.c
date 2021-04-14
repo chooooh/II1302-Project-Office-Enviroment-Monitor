@@ -103,9 +103,6 @@ char* get_return(const char* command){
 		case ESP8266_AT_CWQAP_KEY:
 			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
-		case ESP8266_DEBUG_KEY:
-			return rx_buffer;
-
 		case ESP8266_AT_CWMODE_TEST_KEY:
 			if(ERROR_FLAG || FAIL_FLAG)
 				return "ERROR";

@@ -19,11 +19,11 @@
 /*----------Defines------------*/
 #define RX_BUFFER_SIZE 1024
 
+/*----------Enums------------*/
 
-/* djb2 hash keys */
-/* TODO: implement as enum */
-//ESP8266_AT_CWJAP_SET_KEY 			4
-
+/* djb2 hash keys
+ * Each key maps to corresponding AT command string
+ */
 typedef enum COMMAND_KEYS {
 	ESP8266_AT_KEY 						= 2088901425,
 	ESP8266_AT_RST_KEY	 				= 617536853,
@@ -32,17 +32,19 @@ typedef enum COMMAND_KEYS {
 	ESP8266_AT_CWMODE_TEST_KEY			= 4116713283,
 	ESP8266_AT_CWQAP_KEY				= 445513592,
 	ESP8266_AT_CWJAP_TEST_KEY			= 1543153456,
-	ESP8266_DEBUG_KEY					= 217349260,
 	ESP8266_AT_CWJAP_SET_KEY 			= 2616259383
 } KEYS;
 
+
+/*----------Strings------------*/
 
 /* ssid and password for access point */
 static const char SSID[] = "#Telia-7B6E70";
 static const char PWD[]  = "test";
 
+static const char CRLF[] = "\r\n";
 
-static const char CRLF[]               = "\r\n";
+
 
 /* AT Commands for the ESP8266, see
  * https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf
@@ -59,20 +61,20 @@ static const char CRLF[]               = "\r\n";
  *
  **/
 
-/*Tests AT startup.
+/* Tests AT startup.
  *
  * Returns: OK
  */
 static const char ESP8266_AT[]						= "AT\r\n";
 
 
-/*Restarts the module.
+/* Restarts the module.
  *
  * Returns: OK
  */
 static const char ESP8266_AT_RST[]					= "AT+RST\r\n";
 
-/*Checks version information.*/
+/* Checks version information. */
 static const char ESP8266_AT_GMR[]					= "AT+GMR\r\n";
 
 /*Checks current wifi-mode.
@@ -108,16 +110,16 @@ static const char ESP8266_AT_CWJAP_TEST[]			= "AT+CWJAP?\r\n";
  */
 static const char ESP8266_AT_CWJAP_SET[]			= "AT+CWJAP="; // add "ssid","pwd" + CRLF
 
-/*Disconnect connected AP*/
+/* Disconnect connected AP */
 static const char ESP8266_AT_CWQAP[]				= "AT+CWQAP\r\n";
 
-/*Disable auto connect to AP*/
+/* Disable auto connect to AP */
 static const char ESP8266_AT_CWAUTOCONN[]			= "AT+CWAUTOCONN=0";
 
-/*Set single TCP connection*/
+/* Set single TCP connection */
 static const char ESP8266_AT_CIPMUX[]				= "AT+CIPMUX=0\r\n";
 
-/*Establishes TCP connection
+/* Establishes TCP connection
  *
  * Assumes AT+CIPMUX=0
  * Use following format:
@@ -127,46 +129,64 @@ static const char ESP8266_AT_CIPMUX[]				= "AT+CIPMUX=0\r\n";
  */
 static const char ESP8266_AT_START[]				= "AT+START=\"TCP\",";
 
-/*Send data of desired length*/
+/* Send data of desired length */
 static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
 
-static const char ESP8266_DEBUG[]					= "DEBUG";
+
 
 /*============================================================================
-	FUNCTIONS FOR ESP8266
+								FUNCTIONS FOR ESP8266
 ==============================================================================*/
 
+
 /**
- *
+ * @brief build the command for connection to AP
+ * @param char* buffer, where the command is stored into
+ * @return void
  */
 void ESP8266_get_cwjap_command(char*);
 
 /**
- *
+ * @brief start RX interrupt for UART4
+ * @param void
+ * @return void
  */
 void init_uart_interrupt(void);
 
 /**
- *
+ * @brief callback for UART4 RX interrupt
+ * @param UART_HandleTypeDef* huart handle
+ * @return void
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /**
- *
+ * @brief send command to ESP8266
+ * @param char* command to send
+ * @return ESP8266 response
  */
 char* uart_send(const char*);
 
 /**
- *
+ * @brief get hash number for string
+ * @param const char* string to get hash number for
+ * @return const unsigned long the hash number
  */
 const unsigned long hash(const char*);
 
 /**
- *
+ * @brief Evaluate ESP8266 response, if any flags were set return "ERROR" else "OK".
+ * 		  Used for applicable AT commands that only return basic responses.
+ * @param bool flag to check
+ * @param bool flag to check
+ * @return char* "OK" or "ERROR"
  */
 char* evaluate(bool, bool);
 
 /**
- *
+ * @brief matches command to ESP8266 return type. Looks up the hash of the command, and then looks for
+ * 		  the ESP8266 response which should be returned.
+ * @param char* command to match to a return type
+ * @return char* return ESP8266 response depending on command and its outcome
  */
 char* get_return(const char*);
