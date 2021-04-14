@@ -12,6 +12,9 @@
 static uint8_t rx_variable;
 static char rx_buffer[RX_BUFFER_SIZE];
 static uint8_t rx_buffer_index = 0;
+static bool ERROR_FLAG = false;
+static bool FAIL_FLAG = false;
+
 
 void init_uart_interrupt(void){
 	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
@@ -37,9 +40,11 @@ const unsigned long hash(const char *str) {
 }
 
 char* uart_send(const char* command){
+
 	rx_buffer_index = 0;
 	ERROR_FLAG = false;
 	FAIL_FLAG = false;
+
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
 
@@ -55,7 +60,33 @@ char* uart_send(const char* command){
 		}
 	}
 
-	switch (hash(command)) {
+	return get_return(command);
+}
+
+char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
+	if(ERROR_FLAG || FAIL_FLAG)
+		return "ERROR";
+	return "OK";
+}
+
+void ESP8266_get_cwjap_command(char* ref){
+	strcat(ref, ESP8266_AT_CWJAP_SET);
+	strcat(ref,"\"");
+	strcat(ref, SSID);
+	strcat(ref, "\",\"");
+	strcat(ref, PWD);
+	strcat(ref, "\"");
+	strcat(ref, CRLF);
+	//sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
+}
+
+char* get_return(const char* command){
+
+	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
+		command = ESP8266_AT_CWJAP_SET;
+
+	KEYS return_type = hash(command);
+	switch (return_type) {
 
 		case ESP8266_AT_KEY:
 			return evaluate(ERROR_FLAG, FAIL_FLAG);
@@ -99,10 +130,9 @@ char* uart_send(const char* command){
 					return "CONNECTED";
 			}
 
-		/* needs dynamic key; todo
 
-		case RETURN_CONNECTION_STATUS:
-			if(FAIL_FLAG)
+		case ESP8266_AT_CWJAP_SET_KEY:
+			if(FAIL_FLAG){
 				if (strstr(rx_buffer, "CWJAP:1") != NULL)
 					return "CWJAP:1 - connection timeout";
 				else if((strstr(rx_buffer, "CWJAP:2") != NULL))
@@ -114,27 +144,9 @@ char* uart_send(const char* command){
 				else
 					return "CWJAP:?";
 
-			}*/
+			}
 		default:
-			return "not implemented";
+			return "ERROR: command not implemented";
 			break;
 	}
 }
-
-char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
-	if(ERROR_FLAG || FAIL_FLAG)
-		return "ERROR";
-	return "OK";
-}
-
-void ESP8266_get_cwjap_command(char* ref){
-	strcat(ref, ESP8266_AT_CWJAP_SET);
-	strcat(ref,"\"");
-	strcat(ref, SSID);
-	strcat(ref, "\",\"");
-	strcat(ref, PWD);
-	strcat(ref, "\"");
-	strcat(ref, CRLF);
-	//sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
-}
-

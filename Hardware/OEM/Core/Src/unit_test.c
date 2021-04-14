@@ -56,7 +56,6 @@ void test_ESP8266_AT_CWJAP_VERIFY(void){
 void unit_test(void){
 
 	init_uart_interrupt();
-
 	UNITY_BEGIN();
 	RUN_TEST(test_ESP8266_AT_RST);
 	RUN_TEST(test_ESP8266_AT);

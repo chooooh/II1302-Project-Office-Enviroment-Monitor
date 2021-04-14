@@ -22,23 +22,25 @@
 
 /* djb2 hash keys */
 /* TODO: implement as enum */
-#define ESP8266_AT_KEY 	 	 				2088901425
-#define ESP8266_AT_RST_KEY	 				617536853
-#define ESP8266_AT_GMR_KEY	 				604273922
-#define ESP8266_AT_CWMODE_STATION_MODE_KEY 	608151977
-#define ESP8266_AT_CWMODE_TEST_KEY			4116713283
-#define ESP8266_AT_CWQAP_KEY				445513592
-#define ESP8266_AT_CWJAP_TEST_KEY			1543153456
-#define ESP8266_DEBUG_KEY					217349260
 //ESP8266_AT_CWJAP_SET_KEY 			4
 
+typedef enum COMMAND_KEYS {
+	ESP8266_AT_KEY 						= 2088901425,
+	ESP8266_AT_RST_KEY	 				= 617536853,
+	ESP8266_AT_GMR_KEY	 				= 604273922,
+	ESP8266_AT_CWMODE_STATION_MODE_KEY 	= 608151977,
+	ESP8266_AT_CWMODE_TEST_KEY			= 4116713283,
+	ESP8266_AT_CWQAP_KEY				= 445513592,
+	ESP8266_AT_CWJAP_TEST_KEY			= 1543153456,
+	ESP8266_DEBUG_KEY					= 217349260,
+	ESP8266_AT_CWJAP_SET_KEY 			= 2616259383
+} KEYS;
+
+
 /* ssid and password for access point */
-static const char SSID[] = "test";
+static const char SSID[] = "#Telia-7B6E70";
 static const char PWD[]  = "test";
 
-
-static bool ERROR_FLAG = false;
-static bool FAIL_FLAG = false;
 
 static const char CRLF[]               = "\r\n";
 
@@ -138,19 +140,33 @@ static const char ESP8266_DEBUG[]					= "DEBUG";
  *
  */
 void ESP8266_get_cwjap_command(char*);
+
 /**
  *
  */
 void init_uart_interrupt(void);
+
 /**
  *
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+
 /**
  *
  */
 char* uart_send(const char*);
 
+/**
+ *
+ */
 const unsigned long hash(const char*);
 
+/**
+ *
+ */
 char* evaluate(bool, bool);
+
+/**
+ *
+ */
+char* get_return(const char*);
