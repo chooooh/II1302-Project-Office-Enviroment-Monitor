@@ -8,4 +8,6 @@ unit_test.c:37:6:test_ESP8266_AT_CWMODE_1	8	static
 unit_test.c:41:6:test_ESP8266_AT_CWMODE_1_VERIFY	8	static
 unit_test.c:45:6:test_ESP8266_AT_CWJAP_SET	264	static
 unit_test.c:51:6:test_ESP8266_AT_CWJAP_VERIFY	8	static
-unit_test.c:56:6:unit_test	8	static
+unit_test.c:56:6:test_ESP8266_AT_CIPMUX_SET	8	static
+unit_test.c:60:6:test_ESP8266_CIPMUX_VERIFY	8	static
+unit_test.c:64:6:unit_test	8	static

@@ -53,6 +53,14 @@ void test_ESP8266_AT_CWJAP_VERIFY(void){
 	//TEST_ASSERT_EQUAL_STRING("CONNECTED", uart_send(ESP8266_AT_CWJAP_TEST, connection_status));
 }
 
+void test_ESP8266_AT_CIPMUX_SET(void){
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_CIPMUX));
+}
+
+void test_ESP8266_CIPMUX_VERIFY(void){
+	TEST_ASSERT_EQUAL_STRING("CIPMUX:0", uart_send(ESP8266_AT_CIPMUX_TEST));
+}
+
 void unit_test(void){
 
 	init_uart_interrupt();
@@ -65,6 +73,9 @@ void unit_test(void){
 	//RUN_TEST(test_ESP8266_AT_CWJAP_SET);
 	RUN_TEST(test_ESP8266_AT_CWQAP);
 	RUN_TEST(test_ESP8266_AT_CWJAP_VERIFY);
+	RUN_TEST(test_ESP8266_AT_CIPMUX_SET);
+	RUN_TEST(test_ESP8266_CIPMUX_VERIFY);
+
 	UNITY_END();
 
 

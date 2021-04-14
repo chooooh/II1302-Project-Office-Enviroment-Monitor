@@ -142,6 +142,20 @@ char* get_return(const char* command){
 					return "CWJAP:?";
 
 			}
+
+		case ESP8266_AT_CIPMUX_KEY:
+			return evaluate(ERROR_FLAG, FAIL_FLAG);
+
+		case ESP8266_AT_CIPMUX_TEST_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			else {
+				if (strstr(rx_buffer, "CIPMUX:0") != NULL)
+					return "CIPMUX:0";
+				else
+					return "CIPMUX:1";
+			}
+
 		default:
 			return "ERROR: command not implemented";
 			break;
