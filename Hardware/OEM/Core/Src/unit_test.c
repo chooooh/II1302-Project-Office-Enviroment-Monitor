@@ -12,11 +12,6 @@
 
 #include "unit_test.h"
 
-
-static AT_RETURN_TYPE at_status = 	RETURN_AT_STATUS;
-static AT_RETURN_TYPE cw_mode_status = 	RETURN_CW_MODE_STATUS;
-static AT_RETURN_TYPE connection_status = RETURN_CONNECTION_STATUS;
-
 void setUp(void){
 }
 
@@ -24,41 +19,42 @@ void tearDown(void){
 }
 
 void test_ESP8266_AT_RST(void){
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_RST, at_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_RST));
 }
 
 void test_ESP8266_AT(void){
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT, at_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT));
 }
 
 void test_ESP8266_AT_GMR(void){
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_GMR, at_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_GMR));
 }
 
 void test_ESP8266_AT_CWQAP(void){
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_CWQAP, connection_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_CWQAP));
 }
 
 void test_ESP8266_AT_CWMODE_1(void){
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_CWMODE_STATION_MODE, at_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(ESP8266_AT_CWMODE_STATION_MODE));
 }
 
 void test_ESP8266_AT_CWMODE_1_VERIFY(void){
-	TEST_ASSERT_EQUAL_STRING("CWMODE:1", uart_send(ESP8266_AT_CWMODE_TEST, cw_mode_status));
+	TEST_ASSERT_EQUAL_STRING("CWMODE:1", uart_send(ESP8266_AT_CWMODE_TEST));
 }
 
 void test_ESP8266_AT_CWJAP_SET(void){
 	char buffer[256] = {0};
 	ESP8266_get_cwjap_command(buffer);
-	TEST_ASSERT_EQUAL_STRING("OK", uart_send(buffer, connection_status));
+	TEST_ASSERT_EQUAL_STRING("OK", uart_send(buffer));
 }
 
 void test_ESP8266_AT_CWJAP_VERIFY(void){
-	TEST_ASSERT_EQUAL_STRING("NO AP", uart_send(ESP8266_AT_CWJAP_TEST, connection_status));
+	TEST_ASSERT_EQUAL_STRING("NO AP", uart_send(ESP8266_AT_CWJAP_TEST));
 	//TEST_ASSERT_EQUAL_STRING("CONNECTED", uart_send(ESP8266_AT_CWJAP_TEST, connection_status));
 }
 
 void unit_test(void){
+
 	init_uart_interrupt();
 
 	UNITY_BEGIN();

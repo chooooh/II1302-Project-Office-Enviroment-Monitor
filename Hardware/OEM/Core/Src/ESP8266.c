@@ -5,7 +5,7 @@
 @file ESP8266.c
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
-@version 1.0
+@version 1.1
 *******************************************************************************/
 #include "ESP8266.h"
 
@@ -26,43 +26,90 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
       HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
 }
 
-char* uart_send(const char* command, AT_RETURN_TYPE type){
+/* djb2 hashing algorithm */
+const unsigned long hash(const char *str) {
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c;
+    return hash;
+}
+
+char* uart_send(const char* command){
 	rx_buffer_index = 0;
 	ERROR_FLAG = false;
 	FAIL_FLAG = false;
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
 
-	// wait for OK
+	// wait for OK or ERROR/FAIL
 	while((strstr(rx_buffer, "OK\r\n") == NULL)){
 		if(strstr(rx_buffer, "ERROR") != NULL){
 			ERROR_FLAG = true;
-			break; 									// implement flag here
+			break;
 		}
 		if(strstr(rx_buffer, "FAIL") != NULL){
 			FAIL_FLAG = true;
-			break; 									// implement flag here
+			break;
 		}
 	}
 
-	switch (type) {
-		case RETURN_AT_STATUS:
+	switch (hash(command)) {
+
+		case ESP8266_AT_KEY:
 			if(ERROR_FLAG)
 				return "ERROR";
 			return "OK";
 
-		case RETURN_FULL_BUFFER:
+		case ESP8266_AT_GMR_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			return "OK";
+
+		case ESP8266_AT_RST_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			return "OK";
+
+		case ESP8266_DEBUG_KEY:
 			return rx_buffer;
 
-		case RETURN_CW_MODE_STATUS:
-			if (strstr(rx_buffer, "CWMODE_CUR:1") != NULL)
-				return "CWMODE:1";
-			else if(strstr(rx_buffer, "CWMODE_CUR:2") != NULL)
-				return "CWMODE:2";
-			else if(strstr(rx_buffer, "CWMODE_CUR:3") != NULL)
-				return "CWMODE:3";
-			else
-				return "CWMODE:?";
+		case ESP8266_AT_CWMODE_TEST_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			else {
+				if (strstr(rx_buffer, "CWMODE_CUR:1") != NULL)
+					return "CWMODE:1";
+				else if(strstr(rx_buffer, "CWMODE_CUR:2") != NULL)
+					return "CWMODE:2";
+				else if(strstr(rx_buffer, "CWMODE_CUR:3") != NULL)
+					return "CWMODE:3";
+				else
+					return "CWMODE:?";
+			}
+
+		case ESP8266_AT_CWMODE_STATION_MODE_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			return "OK";
+
+		case ESP8266_AT_CWJAP_TEST_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			else {
+				if(strstr(rx_buffer, "No AP\r\n"))
+					return "NO AP";
+				else
+					return "CONNECTED";
+			}
+
+		case ESP8266_AT_CWQAP_KEY:
+			if(ERROR_FLAG || FAIL_FLAG)
+				return "ERROR";
+			return "OK";
+
+		/* needs dynamic key; todo
 
 		case RETURN_CONNECTION_STATUS:
 			if(FAIL_FLAG)
@@ -76,12 +123,8 @@ char* uart_send(const char* command, AT_RETURN_TYPE type){
 					return "CWJAP:4 - connection failed";
 				else
 					return "CWJAP:?";
-			else {												// add connected return....
-				if(strstr(rx_buffer, "No AP\r\n") != NULL)
-					return "NO AP";
-				else
-					return "OK";
-			}
+
+			}*/
 		default:
 			return "not implemented";
 			break;
