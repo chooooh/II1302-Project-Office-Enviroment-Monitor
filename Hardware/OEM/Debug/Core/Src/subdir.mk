@@ -6,7 +6,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/ESP8266.c \
-../Core/Src/UartRingbuffer.c \
 ../Core/Src/gpio.c \
 ../Core/Src/main.c \
 ../Core/Src/office_environment_monitor.c \
@@ -21,7 +20,6 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/ESP8266.o \
-./Core/Src/UartRingbuffer.o \
 ./Core/Src/gpio.o \
 ./Core/Src/main.o \
 ./Core/Src/office_environment_monitor.o \
@@ -36,7 +34,6 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/ESP8266.d \
-./Core/Src/UartRingbuffer.d \
 ./Core/Src/gpio.d \
 ./Core/Src/main.d \
 ./Core/Src/office_environment_monitor.d \
@@ -53,8 +50,6 @@ C_DEPS += \
 # Each subdirectory must supply rules for building sources it contributes
 Core/Src/ESP8266.o: ../Core/Src/ESP8266.c Core/Src/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Core/Src/UartRingbuffer.o: ../Core/Src/UartRingbuffer.c Core/Src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/UartRingbuffer.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/gpio.o: ../Core/Src/gpio.c Core/Src/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/gpio.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/main.o: ../Core/Src/main.c Core/Src/subdir.mk

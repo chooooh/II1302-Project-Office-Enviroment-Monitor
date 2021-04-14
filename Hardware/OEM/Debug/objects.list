@@ -1,5 +1,4 @@
 "Core/Src/ESP8266.o"
-"Core/Src/UartRingbuffer.o"
 "Core/Src/gpio.o"
 "Core/Src/main.o"
 "Core/Src/office_environment_monitor.o"
