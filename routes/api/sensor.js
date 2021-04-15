@@ -6,6 +6,7 @@
  */
 const express = require('express');
 const router = express.Router();
+var counter = 0;
 //const sensor = require('../../models/sensor');
 
 /**
@@ -13,7 +14,7 @@ const router = express.Router();
  * @param {string} path 
  */
 router.get('/', (req, res) => {
-    res.json({"data": 123});
+    res.json({"data": ++counter});
 });
 
 module.exports = router;
