@@ -5,16 +5,16 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2021-04-06T10:32:27.193Z",
-    "end": "2021-04-06T10:32:27.195Z",
-    "duration": 2
+    "start": "2021-04-15T12:41:54.904Z",
+    "end": "2021-04-15T12:41:54.913Z",
+    "duration": 9
   },
   "tests": [
     {
-      "title": "Welcome Message",
-      "fullTitle": "Message Test Welcome Message",
-      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/Office- Enviroment- Monitor/II1302-Project-Office-Enviroment-Monitor/test/unit-test.js",
-      "duration": 1,
+      "title": "Welcomeeee Message",
+      "fullTitle": "Messages Test Welcomeeee Message",
+      "file": "C:\\Users\\sebas\\ProjektMetodik\\II1302-Project-Office-Enviroment-Monitor\\test\\unit-test.js",
+      "duration": 0,
       "currentRetry": 0,
       "err": {}
     }
@@ -23,10 +23,10 @@
   "failures": [],
   "passes": [
     {
-      "title": "Welcome Message",
-      "fullTitle": "Message Test Welcome Message",
-      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/Office- Enviroment- Monitor/II1302-Project-Office-Enviroment-Monitor/test/unit-test.js",
-      "duration": 1,
+      "title": "Welcomeeee Message",
+      "fullTitle": "Messages Test Welcomeeee Message",
+      "file": "C:\\Users\\sebas\\ProjektMetodik\\II1302-Project-Office-Enviroment-Monitor\\test\\unit-test.js",
+      "duration": 0,
       "currentRetry": 0,
       "err": {}
     }
