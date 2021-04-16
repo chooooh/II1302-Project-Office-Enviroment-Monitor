@@ -1,0 +1,10 @@
+12:43:00 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  23340	    120	   2896	  26356	   66f4	OEM.elf
+Finished building: default.size.stdout
+ 
+
+12:43:00 Build Finished. 0 errors, 0 warnings. (took 177ms)
+

@@ -46,7 +46,32 @@ typedef enum COMMAND_KEYS {
 static const char SSID[] = "#Telia-7B6E70";
 static const char PWD[]  = "test";
 
-static const char CRLF[] = "\r\n";
+static const char CRLF[] 						 = "\r\n";
+static const char NOT_IMPLEMENTED[]				 = "NOT IMPLEMENTED";
+static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
+static const char ESP8266_AT_OK[] 				 = "OK";
+static const char ESP8266_AT_ERROR[] 			 = "ERROR";
+static const char ESP8266_AT_FAIL[] 			 = "FAIL";
+static const char ESP8266_AT_GOT_IP[] 			 = "WIFI GOT IP";
+static const char ESP8266_AT_WIFI_CONNECTED[] 	 = "WIFI CONNECTED";
+static const char ESP8266_AT_WIFI_DISCONNECTED[] = "WIFI DISCONNECT";
+static const char ESP8266_AT_CLOSED[] 			 = "CLOSED";
+static const char ESP8266_AT_NO_AP[] 			 = "No AP\r\n";
+static const char ESP8266_AT_UNKNOWN[]			 = "UNKNOWN";
+static const char ESP8266_AT_CWMODE_1[]			 = "CWMODE_CUR:1";
+static const char ESP8266_AT_CWMODE_2[]			 = "CWMODE_CUR:2";
+static const char ESP8266_AT_CWMODE_3[]			 = "CWMODE_CUR:3";
+static const char ESP8266_AT_CWJAP_1[]			 = "CWJAP:1";
+static const char ESP8266_AT_CWJAP_2[]			 = "CWJAP:2";
+static const char ESP8266_AT_CWJAP_3[]			 = "CWJAP:3";
+static const char ESP8266_AT_CWJAP_4[]			 = "CWJAP:4";
+static const char ESP8266_AT_TIMEOUT[]			 = "connection timeout";
+static const char ESP8266_AT_WRONG_PWD[]		 = "wrong password";
+static const char ESP8266_AT_NO_TARGET[]	     = "cannot find the target AP";
+static const char ESP8266_AT_CONNECTION_FAIL[]	 = "connection failed";
+static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
+static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
+
 
 
 
@@ -117,7 +142,10 @@ static const char ESP8266_AT_CWJAP_SET[]			= "AT+CWJAP="; // add "ssid","pwd" + 
 /* Disconnect connected AP */
 static const char ESP8266_AT_CWQAP[]				= "AT+CWQAP\r\n";
 
-/* Disable auto connect to AP */
+/* Disable auto connect to AP
+ * Writes to flash...
+ * This setting is necessary when testing
+ */
 static const char ESP8266_AT_CWAUTOCONN[]			= "AT+CWAUTOCONN=0";
 
 /* Set single TCP connection */
@@ -151,7 +179,7 @@ static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
  * @param char* buffer, where the command is stored into
  * @return void
  */
-void ESP8266_get_cwjap_command(char*);
+void ESP8266_get_wifi_command(char*);
 
 /**
  * @brief start RX interrupt for UART4
@@ -172,7 +200,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
  * @param char* command to send
  * @return ESP8266 response
  */
-char* uart_send(const char*);
+const char* uart_send(const char*);
 
 /**
  * @brief get hash number for string
@@ -188,7 +216,7 @@ const unsigned long hash(const char*);
  * @param bool flag to check
  * @return char* "OK" or "ERROR"
  */
-char* evaluate(bool, bool);
+const char* evaluate(bool, bool);
 
 /**
  * @brief matches command to ESP8266 return type. Looks up the hash of the command, and then looks for
@@ -196,4 +224,4 @@ char* evaluate(bool, bool);
  * @param char* command to match to a return type
  * @return char* return ESP8266 response depending on command and its outcome
  */
-char* get_return(const char*);
+const char* get_return(const char*);

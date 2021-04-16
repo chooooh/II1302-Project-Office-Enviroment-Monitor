@@ -39,7 +39,7 @@ const unsigned long hash(const char *str) {
     return hash;
 }
 
-char* uart_send(const char* command){
+const char* uart_send(const char* command){
 
 	rx_buffer_index = 0;
 	ERROR_FLAG = false;
@@ -49,12 +49,12 @@ char* uart_send(const char* command){
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
 
 	// wait for OK or ERROR/FAIL
-	while((strstr(rx_buffer, "OK\r\n") == NULL)){
-		if(strstr(rx_buffer, "ERROR") != NULL){
+	while((strstr(rx_buffer, ESP8266_AT_OK_TERMINATOR) == NULL)){
+		if(strstr(rx_buffer, ESP8266_AT_ERROR) != NULL){
 			ERROR_FLAG = true;
 			break;
 		}
-		if(strstr(rx_buffer, "FAIL") != NULL){
+		if(strstr(rx_buffer, ESP8266_AT_FAIL) != NULL){
 			FAIL_FLAG = true;
 			break;
 		}
@@ -63,13 +63,9 @@ char* uart_send(const char* command){
 	return get_return(command);
 }
 
-char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
-	if(ERROR_FLAG || FAIL_FLAG)
-		return "ERROR";
-	return "OK";
-}
 
-void ESP8266_get_cwjap_command(char* ref){
+void ESP8266_get_wifi_command(char* ref){
+	/*
 	strcat(ref, ESP8266_AT_CWJAP_SET);
 	strcat(ref,"\"");
 	strcat(ref, SSID);
@@ -77,10 +73,11 @@ void ESP8266_get_cwjap_command(char* ref){
 	strcat(ref, PWD);
 	strcat(ref, "\"");
 	strcat(ref, CRLF);
-	//sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
+	*/
+	sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
 }
 
-char* get_return(const char* command){
+const char* get_return(const char* command){
 
 	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
 		command = ESP8266_AT_CWJAP_SET;
@@ -105,59 +102,67 @@ char* get_return(const char* command){
 
 		case ESP8266_AT_CWMODE_TEST_KEY:
 			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
+				return ESP8266_AT_ERROR;
 			else {
-				if (strstr(rx_buffer, "CWMODE_CUR:1") != NULL)
-					return "CWMODE:1";
-				else if(strstr(rx_buffer, "CWMODE_CUR:2") != NULL)
-					return "CWMODE:2";
-				else if(strstr(rx_buffer, "CWMODE_CUR:3") != NULL)
-					return "CWMODE:3";
+				if (strstr(rx_buffer, ESP8266_AT_CWMODE_1) != NULL)
+					return ESP8266_AT_CWMODE_1;
+				else if(strstr(rx_buffer, ESP8266_AT_CWMODE_2) != NULL)
+					return ESP8266_AT_CWMODE_2;
+				else if(strstr(rx_buffer, ESP8266_AT_CWMODE_3) != NULL)
+					return ESP8266_AT_CWMODE_3;
 				else
-					return "CWMODE:?";
+					return ESP8266_AT_UNKNOWN;
 			}
 
 		case ESP8266_AT_CWJAP_TEST_KEY:
 			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
+				return ESP8266_AT_ERROR;
 			else {
-				if(strstr(rx_buffer, "No AP\r\n"))
-					return "NO AP";
+				if(strstr(rx_buffer, ESP8266_AT_NO_AP))
+					return ESP8266_AT_WIFI_DISCONNECTED;
 				else
-					return "CONNECTED";
+					return ESP8266_AT_WIFI_CONNECTED;
 			}
 
 
 		case ESP8266_AT_CWJAP_SET_KEY:
 			if(FAIL_FLAG){
-				if (strstr(rx_buffer, "CWJAP:1") != NULL)
-					return "CWJAP:1 - connection timeout";
-				else if((strstr(rx_buffer, "CWJAP:2") != NULL))
-					return "CWJAP:2 - wrong password";
-				else if((strstr(rx_buffer, "CWJAP:3") != NULL))
-					return "CWJAP:3 - cannot find the target AP";
-				else if((strstr(rx_buffer, "CWJAP:4") != NULL))
-					return "CWJAP:4 - connection failed";
+				if (strstr(rx_buffer, ESP8266_AT_CWJAP_1) != NULL)
+					return ESP8266_AT_TIMEOUT;
+				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_2) != NULL))
+					return ESP8266_AT_WRONG_PWD;
+				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_3) != NULL))
+					return ESP8266_AT_NO_TARGET;
+				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_4) != NULL))
+					return ESP8266_AT_CONNECTION_FAIL;
 				else
-					return "CWJAP:?";
-
+					return ESP8266_AT_UNKNOWN;
 			}
+			else
+				return ESP8266_AT_GOT_IP;
+
 
 		case ESP8266_AT_CIPMUX_KEY:
 			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_CIPMUX_TEST_KEY:
 			if(ERROR_FLAG || FAIL_FLAG)
-				return "ERROR";
+				return ESP8266_AT_ERROR;
 			else {
-				if (strstr(rx_buffer, "CIPMUX:0") != NULL)
-					return "CIPMUX:0";
+				if (strstr(rx_buffer, ESP8266_AT_CIPMUX_0) != NULL)
+					return ESP8266_AT_CIPMUX_0;
 				else
-					return "CIPMUX:1";
+					return ESP8266_AT_CIPMUX_1;
 			}
 
 		default:
-			return "ERROR: command not implemented";
+			return NOT_IMPLEMENTED;
 			break;
 	}
+}
+
+const char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
+	if(ERROR_FLAG || FAIL_FLAG)
+		return ESP8266_AT_ERROR;
+	return ESP8266_AT_OK;
 }
