@@ -10,27 +10,6 @@ const express = require('express');
 const message = require('./utils');
 const sensor = require('./routes/api/sensor');
 const cfenv = require('cfenv');
-// cfenv provides access to your Cloud Foundry environment
-// for more info, see: https://www.npmjs.com/package/cfenv
-/*
-const cloudant = require('./database/setup');
-const db = cloudant.db.use('bob');
-db.index((err, res) => {
-    console.log('Database has %d indexes', res.indexes.length);
-});
-db.find({ selector: { }}, (err, res) => {
-    console.log("find result:", res.docs);
-    res.docs.forEach(doc => {
-        console.log(doc);
-    })
-});
-
-var ddoc = {
-    name: 'something',
-    value: '5'
-  };
-db.insert(ddoc, function(err, result){})
-*/
 
 // create a new express server
 const app = express();
