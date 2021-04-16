@@ -1,6 +1,6 @@
 const cloudant = require('./setup');
-const db = cloudant.db.use()
 
+/*
 const write = (data, dest) => (
     
 )
@@ -8,6 +8,7 @@ const write = (data, dest) => (
 const write = (data, dest) => (
     
 )
+*/
 // https://github.com/cloudant/nodejs-cloudant
 
 /*

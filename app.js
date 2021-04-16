@@ -12,7 +12,7 @@ const sensor = require('./routes/api/sensor');
 const cfenv = require('cfenv');
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
-
+/*
 const cloudant = require('./database/setup');
 const db = cloudant.db.use('bob');
 db.index((err, res) => {
@@ -30,6 +30,7 @@ var ddoc = {
     value: '5'
   };
 db.insert(ddoc, function(err, result){})
+*/
 
 // create a new express server
 const app = express();
