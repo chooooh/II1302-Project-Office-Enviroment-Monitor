@@ -14,6 +14,7 @@ var counter = 0;
  * @param {string} path 
  */
 router.get('/', (req, res) => {
+    
     res.json({"data": ++counter});
 });
 
