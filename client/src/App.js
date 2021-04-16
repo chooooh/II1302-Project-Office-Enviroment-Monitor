@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import { HomePage } from "./presenters/homePage.js";
+import { HomePage } from "./components/homePageView"
 
 
 function App() {
