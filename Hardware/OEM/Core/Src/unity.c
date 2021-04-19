@@ -35,6 +35,8 @@ const char PROGMEM UnityStrIgnore[]                        = "\033[43mIGNORE\033
 #else
 const char PROGMEM UnityStrOk[]                            = "OK";
 const char PROGMEM UnityStrPass[]                          = "PASS";
+const char PROGMEM Check[]                                 = " [+]";
+const char PROGMEM Fail[]                                  = " [-]";
 const char PROGMEM UnityStrFail[]                          = "FAIL";
 const char PROGMEM UnityStrIgnore[]                        = "IGNORE";
 #endif
@@ -537,6 +539,7 @@ static void UnityTestResultsFailBegin(const UNITY_LINE_TYPE line)
     UnityTestResultsBegin(Unity.TestFile, line);
     //UnityPrint(UnityStrFail);
     printf(UnityStrFail);
+    printf(Fail);
     UNITY_OUTPUT_CHAR(':');
 }
 
@@ -552,6 +555,7 @@ void UnityConcludeTest(void)
         UnityTestResultsBegin(Unity.TestFile, Unity.CurrentTestLineNumber);
         //UnityPrint(UnityStrPass);
         printf(UnityStrPass);
+        printf(Check);
     }
     else
     {

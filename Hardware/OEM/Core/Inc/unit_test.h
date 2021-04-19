@@ -20,9 +20,11 @@ void test_ESP8266_AT_GMR(void);
 void test_ESP8266_AT_CWQAP(void);
 void test_ESP8266_AT_CWMODE_1(void);
 void test_ESP8266_AT_CWMODE_1_VERIFY(void);
-void test_ESP8266_AT_CWJAP_SET(void);
 void test_ESP8266_AT_CWJAP_VERIFY(void);
 void test_ESP8266_AT_CIPMUX_SET(void);
 void test_ESP8266_CIPMUX_VERIFY(void);
+void test_ESP8266_wifi_connect(void);
+void test_ESP8266_web_connection(void);
+void test_ESP8266_web_request(void);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef*);
 

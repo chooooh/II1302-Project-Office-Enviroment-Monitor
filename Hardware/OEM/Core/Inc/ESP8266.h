@@ -17,7 +17,7 @@
 #include <stdbool.h>
 
 /*----------Defines------------*/
-#define RX_BUFFER_SIZE 1024
+#define RX_BUFFER_SIZE 4096
 
 /*----------Enums------------*/
 
@@ -35,7 +35,7 @@ typedef enum COMMAND_KEYS {
 	ESP8266_AT_CWJAP_SET_KEY 			= 2616259383,
 	ESP8266_AT_CIPMUX_KEY				= 423755967,
 	ESP8266_AT_CIPMUX_TEST_KEY			= 3657056785,
-	ESP8266_AT_START_KEY				= 4274992935,
+	ESP8266_AT_START_KEY				= 3889879756,
 	ESP8266_AT_SEND_KEY					= 898252904
 } KEYS;
 
@@ -43,19 +43,22 @@ typedef enum COMMAND_KEYS {
 /*----------Strings------------*/
 
 /* ssid and password for access point */
-static const char SSID[] = "#Telia-7B6E70";
-static const char PWD[]  = "test";
+static const char SSID[] = "";
+static const char PWD[]  = "";
 
+/*ESP8266 response codes */
 static const char CRLF[] 						 = "\r\n";
-static const char NOT_IMPLEMENTED[]				 = "NOT IMPLEMENTED";
+static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";
 static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
 static const char ESP8266_AT_ERROR[] 			 = "ERROR";
 static const char ESP8266_AT_FAIL[] 			 = "FAIL";
 static const char ESP8266_AT_GOT_IP[] 			 = "WIFI GOT IP";
 static const char ESP8266_AT_WIFI_CONNECTED[] 	 = "WIFI CONNECTED";
-static const char ESP8266_AT_WIFI_DISCONNECTED[] = "WIFI DISCONNECT";
+static const char ESP8266_AT_WIFI_DISCONNECTED[] = "WIFI DISCONNECTED";
+static const char ESP8266_AT_CONNECT[] 		 	 = "CONNECT";
 static const char ESP8266_AT_CLOSED[] 			 = "CLOSED";
+static const char ESP8266_AT_SEND_OK[] 			 = "SEND OK";
 static const char ESP8266_AT_NO_AP[] 			 = "No AP\r\n";
 static const char ESP8266_AT_UNKNOWN[]			 = "UNKNOWN";
 static const char ESP8266_AT_CWMODE_1[]			 = "CWMODE_CUR:1";
@@ -71,8 +74,6 @@ static const char ESP8266_AT_NO_TARGET[]	     = "cannot find the target AP";
 static const char ESP8266_AT_CONNECTION_FAIL[]	 = "connection failed";
 static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
 static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
-
-
 
 
 /* AT Commands for the ESP8266, see
@@ -162,7 +163,10 @@ static const char ESP8266_AT_CIPMUX_TEST[]			= "AT+CIPMUX?\r\n";
  *
  * Example: AT+CIPSTART="TCP","iot.espressif.cn",8000
  */
-static const char ESP8266_AT_START[]				= "AT+START=\"TCP\",";
+static const char ESP8266_AT_START[]				= "AT+CIPSTART=";
+
+/* Disconnect a connection */
+static const char ESP8266_AT_STOP[]					= "AT+CIPCLOSE=0";
 
 /* Send data of desired length */
 static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
@@ -179,35 +183,59 @@ static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
  * @param char* buffer, where the command is stored into
  * @return void
  */
-void ESP8266_get_wifi_command(char*);
+void
+ESP8266_get_wifi_command(char*);
+
+/**
+ * @brief build the command for connection to a website
+ * @param char* ref, where the command is stored into
+ * @param char* connection_type, type of connection "TCP", "UDP" or "SSL"
+ * @param char* remote_ip, the ip to connect to, can also be a url
+ * @param char* remote_port, port to connect
+ * @return void
+ */
+void
+ESP8266_get_connection_command(char* ref, char* connection_type,
+							   char* remote_ip, char* remote_port);
 
 /**
  * @brief start RX interrupt for UART4
  * @param void
  * @return void
  */
-void init_uart_interrupt(void);
+void
+init_uart_interrupt(void);
 
 /**
  * @brief callback for UART4 RX interrupt
  * @param UART_HandleTypeDef* huart handle
  * @return void
  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+void
+HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /**
  * @brief send command to ESP8266
  * @param char* command to send
  * @return ESP8266 response
  */
-const char* uart_send(const char*);
+const char*
+ESP8266_send_command(const char*);
+
+/*
+ *
+ *
+ */
+const char*
+ESP8266_send_data(const char*);
 
 /**
  * @brief get hash number for string
  * @param const char* string to get hash number for
  * @return const unsigned long the hash number
  */
-const unsigned long hash(const char*);
+const unsigned long
+hash(const char*);
 
 /**
  * @brief Evaluate ESP8266 response, if any flags were set return "ERROR" else "OK".
@@ -216,7 +244,8 @@ const unsigned long hash(const char*);
  * @param bool flag to check
  * @return char* "OK" or "ERROR"
  */
-const char* evaluate(bool, bool);
+const char*
+evaluate(bool, bool);
 
 /**
  * @brief matches command to ESP8266 return type. Looks up the hash of the command, and then looks for
@@ -224,4 +253,5 @@ const char* evaluate(bool, bool);
  * @param char* command to match to a return type
  * @return char* return ESP8266 response depending on command and its outcome
  */
-const char* get_return(const char*);
+const char*
+get_return(const char*);

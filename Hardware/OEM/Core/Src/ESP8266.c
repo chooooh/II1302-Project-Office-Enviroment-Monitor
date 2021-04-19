@@ -12,15 +12,17 @@
 static uint8_t rx_variable;
 static char rx_buffer[RX_BUFFER_SIZE];
 static uint8_t rx_buffer_index = 0;
-static bool ERROR_FLAG = false;
-static bool FAIL_FLAG = false;
+static bool error_flag = false;
+static bool fail_flag = false;
 
 
-void init_uart_interrupt(void){
+void
+init_uart_interrupt(void){
 	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void
+HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 
    if (huart->Instance == UART4) {
@@ -30,7 +32,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 /* djb2 hashing algorithm */
-const unsigned long hash(const char *str) {
+const unsigned long
+hash(const char *str) {
     unsigned long hash = 5381;
     int c;
 
@@ -39,11 +42,12 @@ const unsigned long hash(const char *str) {
     return hash;
 }
 
-const char* uart_send(const char* command){
+const char*
+ESP8266_send_command(const char* command){
 
 	rx_buffer_index = 0;
-	ERROR_FLAG = false;
-	FAIL_FLAG = false;
+	error_flag = false;
+	fail_flag = false;
 
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
@@ -51,11 +55,11 @@ const char* uart_send(const char* command){
 	// wait for OK or ERROR/FAIL
 	while((strstr(rx_buffer, ESP8266_AT_OK_TERMINATOR) == NULL)){
 		if(strstr(rx_buffer, ESP8266_AT_ERROR) != NULL){
-			ERROR_FLAG = true;
+			error_flag = true;
 			break;
 		}
 		if(strstr(rx_buffer, ESP8266_AT_FAIL) != NULL){
-			FAIL_FLAG = true;
+			fail_flag = true;
 			break;
 		}
 	}
@@ -63,45 +67,60 @@ const char* uart_send(const char* command){
 	return get_return(command);
 }
 
+const char* ESP8266_send_data(const char* command){
+	rx_buffer_index = 0;
+	error_flag = false;
+	fail_flag = false;
 
-void ESP8266_get_wifi_command(char* ref){
-	/*
-	strcat(ref, ESP8266_AT_CWJAP_SET);
-	strcat(ref,"\"");
-	strcat(ref, SSID);
-	strcat(ref, "\",\"");
-	strcat(ref, PWD);
-	strcat(ref, "\"");
-	strcat(ref, CRLF);
-	*/
-	sprintf (ref, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PWD);
+	memset(rx_buffer, 0, RX_BUFFER_SIZE);
+	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
+
+	while((strstr(rx_buffer, ESP8266_AT_CLOSED) == NULL));
+
+	return ESP8266_AT_CLOSED;
 }
 
-const char* get_return(const char* command){
+
+void
+ESP8266_get_wifi_command(char* ref){
+	sprintf (ref, "%s\"%s\",\"%s\"\r\n", ESP8266_AT_CWJAP_SET, SSID, PWD);
+}
+
+void
+ESP8266_get_connection_command(char* ref, char* connection_type, char* remote_ip, char* remote_port){
+	sprintf(ref, "%s\"%s\",\"%s\",%s\r\n", ESP8266_AT_START, connection_type, remote_ip, remote_port);
+}
+
+const char*
+get_return(const char* command){
+
+	// TODO: avoid using too many strstr... use 1+ argument for id?
 
 	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
 		command = ESP8266_AT_CWJAP_SET;
+	else if(strstr(command, ESP8266_AT_START) != NULL)
+		command = ESP8266_AT_START;
+	else if(strstr(command, ESP8266_AT_SEND) != NULL)
+		command = ESP8266_AT_SEND;
 
 	KEYS return_type = hash(command);
 	switch (return_type) {
 
 		case ESP8266_AT_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_GMR_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_RST_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
 
 		case ESP8266_AT_CWMODE_STATION_MODE_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
+
+		case ESP8266_AT_CIPMUX_KEY:
 
 		case ESP8266_AT_CWQAP_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
+			return evaluate(error_flag, fail_flag);
 
 		case ESP8266_AT_CWMODE_TEST_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
+			if(error_flag || fail_flag)
 				return ESP8266_AT_ERROR;
 			else {
 				if (strstr(rx_buffer, ESP8266_AT_CWMODE_1) != NULL)
@@ -115,7 +134,7 @@ const char* get_return(const char* command){
 			}
 
 		case ESP8266_AT_CWJAP_TEST_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
+			if(error_flag || fail_flag)
 				return ESP8266_AT_ERROR;
 			else {
 				if(strstr(rx_buffer, ESP8266_AT_NO_AP))
@@ -124,9 +143,8 @@ const char* get_return(const char* command){
 					return ESP8266_AT_WIFI_CONNECTED;
 			}
 
-
 		case ESP8266_AT_CWJAP_SET_KEY:
-			if(FAIL_FLAG){
+			if(fail_flag){
 				if (strstr(rx_buffer, ESP8266_AT_CWJAP_1) != NULL)
 					return ESP8266_AT_TIMEOUT;
 				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_2) != NULL))
@@ -139,14 +157,10 @@ const char* get_return(const char* command){
 					return ESP8266_AT_UNKNOWN;
 			}
 			else
-				return ESP8266_AT_GOT_IP;
-
-
-		case ESP8266_AT_CIPMUX_KEY:
-			return evaluate(ERROR_FLAG, FAIL_FLAG);
+				return ESP8266_AT_WIFI_CONNECTED;
 
 		case ESP8266_AT_CIPMUX_TEST_KEY:
-			if(ERROR_FLAG || FAIL_FLAG)
+			if(error_flag || fail_flag)
 				return ESP8266_AT_ERROR;
 			else {
 				if (strstr(rx_buffer, ESP8266_AT_CIPMUX_0) != NULL)
@@ -155,14 +169,25 @@ const char* get_return(const char* command){
 					return ESP8266_AT_CIPMUX_1;
 			}
 
+		case ESP8266_AT_START_KEY:
+			if(error_flag || fail_flag)
+				return ESP8266_AT_ERROR;
+			return ESP8266_AT_CONNECT;
+
+		case ESP8266_AT_SEND_KEY:
+			if(error_flag || fail_flag)
+				return ESP8266_AT_ERROR;
+			return ESP8266_AT_SEND_OK;
+
 		default:
-			return NOT_IMPLEMENTED;
+			return ESP8266_NOT_IMPLEMENTED;
 			break;
 	}
 }
 
-const char* evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
-	if(ERROR_FLAG || FAIL_FLAG)
+const char*
+evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
+	if(error_flag || fail_flag)
 		return ESP8266_AT_ERROR;
 	return ESP8266_AT_OK;
 }
