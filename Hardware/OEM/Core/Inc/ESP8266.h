@@ -42,8 +42,8 @@ typedef enum COMMAND_KEYS {
 /*----------Strings------------*/
 
 /* ssid and password for access point */
-static const char SSID[] = "#Telia-7B6E70";
-static const char PWD[]  = "*K64Z&8r*xC@ewG6";
+static const char SSID[] = "";
+static const char PWD[]  = "";
 
 /* ESP8266 response codes */
 static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";

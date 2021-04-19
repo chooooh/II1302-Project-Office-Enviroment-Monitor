@@ -69,9 +69,11 @@ esp8266_send_command(const char* command){
 
 const char*
 esp8266_send_data(const char* command){
+
+	/* if the function is called after an error, cancel */
+	if(error_flag || fail_flag)
+		return ESP8266_AT_ERROR;
 	rx_buffer_index = 0;
-	error_flag = false;
-	fail_flag = false;
 
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
@@ -154,7 +156,7 @@ get_return(const char* command){
 			}
 
 		case ESP8266_AT_CWJAP_SET_KEY:
-			if(fail_flag){
+			if(fail_flag || error_flag){
 				if (strstr(rx_buffer, ESP8266_AT_CWJAP_1) != NULL)
 					return ESP8266_AT_TIMEOUT;
 				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_2) != NULL))
@@ -164,7 +166,7 @@ get_return(const char* command){
 				else if((strstr(rx_buffer, ESP8266_AT_CWJAP_4) != NULL))
 					return ESP8266_AT_CONNECTION_FAIL;
 				else
-					return ESP8266_AT_UNKNOWN;
+					return ESP8266_AT_ERROR;
 			}
 			else
 				return ESP8266_AT_WIFI_CONNECTED;

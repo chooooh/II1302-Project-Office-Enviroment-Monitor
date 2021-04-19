@@ -3,9 +3,9 @@ ESP8266.c:25:1:HAL_UART_RxCpltCallback	16	static
 ESP8266.c:36:1:hash	24	static
 ESP8266.c:46:1:esp8266_send_command	16	static
 ESP8266.c:71:1:esp8266_send_data	16	static
-ESP8266.c:85:1:esp8266_get_wifi_command	24	static
-ESP8266.c:90:1:esp8266_get_connection_command	32	static
-ESP8266.c:95:1:esp8266_get_at_send_command	16	static
-ESP8266.c:99:9:esp8266_http_get_request	40	static
-ESP8266.c:105:1:get_return	24	static
-ESP8266.c:199:1:evaluate	16	static
+ESP8266.c:87:1:esp8266_get_wifi_command	24	static
+ESP8266.c:92:1:esp8266_get_connection_command	32	static
+ESP8266.c:97:1:esp8266_get_at_send_command	16	static
+ESP8266.c:101:9:esp8266_http_get_request	40	static
+ESP8266.c:107:1:get_return	24	static
+ESP8266.c:201:1:evaluate	16	static
