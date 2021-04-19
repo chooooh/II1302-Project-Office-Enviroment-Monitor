@@ -7,43 +7,43 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00005bec  08000190  08000190  00010190  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000648  08005d7c  08005d7c  00015d7c  2**2
+  2 .rodata       0000062c  08005d7c  08005d7c  00015d7c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  080063c4  080063c4  00020070  2**0
+  3 .ARM.extab    00000000  080063a8  080063a8  00020070  2**0
                   CONTENTS
-  4 .ARM          00000008  080063c4  080063c4  000163c4  2**2
+  4 .ARM          00000008  080063a8  080063a8  000163a8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  080063cc  080063cc  00020070  2**0
+  5 .preinit_array 00000000  080063b0  080063b0  00020070  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  080063cc  080063cc  000163cc  2**2
+  6 .init_array   00000004  080063b0  080063b0  000163b0  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  080063d0  080063d0  000163d0  2**2
+  7 .fini_array   00000004  080063b4  080063b4  000163b4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000070  20000000  080063d4  00020000  2**2
+  8 .data         00000070  20000000  080063b8  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          0000114c  20000070  08006444  00020070  2**2
+  9 .bss          0000114c  20000070  08006428  00020070  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200011bc  08006444  000211bc  2**0
+ 10 ._user_heap_stack 00000604  200011bc  08006428  000211bc  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020070  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000134ce  00000000  00000000  000200a0  2**0
+ 12 .debug_info   0001350d  00000000  00000000  000200a0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00002b81  00000000  00000000  0003356e  2**0
+ 13 .debug_abbrev 00002b81  00000000  00000000  000335ad  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000cc8  00000000  00000000  000360f0  2**3
+ 14 .debug_aranges 00000cc8  00000000  00000000  00036130  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00000bb0  00000000  00000000  00036db8  2**3
+ 15 .debug_ranges 00000bb0  00000000  00000000  00036df8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0002955b  00000000  00000000  00037968  2**0
+ 16 .debug_macro  0002955b  00000000  00000000  000379a8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000f0a9  00000000  00000000  00060ec3  2**0
+ 17 .debug_line   0000f0a9  00000000  00000000  00060f03  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00106953  00000000  00000000  0006ff6c  2**0
+ 18 .debug_str    00106953  00000000  00000000  0006ffac  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  001768bf  2**0
+ 19 .comment      00000053  00000000  00000000  001768ff  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003c44  00000000  00000000  00176914  2**2
+ 20 .debug_frame  00003c44  00000000  00000000  00176954  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -638,9 +638,9 @@ ESP8266_send_command(const char* command){
  80006d0:	20001092 	.word	0x20001092
  80006d4:	20000090 	.word	0x20000090
  80006d8:	20001124 	.word	0x20001124
- 80006dc:	08006020 	.word	0x08006020
- 80006e0:	08006028 	.word	0x08006028
- 80006e4:	08006014 	.word	0x08006014
+ 80006dc:	08006004 	.word	0x08006004
+ 80006e0:	0800600c 	.word	0x0800600c
+ 80006e4:	08005ff8 	.word	0x08005ff8
 
 080006e8 <ESP8266_send_data>:
 
@@ -698,7 +698,7 @@ const char* ESP8266_send_data(const char* command){
  8000744:	20001092 	.word	0x20001092
  8000748:	20000090 	.word	0x20000090
  800074c:	20001124 	.word	0x20001124
- 8000750:	0800605c 	.word	0x0800605c
+ 8000750:	08006040 	.word	0x08006040
 
 08000754 <ESP8266_get_wifi_command>:
 
@@ -722,9 +722,9 @@ ESP8266_get_wifi_command(char* ref){
  800076e:	3708      	adds	r7, #8
  8000770:	46bd      	mov	sp, r7
  8000772:	bd80      	pop	{r7, pc}
- 8000774:	08005ff0 	.word	0x08005ff0
+ 8000774:	08005fe4 	.word	0x08005fe4
  8000778:	08005fe0 	.word	0x08005fe0
- 800077c:	08006138 	.word	0x08006138
+ 800077c:	0800611c 	.word	0x0800611c
  8000780:	08005d7c 	.word	0x08005d7c
 
 08000784 <ESP8266_get_connection_command>:
@@ -754,7 +754,7 @@ ESP8266_get_connection_command(char* ref, char* connection_type, char* remote_ip
  80007aa:	46bd      	mov	sp, r7
  80007ac:	bd80      	pop	{r7, pc}
  80007ae:	bf00      	nop
- 80007b0:	08006144 	.word	0x08006144
+ 80007b0:	08006128 	.word	0x08006128
  80007b4:	08005d8c 	.word	0x08005d8c
 
 080007b8 <get_return>:
@@ -1120,9 +1120,9 @@ get_return(const char* command){
  8000a12:	3710      	adds	r7, #16
  8000a14:	46bd      	mov	sp, r7
  8000a16:	bd80      	pop	{r7, pc}
- 8000a18:	08006138 	.word	0x08006138
- 8000a1c:	08006144 	.word	0x08006144
- 8000a20:	08006154 	.word	0x08006154
+ 8000a18:	0800611c 	.word	0x0800611c
+ 8000a1c:	08006128 	.word	0x08006128
+ 8000a20:	08006138 	.word	0x08006138
  8000a24:	f5600f43 	.word	0xf5600f43
  8000a28:	e7dadacc 	.word	0xe7dadacc
  8000a2c:	d9fa4211 	.word	0xd9fa4211
@@ -1137,28 +1137,28 @@ get_return(const char* command){
  8000a50:	1a8dff78 	.word	0x1a8dff78
  8000a54:	20001091 	.word	0x20001091
  8000a58:	20001092 	.word	0x20001092
- 8000a5c:	08006020 	.word	0x08006020
- 8000a60:	0800607c 	.word	0x0800607c
+ 8000a5c:	08006004 	.word	0x08006004
+ 8000a60:	08006060 	.word	0x08006060
  8000a64:	20000090 	.word	0x20000090
- 8000a68:	0800608c 	.word	0x0800608c
- 8000a6c:	0800609c 	.word	0x0800609c
- 8000a70:	08006074 	.word	0x08006074
- 8000a74:	0800606c 	.word	0x0800606c
- 8000a78:	08006040 	.word	0x08006040
- 8000a7c:	08006030 	.word	0x08006030
- 8000a80:	080060ac 	.word	0x080060ac
- 8000a84:	080060cc 	.word	0x080060cc
- 8000a88:	080060b4 	.word	0x080060b4
- 8000a8c:	080060e0 	.word	0x080060e0
- 8000a90:	080060bc 	.word	0x080060bc
- 8000a94:	080060f0 	.word	0x080060f0
- 8000a98:	080060c4 	.word	0x080060c4
- 8000a9c:	0800610c 	.word	0x0800610c
- 8000aa0:	08006120 	.word	0x08006120
- 8000aa4:	0800612c 	.word	0x0800612c
- 8000aa8:	08006054 	.word	0x08006054
- 8000aac:	08006064 	.word	0x08006064
- 8000ab0:	08006004 	.word	0x08006004
+ 8000a68:	08006070 	.word	0x08006070
+ 8000a6c:	08006080 	.word	0x08006080
+ 8000a70:	08006058 	.word	0x08006058
+ 8000a74:	08006050 	.word	0x08006050
+ 8000a78:	08006024 	.word	0x08006024
+ 8000a7c:	08006014 	.word	0x08006014
+ 8000a80:	08006090 	.word	0x08006090
+ 8000a84:	080060b0 	.word	0x080060b0
+ 8000a88:	08006098 	.word	0x08006098
+ 8000a8c:	080060c4 	.word	0x080060c4
+ 8000a90:	080060a0 	.word	0x080060a0
+ 8000a94:	080060d4 	.word	0x080060d4
+ 8000a98:	080060a8 	.word	0x080060a8
+ 8000a9c:	080060f0 	.word	0x080060f0
+ 8000aa0:	08006104 	.word	0x08006104
+ 8000aa4:	08006110 	.word	0x08006110
+ 8000aa8:	08006038 	.word	0x08006038
+ 8000aac:	08006048 	.word	0x08006048
+ 8000ab0:	08005fe8 	.word	0x08005fe8
 
 08000ab4 <evaluate>:
 
@@ -1195,8 +1195,8 @@ evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
  8000ae6:	bf00      	nop
  8000ae8:	20001091 	.word	0x20001091
  8000aec:	20001092 	.word	0x20001092
- 8000af0:	08006020 	.word	0x08006020
- 8000af4:	0800601c 	.word	0x0800601c
+ 8000af0:	08006004 	.word	0x08006004
+ 8000af4:	08006000 	.word	0x08006000
 
 08000af8 <MX_GPIO_Init>:
 /* USER CODE END 1 */
@@ -2090,8 +2090,8 @@ void test_ESP8266_AT_RST(void){
  8000f12:	bf00      	nop
  8000f14:	bd80      	pop	{r7, pc}
  8000f16:	bf00      	nop
- 8000f18:	080061f8 	.word	0x080061f8
- 8000f1c:	080061a8 	.word	0x080061a8
+ 8000f18:	080061dc 	.word	0x080061dc
+ 8000f1c:	0800618c 	.word	0x0800618c
 
 08000f20 <test_ESP8266_AT>:
 
@@ -2110,8 +2110,8 @@ void test_ESP8266_AT(void){
  8000f36:	bf00      	nop
  8000f38:	bd80      	pop	{r7, pc}
  8000f3a:	bf00      	nop
- 8000f3c:	080061f0 	.word	0x080061f0
- 8000f40:	080061a8 	.word	0x080061a8
+ 8000f3c:	080061d4 	.word	0x080061d4
+ 8000f40:	0800618c 	.word	0x0800618c
 
 08000f44 <test_ESP8266_AT_GMR>:
 
@@ -2130,8 +2130,8 @@ void test_ESP8266_AT_GMR(void){
  8000f5a:	bf00      	nop
  8000f5c:	bd80      	pop	{r7, pc}
  8000f5e:	bf00      	nop
- 8000f60:	08006204 	.word	0x08006204
- 8000f64:	080061a8 	.word	0x080061a8
+ 8000f60:	080061e8 	.word	0x080061e8
+ 8000f64:	0800618c 	.word	0x0800618c
 
 08000f68 <test_ESP8266_AT_CWQAP>:
 
@@ -2150,8 +2150,8 @@ void test_ESP8266_AT_CWQAP(void){
  8000f7e:	bf00      	nop
  8000f80:	bd80      	pop	{r7, pc}
  8000f82:	bf00      	nop
- 8000f84:	08006240 	.word	0x08006240
- 8000f88:	080061a8 	.word	0x080061a8
+ 8000f84:	08006224 	.word	0x08006224
+ 8000f88:	0800618c 	.word	0x0800618c
 
 08000f8c <test_ESP8266_AT_CWMODE_1>:
 
@@ -2170,8 +2170,8 @@ void test_ESP8266_AT_CWMODE_1(void){
  8000fa2:	bf00      	nop
  8000fa4:	bd80      	pop	{r7, pc}
  8000fa6:	bf00      	nop
- 8000fa8:	08006224 	.word	0x08006224
- 8000fac:	080061a8 	.word	0x080061a8
+ 8000fa8:	08006208 	.word	0x08006208
+ 8000fac:	0800618c 	.word	0x0800618c
 
 08000fb0 <test_ESP8266_AT_CWMODE_1_VERIFY>:
 
@@ -2190,8 +2190,8 @@ void test_ESP8266_AT_CWMODE_1_VERIFY(void){
  8000fc6:	bf00      	nop
  8000fc8:	bd80      	pop	{r7, pc}
  8000fca:	bf00      	nop
- 8000fcc:	08006210 	.word	0x08006210
- 8000fd0:	080061d4 	.word	0x080061d4
+ 8000fcc:	080061f4 	.word	0x080061f4
+ 8000fd0:	080061b8 	.word	0x080061b8
 
 08000fd4 <test_ESP8266_AT_CWJAP_VERIFY>:
 
@@ -2210,8 +2210,8 @@ void test_ESP8266_AT_CWJAP_VERIFY(void){
  8000fea:	bf00      	nop
  8000fec:	bd80      	pop	{r7, pc}
  8000fee:	bf00      	nop
- 8000ff0:	08006234 	.word	0x08006234
- 8000ff4:	080061ac 	.word	0x080061ac
+ 8000ff0:	08006218 	.word	0x08006218
+ 8000ff4:	08006190 	.word	0x08006190
 
 08000ff8 <test_ESP8266_AT_CIPMUX_SET>:
 
@@ -2230,8 +2230,8 @@ void test_ESP8266_AT_CIPMUX_SET(void){
  800100e:	bf00      	nop
  8001010:	bd80      	pop	{r7, pc}
  8001012:	bf00      	nop
- 8001014:	0800624c 	.word	0x0800624c
- 8001018:	080061a8 	.word	0x080061a8
+ 8001014:	08006230 	.word	0x08006230
+ 8001018:	0800618c 	.word	0x0800618c
 
 0800101c <test_ESP8266_CIPMUX_VERIFY>:
 
@@ -2250,8 +2250,8 @@ void test_ESP8266_CIPMUX_VERIFY(void){
  8001032:	bf00      	nop
  8001034:	bd80      	pop	{r7, pc}
  8001036:	bf00      	nop
- 8001038:	0800625c 	.word	0x0800625c
- 800103c:	080061e4 	.word	0x080061e4
+ 8001038:	08006240 	.word	0x08006240
+ 800103c:	080061c8 	.word	0x080061c8
 
 08001040 <test_ESP8266_wifi_connect>:
 
@@ -2287,7 +2287,7 @@ void test_ESP8266_wifi_connect(void){
  800107a:	46bd      	mov	sp, r7
  800107c:	bd80      	pop	{r7, pc}
  800107e:	bf00      	nop
- 8001080:	080061ac 	.word	0x080061ac
+ 8001080:	08006190 	.word	0x08006190
 
 08001084 <test_ESP8266_web_connection>:
 
@@ -2355,7 +2355,7 @@ void test_ESP8266_web_connection(void){
  8001104:	08005da0 	.word	0x08005da0
  8001108:	00504354 	.word	0x00504354
  800110c:	08005de0 	.word	0x08005de0
- 8001110:	080061bc 	.word	0x080061bc
+ 8001110:	080061a0 	.word	0x080061a0
 
 08001114 <test_ESP8266_web_request>:
 
@@ -2438,10 +2438,10 @@ void test_ESP8266_web_request(void){
  80011bc:	bdb0      	pop	{r4, r5, r7, pc}
  80011be:	bf00      	nop
  80011c0:	08005dec 	.word	0x08005dec
- 80011c4:	0800626c 	.word	0x0800626c
+ 80011c4:	08006250 	.word	0x08006250
  80011c8:	08005de4 	.word	0x08005de4
- 80011cc:	080061cc 	.word	0x080061cc
- 80011d0:	080061c4 	.word	0x080061c4
+ 80011cc:	080061b0 	.word	0x080061b0
+ 80011d0:	080061a8 	.word	0x080061a8
 
 080011d4 <unit_test>:
 
@@ -2524,7 +2524,6 @@ void unit_test(void){
  800125e:	f000 fa0d 	bl	800167c <UnityDefaultTestRun>
 	UNITY_END();
  8001262:	f000 fa69 	bl	8001738 <UnityEnd>
-
 }
  8001266:	bf00      	nop
  8001268:	bd80      	pop	{r7, pc}
@@ -2948,8 +2947,8 @@ static void UnityTestResultsFailBegin(const UNITY_LINE_TYPE line)
  80014e0:	bd80      	pop	{r7, pc}
  80014e2:	bf00      	nop
  80014e4:	200010a0 	.word	0x200010a0
- 80014e8:	08006294 	.word	0x08006294
- 80014ec:	0800628c 	.word	0x0800628c
+ 80014e8:	08006278 	.word	0x08006278
+ 80014ec:	08006270 	.word	0x08006270
 
 080014f0 <UnityConcludeTest>:
 
@@ -3024,8 +3023,8 @@ void UnityConcludeTest(void)
  800154c:	bd80      	pop	{r7, pc}
  800154e:	bf00      	nop
  8001550:	200010a0 	.word	0x200010a0
- 8001554:	0800627c 	.word	0x0800627c
- 8001558:	08006284 	.word	0x08006284
+ 8001554:	08006260 	.word	0x08006260
+ 8001558:	08006268 	.word	0x08006268
 
 0800155c <UnityPrintExpectedAndActualStrings>:
     }
@@ -3104,10 +3103,10 @@ static void UnityPrintExpectedAndActualStrings(const char* expected, const char*
  80015ba:	3708      	adds	r7, #8
  80015bc:	46bd      	mov	sp, r7
  80015be:	bd80      	pop	{r7, pc}
- 80015c0:	080062a4 	.word	0x080062a4
+ 80015c0:	08006288 	.word	0x08006288
  80015c4:	08005fbc 	.word	0x08005fbc
- 80015c8:	0800629c 	.word	0x0800629c
- 80015cc:	080062b0 	.word	0x080062b0
+ 80015c8:	08006280 	.word	0x08006280
+ 80015cc:	08006294 	.word	0x08006294
 
 080015d0 <UnityAssertEqualString>:
 /*-----------------------------------------------*/
@@ -3450,14 +3449,14 @@ int UnityEnd(void)
  80017aa:	4618      	mov	r0, r3
  80017ac:	bd80      	pop	{r7, pc}
  80017ae:	bf00      	nop
- 80017b0:	080062e8 	.word	0x080062e8
- 80017b4:	08006300 	.word	0x08006300
+ 80017b0:	080062cc 	.word	0x080062cc
+ 80017b4:	080062e4 	.word	0x080062e4
  80017b8:	200010a0 	.word	0x200010a0
  80017bc:	08005fc0 	.word	0x08005fc0
- 80017c0:	08006314 	.word	0x08006314
- 80017c4:	08006320 	.word	0x08006320
- 80017c8:	08006278 	.word	0x08006278
- 80017cc:	08006294 	.word	0x08006294
+ 80017c0:	080062f8 	.word	0x080062f8
+ 80017c4:	08006304 	.word	0x08006304
+ 80017c8:	0800625c 	.word	0x0800625c
+ 80017cc:	08006278 	.word	0x08006278
 
 080017d0 <MX_UART4_Init>:
 
@@ -3713,7 +3712,7 @@ LoopForever:
   ldr   sp, =_estack    /* Set stack pointer */
  80018fc:	20018000 	.word	0x20018000
 	ldr	r3, =_sidata
- 8001900:	080063d4 	.word	0x080063d4
+ 8001900:	080063b8 	.word	0x080063b8
 	ldr	r0, =_sdata
  8001904:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -5613,7 +5612,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
  8002418:	e011      	b.n	800243e <HAL_RCC_OscConfig+0x2ba>
  800241a:	bf00      	nop
  800241c:	40021000 	.word	0x40021000
- 8002420:	08006160 	.word	0x08006160
+ 8002420:	08006144 	.word	0x08006144
  8002424:	20000000 	.word	0x20000000
  8002428:	20000004 	.word	0x20000004
         {
@@ -6871,7 +6870,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8002afe:	bf00      	nop
  8002b00:	40022000 	.word	0x40022000
  8002b04:	40021000 	.word	0x40021000
- 8002b08:	08006160 	.word	0x08006160
+ 8002b08:	08006144 	.word	0x08006144
  8002b0c:	20000000 	.word	0x20000000
  8002b10:	20000004 	.word	0x20000004
 
@@ -7076,7 +7075,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8002c18:	4770      	bx	lr
  8002c1a:	bf00      	nop
  8002c1c:	40021000 	.word	0x40021000
- 8002c20:	08006178 	.word	0x08006178
+ 8002c20:	0800615c 	.word	0x0800615c
  8002c24:	00f42400 	.word	0x00f42400
  8002c28:	02dc6c00 	.word	0x02dc6c00
 
@@ -7125,7 +7124,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8002c64:	4618      	mov	r0, r3
  8002c66:	bd80      	pop	{r7, pc}
  8002c68:	40021000 	.word	0x40021000
- 8002c6c:	08006170 	.word	0x08006170
+ 8002c6c:	08006154 	.word	0x08006154
 
 08002c70 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -7152,7 +7151,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  8002c90:	4618      	mov	r0, r3
  8002c92:	bd80      	pop	{r7, pc}
  8002c94:	40021000 	.word	0x40021000
- 8002c98:	08006170 	.word	0x08006170
+ 8002c98:	08006154 	.word	0x08006154
 
 08002c9c <RCC_SetFlashLatencyFromMSIRange>:
             voltage range.
@@ -12262,10 +12261,10 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004916:	4798      	blx	r3
  8004918:	3601      	adds	r6, #1
  800491a:	e7f2      	b.n	8004902 <__libc_init_array+0x1e>
- 800491c:	080063cc 	.word	0x080063cc
- 8004920:	080063cc 	.word	0x080063cc
- 8004924:	080063cc 	.word	0x080063cc
- 8004928:	080063d0 	.word	0x080063d0
+ 800491c:	080063b0 	.word	0x080063b0
+ 8004920:	080063b0 	.word	0x080063b0
+ 8004924:	080063b0 	.word	0x080063b0
+ 8004928:	080063b4 	.word	0x080063b4
 
 0800492c <memcpy>:
  800492c:	440a      	add	r2, r1
@@ -12427,9 +12426,9 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004a7e:	6022      	str	r2, [r4, #0]
  8004a80:	701d      	strb	r5, [r3, #0]
  8004a82:	e7db      	b.n	8004a3c <_puts_r+0x88>
- 8004a84:	08006350 	.word	0x08006350
- 8004a88:	08006370 	.word	0x08006370
- 8004a8c:	08006330 	.word	0x08006330
+ 8004a84:	08006334 	.word	0x08006334
+ 8004a88:	08006354 	.word	0x08006354
+ 8004a8c:	08006314 	.word	0x08006314
 
 08004a90 <puts>:
  8004a90:	4b02      	ldr	r3, [pc, #8]	; (8004a9c <puts+0xc>)
@@ -12563,9 +12562,9 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004ba0:	f04f 37ff 	mov.w	r7, #4294967295
  8004ba4:	e7ea      	b.n	8004b7c <__swbuf_r+0x6c>
  8004ba6:	bf00      	nop
- 8004ba8:	08006350 	.word	0x08006350
- 8004bac:	08006370 	.word	0x08006370
- 8004bb0:	08006330 	.word	0x08006330
+ 8004ba8:	08006334 	.word	0x08006334
+ 8004bac:	08006354 	.word	0x08006354
+ 8004bb0:	08006314 	.word	0x08006314
 
 08004bb4 <__swsetup_r>:
  8004bb4:	4b32      	ldr	r3, [pc, #200]	; (8004c80 <__swsetup_r+0xcc>)
@@ -12657,9 +12656,9 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004c7c:	e7f7      	b.n	8004c6e <__swsetup_r+0xba>
  8004c7e:	bf00      	nop
  8004c80:	2000000c 	.word	0x2000000c
- 8004c84:	08006350 	.word	0x08006350
- 8004c88:	08006370 	.word	0x08006370
- 8004c8c:	08006330 	.word	0x08006330
+ 8004c84:	08006334 	.word	0x08006334
+ 8004c88:	08006354 	.word	0x08006354
+ 8004c8c:	08006314 	.word	0x08006314
 
 08004c90 <__sflush_r>:
  8004c90:	898a      	ldrh	r2, [r1, #12]
@@ -12835,9 +12834,9 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004e02:	bf08      	it	eq
  8004e04:	68ec      	ldreq	r4, [r5, #12]
  8004e06:	e7da      	b.n	8004dbe <_fflush_r+0x22>
- 8004e08:	08006350 	.word	0x08006350
- 8004e0c:	08006370 	.word	0x08006370
- 8004e10:	08006330 	.word	0x08006330
+ 8004e08:	08006334 	.word	0x08006334
+ 8004e0c:	08006354 	.word	0x08006354
+ 8004e10:	08006314 	.word	0x08006314
 
 08004e14 <std>:
  8004e14:	2300      	movs	r3, #0
@@ -12962,7 +12961,7 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004f26:	61a3      	str	r3, [r4, #24]
  8004f28:	e7d2      	b.n	8004ed0 <__sinit+0xc>
  8004f2a:	bf00      	nop
- 8004f2c:	0800632c 	.word	0x0800632c
+ 8004f2c:	08006310 	.word	0x08006310
  8004f30:	08004e5d 	.word	0x08004e5d
 
 08004f34 <__sfp>:
@@ -13017,7 +13016,7 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8004fb2:	603b      	str	r3, [r7, #0]
  8004fb4:	e7ee      	b.n	8004f94 <__sfp+0x60>
  8004fb6:	bf00      	nop
- 8004fb8:	0800632c 	.word	0x0800632c
+ 8004fb8:	08006310 	.word	0x08006310
  8004fbc:	ffff0001 	.word	0xffff0001
 
 08004fc0 <_fwalk_reent>:
@@ -13578,11 +13577,11 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  80054bc:	f000 f9d4 	bl	8005868 <_printf_i>
  80054c0:	e7eb      	b.n	800549a <_svfiprintf_r+0x1c2>
  80054c2:	bf00      	nop
- 80054c4:	08006390 	.word	0x08006390
- 80054c8:	0800639a 	.word	0x0800639a
+ 80054c4:	08006374 	.word	0x08006374
+ 80054c8:	0800637e 	.word	0x0800637e
  80054cc:	00000000 	.word	0x00000000
  80054d0:	08005221 	.word	0x08005221
- 80054d4:	08006396 	.word	0x08006396
+ 80054d4:	0800637a 	.word	0x0800637a
 
 080054d8 <__sfputc_r>:
  80054d8:	6893      	ldr	r3, [r2, #8]
@@ -13865,14 +13864,14 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8005764:	f000 f880 	bl	8005868 <_printf_i>
  8005768:	e7e4      	b.n	8005734 <_vfiprintf_r+0x208>
  800576a:	bf00      	nop
- 800576c:	08006350 	.word	0x08006350
- 8005770:	08006370 	.word	0x08006370
- 8005774:	08006330 	.word	0x08006330
- 8005778:	08006390 	.word	0x08006390
- 800577c:	0800639a 	.word	0x0800639a
+ 800576c:	08006334 	.word	0x08006334
+ 8005770:	08006354 	.word	0x08006354
+ 8005774:	08006314 	.word	0x08006314
+ 8005778:	08006374 	.word	0x08006374
+ 800577c:	0800637e 	.word	0x0800637e
  8005780:	00000000 	.word	0x00000000
  8005784:	08005507 	.word	0x08005507
- 8005788:	08006396 	.word	0x08006396
+ 8005788:	0800637a 	.word	0x0800637a
 
 0800578c <_printf_common>:
  800578c:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -14208,8 +14207,8 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8005aa4:	f104 0619 	add.w	r6, r4, #25
  8005aa8:	e7f5      	b.n	8005a96 <_printf_i+0x22e>
  8005aaa:	bf00      	nop
- 8005aac:	080063a1 	.word	0x080063a1
- 8005ab0:	080063b2 	.word	0x080063b2
+ 8005aac:	08006385 	.word	0x08006385
+ 8005ab0:	08006396 	.word	0x08006396
 
 08005ab4 <_putc_r>:
  8005ab4:	b570      	push	{r4, r5, r6, lr}
@@ -14274,9 +14273,9 @@ __weak void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  8005b30:	f7fe ffee 	bl	8004b10 <__swbuf_r>
  8005b34:	4605      	mov	r5, r0
  8005b36:	e7e3      	b.n	8005b00 <_putc_r+0x4c>
- 8005b38:	08006350 	.word	0x08006350
- 8005b3c:	08006370 	.word	0x08006370
- 8005b40:	08006330 	.word	0x08006330
+ 8005b38:	08006334 	.word	0x08006334
+ 8005b3c:	08006354 	.word	0x08006354
+ 8005b40:	08006314 	.word	0x08006314
 
 08005b44 <_sbrk_r>:
  8005b44:	b538      	push	{r3, r4, r5, lr}
