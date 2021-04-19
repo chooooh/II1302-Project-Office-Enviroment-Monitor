@@ -39,15 +39,13 @@ typedef enum COMMAND_KEYS {
 	ESP8266_AT_SEND_KEY					= 898252904
 } KEYS;
 
-
 /*----------Strings------------*/
 
 /* ssid and password for access point */
-static const char SSID[] = "";
-static const char PWD[]  = "";
+static const char SSID[] = "#Telia-7B6E70";
+static const char PWD[]  = "*K64Z&8r*xC@ewG6";
 
-/*ESP8266 response codes */
-static const char CRLF[] 						 = "\r\n";
+/* ESP8266 response codes */
 static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";
 static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
@@ -74,6 +72,14 @@ static const char ESP8266_AT_NO_TARGET[]	     = "cannot find the target AP";
 static const char ESP8266_AT_CONNECTION_FAIL[]	 = "connection failed";
 static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
 static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
+
+/* HTTP request strings*/
+static const char HTTP_GET[]	 		 		 = "GET ";
+static const char HTTP_POST[]	 		 		 = "POST ";
+static const char HTTP_VERSION[]	 		     = "HTTP/1.1";
+static const char HTTP_HOST[]	 		         = "Host: ";
+static const char HTTP_CONNECTION_CLOSE[]	     = "Connection: close";
+static const char CRLF[] 						 = "\r\n";
 
 
 /* AT Commands for the ESP8266, see
@@ -149,8 +155,8 @@ static const char ESP8266_AT_CWQAP[]				= "AT+CWQAP\r\n";
  */
 static const char ESP8266_AT_CWAUTOCONN[]			= "AT+CWAUTOCONN=0";
 
-/* Set single TCP connection */
-static const char ESP8266_AT_CIPMUX[]				= "AT+CIPMUX=0\r\n";
+/* Set single connection */
+static const char ESP8266_AT_CIPMUX_SINGLE[]		= "AT+CIPMUX=0\r\n";
 
 /* Query CIPMUX setting */
 static const char ESP8266_AT_CIPMUX_TEST[]			= "AT+CIPMUX?\r\n";
@@ -184,7 +190,7 @@ static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
  * @return void
  */
 void
-ESP8266_get_wifi_command(char*);
+esp8266_get_wifi_command(char*);
 
 /**
  * @brief build the command for connection to a website
@@ -195,8 +201,15 @@ ESP8266_get_wifi_command(char*);
  * @return void
  */
 void
-ESP8266_get_connection_command(char* ref, char* connection_type,
+esp8266_get_connection_command(char* ref, char* connection_type,
 							   char* remote_ip, char* remote_port);
+
+
+void
+esp8266_get_at_send_command(char*, uint8_t);
+
+uint8_t
+esp8266_http_get_request(char*, char*, char*);
 
 /**
  * @brief start RX interrupt for UART4
@@ -220,14 +233,14 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
  * @return ESP8266 response
  */
 const char*
-ESP8266_send_command(const char*);
+esp8266_send_command(const char*);
 
 /*
  *
  *
  */
 const char*
-ESP8266_send_data(const char*);
+esp8266_send_data(const char*);
 
 /**
  * @brief get hash number for string

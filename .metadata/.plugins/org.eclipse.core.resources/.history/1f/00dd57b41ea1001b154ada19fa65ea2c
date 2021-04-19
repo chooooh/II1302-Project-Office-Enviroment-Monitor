@@ -1,0 +1,111 @@
+/**
+******************************************************************************
+@brief unit test for the office environment monitor project.
+@details bla bla bla
+@file unit_test.c
+@author  Jonatan Lundqvist Silins, jonls@kth.se
+@author  Sebastian Divander,       sdiv@kth.se
+@date 29-03-2021
+@version 1.0
+******************************************************************************
+*/
+
+#include "unit_test.h"
+
+void setUp(void){
+}
+
+void tearDown(void){
+}
+
+void test_esp8266_init(void){
+	RUN_TEST(test_esp8266_at_rst);
+	RUN_TEST(test_esp8266_at);
+	RUN_TEST(test_esp8266_at_cwqap);
+	RUN_TEST(test_esp8266_at_cwmode_1);
+	RUN_TEST(test_esp8266_at_cwmode_1_verify);
+	RUN_TEST(test_esp8266_at_cipmux_set_single);
+	RUN_TEST(test_esp8266_at_cipmux_verify);
+}
+
+
+void unit_test(void){
+
+	/*TODO: make test function names more self explaining
+	 	 	add tests together for init etc, or all that return "OK"? */
+
+	/*VALIDATION TESTING*/
+	init_uart_interrupt();
+	UNITY_BEGIN();
+	RUN_TEST(test_esp8266_init);
+/*
+	HAL_Delay(2000);
+	RUN_TEST(test_ESP8266_wifi_connect);
+	RUN_TEST(test_ESP8266_AT_CWJAP_VERIFY);
+	RUN_TEST(test_ESP8266_web_connection);
+*/
+//	RUN_TEST(test_ESP8266_web_request);
+
+	/*TODO: make a function to handle the request data (see test function) */
+	UNITY_END();
+}
+
+void test_esp8266_at_rst(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_RST));
+}
+
+void test_esp8266_at(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT));
+}
+
+void test_esp8266_at_cwqap(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWQAP));
+}
+
+void test_esp8266_at_cwmode_1(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE));
+}
+
+void test_esp8266_at_cwmode_1_verify(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CWMODE_1, esp8266_send_command(ESP8266_AT_CWMODE_TEST));
+}
+
+void test_esp8266_at_cwjap_verify(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(ESP8266_AT_CWJAP_TEST));
+}
+
+void test_esp8266_at_cipmux_set_single(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CIPMUX_SINGLE));
+}
+
+void test_esp8266_at_cipmux_verify(void){
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CIPMUX_0, esp8266_send_command(ESP8266_AT_CIPMUX_TEST));
+}
+
+void test_esp8266_wifi_connect(void){
+	char wifi_command[256] = {0};
+	esp8266_get_wifi_command(wifi_command);
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(wifi_command));
+}
+
+void test_esp8266_web_connection(void){
+	char connection_command[256] = {0};
+	char remote_ip[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
+	char type[] = "TCP";
+	char remote_port[] = "80";
+	esp8266_get_connection_command(connection_command, type, remote_ip, remote_port);
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CONNECT, esp8266_send_command(connection_command));
+}
+
+void test_esp8266_web_request(void){
+	char request[] = "GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
+	//int len = strlen (request);
+	char
+	esp8266_http_get_request();
+	char init_send[len];
+	sprintf(init_send, "%s%d\r\n", ESP8266_AT_SEND, len);
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_SEND_OK, esp8266_send_command(init_send));
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CLOSED, esp8266_send_data(request));
+}
+
+

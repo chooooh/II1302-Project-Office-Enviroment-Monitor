@@ -43,7 +43,7 @@ hash(const char *str) {
 }
 
 const char*
-ESP8266_send_command(const char* command){
+esp8266_send_command(const char* command){
 
 	rx_buffer_index = 0;
 	error_flag = false;
@@ -67,7 +67,8 @@ ESP8266_send_command(const char* command){
 	return get_return(command);
 }
 
-const char* ESP8266_send_data(const char* command){
+const char*
+esp8266_send_data(const char* command){
 	rx_buffer_index = 0;
 	error_flag = false;
 	fail_flag = false;
@@ -80,21 +81,30 @@ const char* ESP8266_send_data(const char* command){
 	return ESP8266_AT_CLOSED;
 }
 
-
 void
-ESP8266_get_wifi_command(char* ref){
+esp8266_get_wifi_command(char* ref){
 	sprintf (ref, "%s\"%s\",\"%s\"\r\n", ESP8266_AT_CWJAP_SET, SSID, PWD);
 }
 
 void
-ESP8266_get_connection_command(char* ref, char* connection_type, char* remote_ip, char* remote_port){
+esp8266_get_connection_command(char* ref, char* connection_type, char* remote_ip, char* remote_port){
 	sprintf(ref, "%s\"%s\",\"%s\",%s\r\n", ESP8266_AT_START, connection_type, remote_ip, remote_port);
 }
 
+void
+esp8266_get_at_send_command(char* ref, uint8_t len){
+	sprintf(ref, "%s%d\r\n", ESP8266_AT_SEND, len);
+}
+
+uint8_t esp8266_http_get_request(char* ref, char* uri, char* host){
+	sprintf(ref, "%s%s %s\r\n%s%s\r\n%s\r\n\r\n", HTTP_GET, uri, HTTP_VERSION, HTTP_HOST, host, HTTP_CONNECTION_CLOSE);
+	return (strlen (ref));
+}
+//char request[] = "GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 const char*
 get_return(const char* command){
 
-	// TODO: avoid using too many strstr... use 1+ argument for id?
+	// TODO: avoid using too many strstr... +100ms per
 
 	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
 		command = ESP8266_AT_CWJAP_SET;
