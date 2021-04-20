@@ -1,6 +1,7 @@
 # II1302-Project-Office-Enviroment-Monitor
 
 ## Run web app in development
+Node.Js is required, whatever version should suffice
 The web app requires both the server and client to be running.
 Run following commands to start the server and client:
 - npm install && npm run dev (in project root folder)
