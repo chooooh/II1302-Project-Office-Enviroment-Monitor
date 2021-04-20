@@ -1,0 +1,69 @@
+http://localhost:6001
+Error: connect ECONNREFUSED 127.0.0.1:6001
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1146:16) {
+  errno: -61,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '127.0.0.1',
+  port: 6001,
+  response: undefined
+}
+{
+  "stats": {
+    "suites": 2,
+    "tests": 2,
+    "passes": 1,
+    "pending": 0,
+    "failures": 1,
+    "start": "2021-04-20T14:59:10.208Z",
+    "end": "2021-04-20T14:59:10.229Z",
+    "duration": 21
+  },
+  "tests": [
+    {
+      "title": "Welcome Message",
+      "fullTitle": "Hello Welcome Message",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return...",
+      "fullTitle": "Test GET /user It should return...",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "err": {
+        "stack": "TypeError: Cannot read property 'should' of undefined\n    at /Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js:27:22\n    at Test.Request.callback (node_modules/superagent/lib/node/index.js:728:3)\n    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:647:10)\n    at Socket.socketErrorListener (_http_client.js:469:9)\n    at emitErrorNT (internal/streams/destroy.js:106:8)\n    at emitErrorCloseNT (internal/streams/destroy.js:74:3)\n    at processTicksAndRejections (internal/process/task_queues.js:80:21)",
+        "message": "Cannot read property 'should' of undefined",
+        "uncaught": true
+      }
+    }
+  ],
+  "pending": [],
+  "failures": [
+    {
+      "title": "It should return...",
+      "fullTitle": "Test GET /user It should return...",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "err": {
+        "stack": "TypeError: Cannot read property 'should' of undefined\n    at /Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js:27:22\n    at Test.Request.callback (node_modules/superagent/lib/node/index.js:728:3)\n    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:647:10)\n    at Socket.socketErrorListener (_http_client.js:469:9)\n    at emitErrorNT (internal/streams/destroy.js:106:8)\n    at emitErrorCloseNT (internal/streams/destroy.js:74:3)\n    at processTicksAndRejections (internal/process/task_queues.js:80:21)",
+        "message": "Cannot read property 'should' of undefined",
+        "uncaught": true
+      }
+    }
+  ],
+  "passes": [
+    {
+      "title": "Welcome Message",
+      "fullTitle": "Hello Welcome Message",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}

@@ -8,20 +8,19 @@ const { DateTime } = require("luxon");
 const express = require('express');
 const router = express.Router();
 
-const { readFromDB, readFromDB2, writeToDB } = require('../../database/io');
+const { readFromDB, writeToDB } = require('../../database/io');
 //const sensor = require('../../models/sensor');
 
 var counter = 0;
 const airqualityDbName = 'airquality';
 const peopleDbName= 'people';
 
-
 /**
  * Route serving the sensor data.
  * @param {string} path 
  */
 router.get('/', (req, res) => {
-    res.json({"data": ++counter});
+    res.set(200).json({"data": ++counter});
 });
 
 /**
@@ -35,7 +34,17 @@ router.post('/airquality', (req, res) => {
     writeToDB(req.query, airqualityDbName, now)
     .then(result => {
         res.set(200).send(result)
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        console.log(err)
+        res.set(400).send(err);
+    });
+});
+
+/**
+ * This is the endpoint that provides information of the current airquanlity
+ */
+router.get('/airquality', (req, res) => {
+    res.send("not done");
 });
 
 /**
@@ -49,12 +58,16 @@ router.post('/peopleintheroom', (req, res) => {
     writeToDB(req.query, peopleDbName, now)
     .then(result => {
         res.set(200).send(result)
-    }).catch(err => console.log(err));
+    }).catch(err => {
+        console.log(err)
+        res.set(400).send(err);
+    });
 });
 
+
 /**
- * A simple function that 
- * @returns 
+ * A simple function that returns the current date and time
+ * @returns Date and time with custom formatting
  */
 const currentDateTime = () => {
     let now = DateTime.local();
