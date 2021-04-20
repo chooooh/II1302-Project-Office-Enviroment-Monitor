@@ -4,6 +4,7 @@
  * sensor model. A helper method providing time and date is also present.
  * @package
  */
+require('dotenv').config()
 const { DateTime } = require("luxon");
 const express = require('express');
 const router = express.Router();
@@ -44,7 +45,7 @@ router.post('/airquality', (req, res) => {
  * This is the endpoint that provides information of the current airquanlity
  */
 router.get('/airquality', (req, res) => {
-    res.send("not done");
+    res.send(process.env.cloudant_username);
 });
 
 /**
