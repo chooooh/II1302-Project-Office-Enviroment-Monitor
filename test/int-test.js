@@ -22,8 +22,8 @@ describe('Test GET /user', () => {
         chai.request(host)
         .get("/api/sensor")
         .end((err, response) => {
-            console.log(host);
-            console.log(err);
+            //console.log(host);
+            //console.log(err);
             response.should.have.status(200);
             done();
         });
