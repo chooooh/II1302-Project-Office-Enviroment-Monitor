@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "node app.js",
-		"test": "mocha test/int-test.js",
+		"test": "mocha",
 		"test-unit": "mocha test/unit-test.js --reporter json --reporter-options output=test/unit-test.json | tee test/unit-test.json",
 		"test-int": "mocha test/int-test.js --reporter json --reporter-options output=test/int-test.json | tee test/int-test.json",
 		"dev": "nodemon app.js"

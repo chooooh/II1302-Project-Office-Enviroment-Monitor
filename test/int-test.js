@@ -29,3 +29,4 @@ describe('Test GET /user', () => {
         });
     });
 })
+// npm run mocha test/int-test.js
