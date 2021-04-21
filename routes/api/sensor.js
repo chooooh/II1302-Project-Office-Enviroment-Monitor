@@ -8,6 +8,7 @@ require('dotenv').config()
 const { DateTime } = require("luxon");
 const express = require('express');
 const router = express.Router();
+const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
 
 const { readFromDB, writeToDB } = require('../../database/io');
