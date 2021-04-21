@@ -8,6 +8,7 @@ require('dotenv').config()
 const { DateTime } = require("luxon");
 const express = require('express');
 const router = express.Router();
+const appEnv = cfenv.getAppEnv();
 
 const { readFromDB, writeToDB } = require('../../database/io');
 //const sensor = require('../../models/sensor');
@@ -21,7 +22,7 @@ const peopleDbName= 'people';
  * @param {string} path 
  */
 router.get('/', (req, res) => {
-    res.set(200).json({"data": ++counter});
+    res.send(200).json({"data": ++counter});
 });
 
 /**
@@ -45,7 +46,8 @@ router.post('/airquality', (req, res) => {
  * This is the endpoint that provides information of the current airquanlity
  */
 router.get('/airquality', (req, res) => {
-    res.send(process.env.cloudant_username);
+    const host = appEnv.url;
+    res.send(host);
 });
 
 /**
