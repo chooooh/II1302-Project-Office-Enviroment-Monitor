@@ -23,7 +23,7 @@ const peopleDbName= 'people';
  * @param {string} path 
  */
 router.get('/', (req, res) => {
-    res.send(200).json({"data": ++counter});
+    res.status(200).json({"data": ++counter});
 });
 
 /**
@@ -48,7 +48,7 @@ router.post('/airquality', (req, res) => {
  */
 router.get('/airquality', (req, res) => {
     const host = appEnv.url;
-    res.send(host);
+    res.set(200).send(host);
 });
 
 /**
@@ -67,7 +67,6 @@ router.post('/peopleintheroom', (req, res) => {
         res.set(400).send(err);
     });
 });
-
 
 /**
  * A simple function that returns the current date and time
