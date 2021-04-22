@@ -21,3 +21,4 @@ Since app.js in root folder serves the static files client/build, the following 
 - cd client && npm install && npm run build (in client folder, install frontend dependencies).
 
 
+*This is a test*
