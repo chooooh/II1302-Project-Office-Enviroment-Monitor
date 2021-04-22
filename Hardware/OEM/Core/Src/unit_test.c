@@ -47,10 +47,12 @@ void test_esp8266_web_request(void){
 	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 	char request[256] = {0};
 	char init_send[64] = {0};
-	char uri[] = "/api/sensor";
+	char uri[] = "/api/sensor/peopleintheroom?data=5";
+	//char uri[] = "/api/sensor";
 	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 
-	uint8_t len = esp8266_http_get_request(request, uri, host);
+//	uint8_t len = esp8266_http_get_request(request, HTTP_GET, uri, host);
+	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
 	esp8266_get_at_send_command(init_send, len);
 
 	test_esp8266_at_send(init_send);

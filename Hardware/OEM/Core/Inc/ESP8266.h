@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <login.h>
 
 /*----------Defines------------*/
 #define RX_BUFFER_SIZE 4096
@@ -40,10 +41,6 @@ typedef enum COMMAND_KEYS {
 } KEYS;
 
 /*----------Strings------------*/
-
-/* ssid and password for access point */
-static const char SSID[] = "";
-static const char PWD[]  = "";
 
 /* ESP8266 response codes */
 static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";
@@ -74,6 +71,7 @@ static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
 static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
 
 /* HTTP request strings*/
+// TODO: these should probably be hard coded as full requests later
 static const char HTTP_GET[]	 		 		 = "GET ";
 static const char HTTP_POST[]	 		 		 = "POST ";
 static const char HTTP_VERSION[]	 		     = "HTTP/1.1";
@@ -209,7 +207,7 @@ void
 esp8266_get_at_send_command(char*, uint8_t);
 
 uint8_t
-esp8266_http_get_request(char*, char*, char*);
+esp8266_http_get_request(char*, const char*, char*, char*);
 
 /**
  * @brief start RX interrupt for UART4
@@ -235,9 +233,11 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 const char*
 esp8266_send_command(const char*);
 
-/*
- *
- *
+/**
+ * @brief send data to ESP8266, this is used after calling cipsend
+ * where the length of the data that will be sent has been specified.
+ * @param char* data to send
+ * @return ESP8266 response
  */
 const char*
 esp8266_send_data(const char*);
@@ -252,17 +252,15 @@ hash(const char*);
 
 /**
  * @brief Evaluate ESP8266 response, if any flags were set return "ERROR" else "OK".
- * 		  Used for applicable AT commands that only return basic responses.
- * @param bool flag to check
- * @param bool flag to check
+ * Used for applicable AT commands that only return basic responses.
  * @return char* "OK" or "ERROR"
  */
 const char*
-evaluate(bool, bool);
+evaluate(void);
 
 /**
  * @brief matches command to ESP8266 return type. Looks up the hash of the command, and then looks for
- * 		  the ESP8266 response which should be returned.
+ * the ESP8266 response which should be returned.
  * @param char* command to match to a return type
  * @return char* return ESP8266 response depending on command and its outcome
  */

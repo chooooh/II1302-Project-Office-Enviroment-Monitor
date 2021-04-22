@@ -30,7 +30,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/gpio.h \
  ../Core/Inc/office_environment_monitor.h ../Core/Inc/unit_test.h \
  ../Core/Inc/unity.h ../Core/Inc/unity_internals.h ../Core/Inc/usart.h \
- ../Core/Inc/ESP8266.h
+ ../Core/Inc/ESP8266.h ../Core/Inc/login.h
 
 ../Core/Inc/main.h:
 
@@ -107,3 +107,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/usart.h:
 
 ../Core/Inc/ESP8266.h:
+
+../Core/Inc/login.h:

@@ -7366,3 +7366,121 @@ Finished building: OEM.bin
  
 Finished building: OEM.list
  
+22:30:04 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
+../Core/Src/unit_test.c: In function 'test_esp8266_web_request':
+../Core/Src/unit_test.c:55:50: warning: passing argument 2 of 'esp8266_http_get_request' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   55 |  uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
+      |                                                  ^~~~~~~~~
+In file included from ../Core/Inc/unit_test.h:11,
+                 from ../Core/Src/unit_test.c:13:
+../Core/Inc/ESP8266.h:212:33: note: expected 'char *' but argument is of type 'const char *'
+  212 | esp8266_http_get_request(char*, char*, char*, char*);
+      |                                 ^~~~~
+arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: OEM.elf
+ 
+arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
+arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25672	    120	   5968	  31760	   7c10	OEM.elf
+Finished building: default.size.stdout
+ 
+Finished building: OEM.bin
+ 
+Finished building: OEM.list
+ 
+22:30:50 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
+arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: OEM.elf
+ 
+arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
+arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25672	    120	   5968	  31760	   7c10	OEM.elf
+Finished building: default.size.stdout
+ 
+Finished building: OEM.bin
+ 
+Finished building: OEM.list
+ 
+22:31:37 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
+arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: OEM.elf
+ 
+arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
+arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25700	    120	   5968	  31788	   7c2c	OEM.elf
+Finished building: default.size.stdout
+ 
+Finished building: OEM.bin
+ 
+Finished building: OEM.list
+ 
+14:35:51 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
+../Core/Src/ESP8266.c: In function 'get_return':
+../Core/Src/ESP8266.c:138:11: error: too many arguments to function 'evaluate'
+  138 |    return evaluate(error_flag, fail_flag);
+      |           ^~~~~~~~
+In file included from ../Core/Src/ESP8266.c:10:
+../Core/Inc/ESP8266.h:259:1: note: declared here
+  259 | evaluate(void);
+      | ^~~~~~~~
+make: *** [Core/Src/subdir.mk:52: Core/Src/ESP8266.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+14:36:11 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: OEM.elf
+ 
+arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
+arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25652	    120	   5968	  31740	   7bfc	OEM.elf
+Finished building: default.size.stdout
+ 
+Finished building: OEM.bin
+ 
+Finished building: OEM.list
+ 
+14:39:46 **** Incremental Build of configuration Debug for project OEM ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
+arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: OEM.elf
+ 
+arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
+arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
+arm-none-eabi-size   OEM.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25672	    120	   5968	  31760	   7c10	OEM.elf
+Finished building: default.size.stdout
+ 
+Finished building: OEM.bin
+ 
+Finished building: OEM.list
+ 

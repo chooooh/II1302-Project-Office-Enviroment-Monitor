@@ -1,0 +1,15 @@
+/*
+ * login.h
+ *
+ *  Created on: 22 apr. 2021
+ *      Author: Jonatan Lundqvist Silins
+ */
+
+#ifndef INC_LOGIN_H_
+#define INC_LOGIN_H_
+
+/* ssid and password for access point */
+static const char SSID[] = "#Telia-7B6E70";
+static const char PWD[]  = "*K64Z&8r*xC@ewG6";
+
+#endif /* INC_LOGIN_H_ */

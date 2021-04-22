@@ -5,10 +5,11 @@
 @file ESP8266.c
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
-@version 1.1
+@version 2
 *******************************************************************************/
 #include "ESP8266.h"
 
+/* Global variables */
 static uint8_t rx_variable;
 static char rx_buffer[RX_BUFFER_SIZE];
 static uint8_t rx_buffer_index = 0;
@@ -21,17 +22,18 @@ init_uart_interrupt(void){
 	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
 }
 
+/* Probably not the most efficient solution */
 void
 HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 
    if (huart->Instance == UART4) {
-      rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to Rx_Buffer
+      rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to rx_Buffer
     }
-      HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
+      HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
 }
 
-/* djb2 hashing algorithm */
+/* djb2 hashing algorithm which is used in mapping sent commands to the right ESP8266 response code */
 const unsigned long
 hash(const char *str) {
     unsigned long hash = 5381;
@@ -64,11 +66,12 @@ esp8266_send_command(const char* command){
 		}
 	}
 
+	//return evaluate(); would more efficient but not as clear in testing
 	return get_return(command);
 }
 
 const char*
-esp8266_send_data(const char* command){
+esp8266_send_data(const char* data){
 
 	/* if the function is called after an error, cancel */
 	if(error_flag || fail_flag)
@@ -76,7 +79,7 @@ esp8266_send_data(const char* command){
 	rx_buffer_index = 0;
 
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
-	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
+	HAL_UART_Transmit(&huart4, (uint8_t*) data, strlen(data), 100);
 
 	while((strstr(rx_buffer, ESP8266_AT_CLOSED) == NULL));
 
@@ -98,15 +101,18 @@ esp8266_get_at_send_command(char* ref, uint8_t len){
 	sprintf(ref, "%s%d\r\n", ESP8266_AT_SEND, len);
 }
 
-uint8_t esp8266_http_get_request(char* ref, char* uri, char* host){
-	sprintf(ref, "%s%s %s\r\n%s%s\r\n%s\r\n\r\n", HTTP_GET, uri, HTTP_VERSION, HTTP_HOST, host, HTTP_CONNECTION_CLOSE);
-	return (strlen (ref));
+uint8_t
+esp8266_http_get_request(char* ref, const char* http_type, char* uri, char* host){
+	sprintf(ref, "%s%s %s\r\n%s%s\r\n%s\r\n\r\n", http_type, uri, HTTP_VERSION, HTTP_HOST, host, HTTP_CONNECTION_CLOSE);
+	return (strlen(ref));
 }
-//char request[] = "GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
+
+/* Returns the ESP8266 response code that is in the rx_buffer as a string,
+ * this makes debugging and verification through testing easier, at the
+ * cost of simplicity.
+ */
 const char*
 get_return(const char* command){
-
-	// TODO: avoid using too many strstr... +100ms per
 
 	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
 		command = ESP8266_AT_CWJAP_SET;
@@ -129,7 +135,7 @@ get_return(const char* command){
 		case ESP8266_AT_CIPMUX_KEY:
 
 		case ESP8266_AT_CWQAP_KEY:
-			return evaluate(error_flag, fail_flag);
+			return evaluate();
 
 		case ESP8266_AT_CWMODE_TEST_KEY:
 			if(error_flag || fail_flag)
@@ -198,7 +204,7 @@ get_return(const char* command){
 }
 
 const char*
-evaluate(bool ERROR_FLAG, bool FAIL_FLAG){
+evaluate(void){
 	if(error_flag || fail_flag)
 		return ESP8266_AT_ERROR;
 	return ESP8266_AT_OK;

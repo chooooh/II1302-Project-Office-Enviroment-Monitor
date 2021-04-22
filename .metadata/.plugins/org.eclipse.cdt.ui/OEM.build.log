@@ -1,6 +1,8 @@
-17:53:12 **** Incremental Build of configuration Debug for project OEM ****
+14:39:46 **** Incremental Build of configuration Debug for project OEM ****
 make -j16 all 
 arm-none-eabi-gcc "../Core/Src/ESP8266.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ESP8266.d" -MT"Core/Src/ESP8266.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ESP8266.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/unit_test.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/unit_test.d" -MT"Core/Src/unit_test.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/unit_test.o"
 arm-none-eabi-gcc -o "OEM.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\github\II1302-Project-Office-Enviroment-Monitor\Hardware\OEM\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OEM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: OEM.elf
  
@@ -8,7 +10,7 @@ arm-none-eabi-objdump -h -S  OEM.elf  > "OEM.list"
 arm-none-eabi-objcopy  -O binary  OEM.elf  "OEM.bin"
 arm-none-eabi-size   OEM.elf 
    text	   data	    bss	    dec	    hex	filename
-  25632	    120	   5968	  31720	   7be8	OEM.elf
+  25672	    120	   5968	  31760	   7c10	OEM.elf
 Finished building: default.size.stdout
  
 Finished building: OEM.bin
@@ -16,5 +18,5 @@ Finished building: OEM.bin
 Finished building: OEM.list
  
 
-17:53:12 Build Finished. 0 errors, 0 warnings. (took 629ms)
+14:39:47 Build Finished. 0 errors, 0 warnings. (took 736ms)
 
