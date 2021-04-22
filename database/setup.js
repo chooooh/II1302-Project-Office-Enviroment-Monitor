@@ -8,5 +8,9 @@ const username = process.env.cloudant_username;
 const password = process.env.cloudant_password;
 // Initialize the library with url and credentials.
 
-const cloudant = Cloudant({ url: url, username: username, password: password, plugins: [] });
+
+//const cloudant = Cloudant({ url: url, username: username, password: password });
+const cloudant = Cloudant({ vcapServices: JSON.parse(process.env.VCAP_SERVICES) });
+
+//const cloudant = Cloudant({ url: url, username: username, password: password });
 module.exports = cloudant;
