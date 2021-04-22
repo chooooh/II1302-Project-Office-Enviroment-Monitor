@@ -27,8 +27,8 @@ const colColor = {
 };
 
 export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
+   
     <Container className =  "justify-content-left">
-     
             <Navbar bg="dark" variant="dark" fixed = "top">
                 <Navbar.Brand href="#currentQuality">Current Quality</Navbar.Brand>
                 <Nav className="mr-auto">
@@ -38,7 +38,7 @@ export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
                
             </Navbar>
             <Row>
-               <Col className = "text-left"  lg = {9} style = {colStyle}>
+               <Col date-testid = "text-col" className = "text-left"  lg = {9} style = {colStyle}>
                     On this page you can find all of the current statistics being monitored.<br/>
                     If the number of poeple displayed on this page is incorrect you can change it to the proper amount.<br/>
                     You may want to refresh the page if you suspect that the values are outdated.
@@ -47,7 +47,7 @@ export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
            <Row>
                <Col style = {colColor}>
                     <Row>
-                        <Col className = "text-left"  >Current air quality: </Col>
+                        <Col data-testid = "currentAirQualityText" className = "text-left"  >Current air quality: </Col>
                         <Col>{airQuality}</Col>
                     </Row>
                     <Row>
@@ -78,7 +78,5 @@ export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
            </Row>
            </Container>
 
-      
-  
 );
 
