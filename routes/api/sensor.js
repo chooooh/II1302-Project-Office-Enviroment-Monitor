@@ -26,6 +26,13 @@ router.get('/', (req, res) => {
     res.status(200).json({"data": ++counter});
 });
 
+router.get('/airquality', (req, res) => {
+    readFromDB("2021-4-20 16:12:14", airqualityDbName)
+    .then(result => {
+        res.set(200).send(result);
+    })
+});
+
 /**
  * This is the endpoint that the micro controller will send
  * HTTP POST requests to with information about the current
