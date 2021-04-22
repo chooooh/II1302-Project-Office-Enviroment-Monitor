@@ -8,5 +8,5 @@ const username = process.env.cloudant_username;
 const password = process.env.cloudant_password;
 // Initialize the library with url and credentials.
 
-const cloudant = Cloudant({ url: url, username: username, password: password });
+const cloudant = Cloudant({ url: url, username: username, password: password, plugins: [] });
 module.exports = cloudant;
