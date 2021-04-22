@@ -381,8 +381,8 @@ Discarded input sections
  .text          0x0000000000000000        0x0 Core/Src/main.o
  .data          0x0000000000000000        0x0 Core/Src/main.o
  .bss           0x0000000000000000        0x0 Core/Src/main.o
- .rodata.SSID   0x0000000000000000        0xe Core/Src/main.o
- .rodata.PWD    0x0000000000000000       0x11 Core/Src/main.o
+ .rodata.SSID   0x0000000000000000        0x5 Core/Src/main.o
+ .rodata.PWD    0x0000000000000000        0x5 Core/Src/main.o
  .rodata.ESP8266_NOT_IMPLEMENTED
                 0x0000000000000000       0x10 Core/Src/main.o
  .rodata.ESP8266_AT_OK_TERMINATOR
@@ -1011,8 +1011,8 @@ Discarded input sections
  .text          0x0000000000000000        0x0 Core/Src/unit_test.o
  .data          0x0000000000000000        0x0 Core/Src/unit_test.o
  .bss           0x0000000000000000        0x0 Core/Src/unit_test.o
- .rodata.SSID   0x0000000000000000        0xe Core/Src/unit_test.o
- .rodata.PWD    0x0000000000000000       0x11 Core/Src/unit_test.o
+ .rodata.SSID   0x0000000000000000        0x5 Core/Src/unit_test.o
+ .rodata.PWD    0x0000000000000000        0x5 Core/Src/unit_test.o
  .rodata.ESP8266_NOT_IMPLEMENTED
                 0x0000000000000000       0x10 Core/Src/unit_test.o
  .rodata.ESP8266_AT_OK_TERMINATOR
@@ -4541,7 +4541,7 @@ LOAD c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
 .iplt           0x0000000008005e14        0x0
  .iplt          0x0000000008005e14        0x0 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.rodata         0x0000000008005e14      0x634
+.rodata         0x0000000008005e14      0x620
                 0x0000000008005e14                . = ALIGN (0x4)
  *(.rodata)
  .rodata        0x0000000008005e14       0x42 Core/Src/ESP8266.o
@@ -4551,257 +4551,257 @@ LOAD c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .rodata        0x000000000800601c       0x2d Core/Src/unity.o
  *(.rodata*)
  *fill*         0x0000000008006049        0x3 
- .rodata.SSID   0x000000000800604c        0xe Core/Src/ESP8266.o
- *fill*         0x000000000800605a        0x2 
- .rodata.PWD    0x000000000800605c       0x11 Core/Src/ESP8266.o
- *fill*         0x000000000800606d        0x3 
+ .rodata.SSID   0x000000000800604c        0x5 Core/Src/ESP8266.o
+ *fill*         0x0000000008006051        0x3 
+ .rodata.PWD    0x0000000008006054        0x5 Core/Src/ESP8266.o
+ *fill*         0x0000000008006059        0x3 
  .rodata.ESP8266_NOT_IMPLEMENTED
-                0x0000000008006070       0x10 Core/Src/ESP8266.o
+                0x000000000800605c       0x10 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_OK_TERMINATOR
+                0x000000000800606c        0x5 Core/Src/ESP8266.o
+ *fill*         0x0000000008006071        0x3 
+ .rodata.ESP8266_AT_OK
+                0x0000000008006074        0x3 Core/Src/ESP8266.o
+ *fill*         0x0000000008006077        0x1 
+ .rodata.ESP8266_AT_ERROR
+                0x0000000008006078        0x6 Core/Src/ESP8266.o
+ *fill*         0x000000000800607e        0x2 
+ .rodata.ESP8266_AT_FAIL
                 0x0000000008006080        0x5 Core/Src/ESP8266.o
  *fill*         0x0000000008006085        0x3 
- .rodata.ESP8266_AT_OK
-                0x0000000008006088        0x3 Core/Src/ESP8266.o
- *fill*         0x000000000800608b        0x1 
- .rodata.ESP8266_AT_ERROR
-                0x000000000800608c        0x6 Core/Src/ESP8266.o
- *fill*         0x0000000008006092        0x2 
- .rodata.ESP8266_AT_FAIL
-                0x0000000008006094        0x5 Core/Src/ESP8266.o
- *fill*         0x0000000008006099        0x3 
  .rodata.ESP8266_AT_WIFI_CONNECTED
-                0x000000000800609c        0xf Core/Src/ESP8266.o
- *fill*         0x00000000080060ab        0x1 
+                0x0000000008006088        0xf Core/Src/ESP8266.o
+ *fill*         0x0000000008006097        0x1 
  .rodata.ESP8266_AT_WIFI_DISCONNECTED
-                0x00000000080060ac       0x12 Core/Src/ESP8266.o
- *fill*         0x00000000080060be        0x2 
+                0x0000000008006098       0x12 Core/Src/ESP8266.o
+ *fill*         0x00000000080060aa        0x2 
  .rodata.ESP8266_AT_CONNECT
-                0x00000000080060c0        0x8 Core/Src/ESP8266.o
+                0x00000000080060ac        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_CLOSED
-                0x00000000080060c8        0x7 Core/Src/ESP8266.o
- *fill*         0x00000000080060cf        0x1 
+                0x00000000080060b4        0x7 Core/Src/ESP8266.o
+ *fill*         0x00000000080060bb        0x1 
  .rodata.ESP8266_AT_SEND_OK
-                0x00000000080060d0        0x8 Core/Src/ESP8266.o
+                0x00000000080060bc        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_NO_AP
-                0x00000000080060d8        0x8 Core/Src/ESP8266.o
+                0x00000000080060c4        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_UNKNOWN
-                0x00000000080060e0        0x8 Core/Src/ESP8266.o
+                0x00000000080060cc        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_CWMODE_1
-                0x00000000080060e8        0xd Core/Src/ESP8266.o
- *fill*         0x00000000080060f5        0x3 
+                0x00000000080060d4        0xd Core/Src/ESP8266.o
+ *fill*         0x00000000080060e1        0x3 
  .rodata.ESP8266_AT_CWMODE_2
-                0x00000000080060f8        0xd Core/Src/ESP8266.o
- *fill*         0x0000000008006105        0x3 
+                0x00000000080060e4        0xd Core/Src/ESP8266.o
+ *fill*         0x00000000080060f1        0x3 
  .rodata.ESP8266_AT_CWMODE_3
-                0x0000000008006108        0xd Core/Src/ESP8266.o
- *fill*         0x0000000008006115        0x3 
+                0x00000000080060f4        0xd Core/Src/ESP8266.o
+ *fill*         0x0000000008006101        0x3 
  .rodata.ESP8266_AT_CWJAP_1
-                0x0000000008006118        0x8 Core/Src/ESP8266.o
+                0x0000000008006104        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_CWJAP_2
-                0x0000000008006120        0x8 Core/Src/ESP8266.o
+                0x000000000800610c        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_CWJAP_3
-                0x0000000008006128        0x8 Core/Src/ESP8266.o
+                0x0000000008006114        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_CWJAP_4
-                0x0000000008006130        0x8 Core/Src/ESP8266.o
+                0x000000000800611c        0x8 Core/Src/ESP8266.o
  .rodata.ESP8266_AT_TIMEOUT
-                0x0000000008006138       0x13 Core/Src/ESP8266.o
- *fill*         0x000000000800614b        0x1 
+                0x0000000008006124       0x13 Core/Src/ESP8266.o
+ *fill*         0x0000000008006137        0x1 
  .rodata.ESP8266_AT_WRONG_PWD
-                0x000000000800614c        0xf Core/Src/ESP8266.o
- *fill*         0x000000000800615b        0x1 
+                0x0000000008006138        0xf Core/Src/ESP8266.o
+ *fill*         0x0000000008006147        0x1 
  .rodata.ESP8266_AT_NO_TARGET
-                0x000000000800615c       0x1a Core/Src/ESP8266.o
- *fill*         0x0000000008006176        0x2 
+                0x0000000008006148       0x1a Core/Src/ESP8266.o
+ *fill*         0x0000000008006162        0x2 
  .rodata.ESP8266_AT_CONNECTION_FAIL
-                0x0000000008006178       0x12 Core/Src/ESP8266.o
- *fill*         0x000000000800618a        0x2 
+                0x0000000008006164       0x12 Core/Src/ESP8266.o
+ *fill*         0x0000000008006176        0x2 
  .rodata.ESP8266_AT_CIPMUX_0
-                0x000000000800618c        0x9 Core/Src/ESP8266.o
- *fill*         0x0000000008006195        0x3 
+                0x0000000008006178        0x9 Core/Src/ESP8266.o
+ *fill*         0x0000000008006181        0x3 
  .rodata.ESP8266_AT_CIPMUX_1
-                0x0000000008006198        0x9 Core/Src/ESP8266.o
- *fill*         0x00000000080061a1        0x3 
+                0x0000000008006184        0x9 Core/Src/ESP8266.o
+ *fill*         0x000000000800618d        0x3 
  .rodata.HTTP_VERSION
-                0x00000000080061a4        0x9 Core/Src/ESP8266.o
- *fill*         0x00000000080061ad        0x3 
+                0x0000000008006190        0x9 Core/Src/ESP8266.o
+ *fill*         0x0000000008006199        0x3 
  .rodata.HTTP_HOST
-                0x00000000080061b0        0x7 Core/Src/ESP8266.o
- *fill*         0x00000000080061b7        0x1 
+                0x000000000800619c        0x7 Core/Src/ESP8266.o
+ *fill*         0x00000000080061a3        0x1 
  .rodata.HTTP_CONNECTION_CLOSE
-                0x00000000080061b8       0x12 Core/Src/ESP8266.o
- *fill*         0x00000000080061ca        0x2 
+                0x00000000080061a4       0x12 Core/Src/ESP8266.o
+ *fill*         0x00000000080061b6        0x2 
  .rodata.ESP8266_AT_CWJAP_SET
-                0x00000000080061cc        0xa Core/Src/ESP8266.o
- *fill*         0x00000000080061d6        0x2 
+                0x00000000080061b8        0xa Core/Src/ESP8266.o
+ *fill*         0x00000000080061c2        0x2 
  .rodata.ESP8266_AT_START
-                0x00000000080061d8        0xd Core/Src/ESP8266.o
- *fill*         0x00000000080061e5        0x3 
+                0x00000000080061c4        0xd Core/Src/ESP8266.o
+ *fill*         0x00000000080061d1        0x3 
  .rodata.ESP8266_AT_SEND
-                0x00000000080061e8        0xc Core/Src/ESP8266.o
+                0x00000000080061d4        0xc Core/Src/ESP8266.o
  .rodata.AHBPrescTable
-                0x00000000080061f4       0x10 Core/Src/system_stm32l4xx.o
-                0x00000000080061f4                AHBPrescTable
+                0x00000000080061e0       0x10 Core/Src/system_stm32l4xx.o
+                0x00000000080061e0                AHBPrescTable
  .rodata.APBPrescTable
-                0x0000000008006204        0x8 Core/Src/system_stm32l4xx.o
-                0x0000000008006204                APBPrescTable
+                0x00000000080061f0        0x8 Core/Src/system_stm32l4xx.o
+                0x00000000080061f0                APBPrescTable
  .rodata.MSIRangeTable
-                0x000000000800620c       0x30 Core/Src/system_stm32l4xx.o
-                0x000000000800620c                MSIRangeTable
+                0x00000000080061f8       0x30 Core/Src/system_stm32l4xx.o
+                0x00000000080061f8                MSIRangeTable
  .rodata.ESP8266_AT_OK
-                0x000000000800623c        0x3 Core/Src/unit_test.o
- *fill*         0x000000000800623f        0x1 
+                0x0000000008006228        0x3 Core/Src/unit_test.o
+ *fill*         0x000000000800622b        0x1 
  .rodata.ESP8266_AT_WIFI_CONNECTED
-                0x0000000008006240        0xf Core/Src/unit_test.o
- *fill*         0x000000000800624f        0x1 
+                0x000000000800622c        0xf Core/Src/unit_test.o
+ *fill*         0x000000000800623b        0x1 
  .rodata.ESP8266_AT_CONNECT
-                0x0000000008006250        0x8 Core/Src/unit_test.o
+                0x000000000800623c        0x8 Core/Src/unit_test.o
  .rodata.ESP8266_AT_CLOSED
-                0x0000000008006258        0x7 Core/Src/unit_test.o
- *fill*         0x000000000800625f        0x1 
+                0x0000000008006244        0x7 Core/Src/unit_test.o
+ *fill*         0x000000000800624b        0x1 
  .rodata.ESP8266_AT_SEND_OK
-                0x0000000008006260        0x8 Core/Src/unit_test.o
+                0x000000000800624c        0x8 Core/Src/unit_test.o
  .rodata.ESP8266_AT_CWMODE_1
-                0x0000000008006268        0xd Core/Src/unit_test.o
- *fill*         0x0000000008006275        0x3 
+                0x0000000008006254        0xd Core/Src/unit_test.o
+ *fill*         0x0000000008006261        0x3 
  .rodata.ESP8266_AT_CIPMUX_0
-                0x0000000008006278        0x9 Core/Src/unit_test.o
- *fill*         0x0000000008006281        0x3 
+                0x0000000008006264        0x9 Core/Src/unit_test.o
+ *fill*         0x000000000800626d        0x3 
  .rodata.HTTP_POST
-                0x0000000008006284        0x6 Core/Src/unit_test.o
- *fill*         0x000000000800628a        0x2 
+                0x0000000008006270        0x6 Core/Src/unit_test.o
+ *fill*         0x0000000008006276        0x2 
  .rodata.ESP8266_AT
-                0x000000000800628c        0x5 Core/Src/unit_test.o
- *fill*         0x0000000008006291        0x3 
+                0x0000000008006278        0x5 Core/Src/unit_test.o
+ *fill*         0x000000000800627d        0x3 
  .rodata.ESP8266_AT_RST
-                0x0000000008006294        0x9 Core/Src/unit_test.o
- *fill*         0x000000000800629d        0x3 
+                0x0000000008006280        0x9 Core/Src/unit_test.o
+ *fill*         0x0000000008006289        0x3 
  .rodata.ESP8266_AT_CWMODE_TEST
-                0x00000000080062a0       0x11 Core/Src/unit_test.o
- *fill*         0x00000000080062b1        0x3 
+                0x000000000800628c       0x11 Core/Src/unit_test.o
+ *fill*         0x000000000800629d        0x3 
  .rodata.ESP8266_AT_CWMODE_STATION_MODE
-                0x00000000080062b4        0xe Core/Src/unit_test.o
- *fill*         0x00000000080062c2        0x2 
+                0x00000000080062a0        0xe Core/Src/unit_test.o
+ *fill*         0x00000000080062ae        0x2 
  .rodata.ESP8266_AT_CWJAP_TEST
-                0x00000000080062c4        0xc Core/Src/unit_test.o
+                0x00000000080062b0        0xc Core/Src/unit_test.o
  .rodata.ESP8266_AT_CWQAP
-                0x00000000080062d0        0xb Core/Src/unit_test.o
- *fill*         0x00000000080062db        0x1 
+                0x00000000080062bc        0xb Core/Src/unit_test.o
+ *fill*         0x00000000080062c7        0x1 
  .rodata.ESP8266_AT_CIPMUX_SINGLE
-                0x00000000080062dc        0xe Core/Src/unit_test.o
- *fill*         0x00000000080062ea        0x2 
+                0x00000000080062c8        0xe Core/Src/unit_test.o
+ *fill*         0x00000000080062d6        0x2 
  .rodata.ESP8266_AT_CIPMUX_TEST
-                0x00000000080062ec        0xd Core/Src/unit_test.o
- *fill*         0x00000000080062f9        0x3 
+                0x00000000080062d8        0xd Core/Src/unit_test.o
+ *fill*         0x00000000080062e5        0x3 
  .rodata.UnityStrOk
-                0x00000000080062fc        0x3 Core/Src/unity.o
-                0x00000000080062fc                UnityStrOk
- *fill*         0x00000000080062ff        0x1 
+                0x00000000080062e8        0x3 Core/Src/unity.o
+                0x00000000080062e8                UnityStrOk
+ *fill*         0x00000000080062eb        0x1 
  .rodata.UnityStrPass
-                0x0000000008006300        0x5 Core/Src/unity.o
-                0x0000000008006300                UnityStrPass
- *fill*         0x0000000008006305        0x3 
- .rodata.Check  0x0000000008006308        0x5 Core/Src/unity.o
-                0x0000000008006308                Check
- *fill*         0x000000000800630d        0x3 
- .rodata.Fail   0x0000000008006310        0x5 Core/Src/unity.o
-                0x0000000008006310                Fail
- *fill*         0x0000000008006315        0x3 
+                0x00000000080062ec        0x5 Core/Src/unity.o
+                0x00000000080062ec                UnityStrPass
+ *fill*         0x00000000080062f1        0x3 
+ .rodata.Check  0x00000000080062f4        0x5 Core/Src/unity.o
+                0x00000000080062f4                Check
+ *fill*         0x00000000080062f9        0x3 
+ .rodata.Fail   0x00000000080062fc        0x5 Core/Src/unity.o
+                0x00000000080062fc                Fail
+ *fill*         0x0000000008006301        0x3 
  .rodata.UnityStrFail
-                0x0000000008006318        0x5 Core/Src/unity.o
-                0x0000000008006318                UnityStrFail
- *fill*         0x000000000800631d        0x3 
+                0x0000000008006304        0x5 Core/Src/unity.o
+                0x0000000008006304                UnityStrFail
+ *fill*         0x0000000008006309        0x3 
  .rodata.UnityStrNull
-                0x0000000008006320        0x5 Core/Src/unity.o
- *fill*         0x0000000008006325        0x3 
+                0x000000000800630c        0x5 Core/Src/unity.o
+ *fill*         0x0000000008006311        0x3 
  .rodata.UnityStrExpected
-                0x0000000008006328        0xc Core/Src/unity.o
+                0x0000000008006314        0xc Core/Src/unity.o
  .rodata.UnityStrWas
-                0x0000000008006334        0x7 Core/Src/unity.o
- *fill*         0x000000000800633b        0x1 
+                0x0000000008006320        0x7 Core/Src/unity.o
+ *fill*         0x0000000008006327        0x1 
  .rodata.UnityStrInf
-                0x000000000800633c        0x9 Core/Src/unity.o
- *fill*         0x0000000008006345        0x3 
+                0x0000000008006328        0x9 Core/Src/unity.o
+ *fill*         0x0000000008006331        0x3 
  .rodata.UnityStrNegInf
-                0x0000000008006348       0x12 Core/Src/unity.o
- *fill*         0x000000000800635a        0x2 
+                0x0000000008006334       0x12 Core/Src/unity.o
+ *fill*         0x0000000008006346        0x2 
  .rodata.UnityStrNaN
-                0x000000000800635c        0x4 Core/Src/unity.o
+                0x0000000008006348        0x4 Core/Src/unity.o
  .rodata.UnityStrDet
-                0x0000000008006360        0xc Core/Src/unity.o
+                0x000000000800634c        0xc Core/Src/unity.o
  .rodata.UnityStrBreaker
-                0x000000000800636c       0x18 Core/Src/unity.o
+                0x0000000008006358       0x18 Core/Src/unity.o
  .rodata.UnityStrResultsTests
-                0x0000000008006384       0x12 Core/Src/unity.o
- *fill*         0x0000000008006396        0x2 
+                0x0000000008006370       0x12 Core/Src/unity.o
+ *fill*         0x0000000008006382        0x2 
  .rodata.UnityStrResultsFailures
-                0x0000000008006398        0xc Core/Src/unity.o
+                0x0000000008006384        0xc Core/Src/unity.o
  .rodata.UnityStrResultsIgnored
-                0x00000000080063a4        0xb Core/Src/unity.o
- *fill*         0x00000000080063af        0x1 
+                0x0000000008006390        0xb Core/Src/unity.o
+ *fill*         0x000000000800639b        0x1 
  .rodata._global_impure_ptr
-                0x00000000080063b0        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-impure.o)
-                0x00000000080063b0                _global_impure_ptr
+                0x000000000800639c        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-impure.o)
+                0x000000000800639c                _global_impure_ptr
  .rodata.__sf_fake_stderr
-                0x00000000080063b4       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080063b4                __sf_fake_stderr
+                0x00000000080063a0       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x00000000080063a0                __sf_fake_stderr
  .rodata.__sf_fake_stdin
-                0x00000000080063d4       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080063d4                __sf_fake_stdin
+                0x00000000080063c0       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x00000000080063c0                __sf_fake_stdin
  .rodata.__sf_fake_stdout
-                0x00000000080063f4       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080063f4                __sf_fake_stdout
+                0x00000000080063e0       0x20 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x00000000080063e0                __sf_fake_stdout
  .rodata._svfprintf_r.str1.1
-                0x0000000008006414       0x11 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-svfprintf.o)
+                0x0000000008006400       0x11 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-svfprintf.o)
  .rodata._vfprintf_r.str1.1
-                0x0000000008006425       0x11 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-vfprintf.o)
+                0x0000000008006411       0x11 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-vfprintf.o)
  .rodata._printf_i.str1.1
-                0x0000000008006425       0x22 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-vfprintf_i.o)
-                0x0000000008006448                . = ALIGN (0x4)
- *fill*         0x0000000008006447        0x1 
+                0x0000000008006411       0x22 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0000000008006434                . = ALIGN (0x4)
+ *fill*         0x0000000008006433        0x1 
 
-.ARM.extab      0x0000000008006448        0x0
-                0x0000000008006448                . = ALIGN (0x4)
+.ARM.extab      0x0000000008006434        0x0
+                0x0000000008006434                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000008006448                . = ALIGN (0x4)
+                0x0000000008006434                . = ALIGN (0x4)
 
-.ARM            0x0000000008006448        0x8
-                0x0000000008006448                . = ALIGN (0x4)
-                0x0000000008006448                __exidx_start = .
+.ARM            0x0000000008006434        0x8
+                0x0000000008006434                . = ALIGN (0x4)
+                0x0000000008006434                __exidx_start = .
  *(.ARM.exidx*)
- .ARM.exidx     0x0000000008006448        0x8 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
-                0x0000000008006450                __exidx_end = .
-                0x0000000008006450                . = ALIGN (0x4)
+ .ARM.exidx     0x0000000008006434        0x8 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
+                0x000000000800643c                __exidx_end = .
+                0x000000000800643c                . = ALIGN (0x4)
 
-.rel.dyn        0x0000000008006450        0x0
- .rel.iplt      0x0000000008006450        0x0 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.rel.dyn        0x000000000800643c        0x0
+ .rel.iplt      0x000000000800643c        0x0 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.preinit_array  0x0000000008006450        0x0
-                0x0000000008006450                . = ALIGN (0x4)
-                0x0000000008006450                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x000000000800643c        0x0
+                0x000000000800643c                . = ALIGN (0x4)
+                0x000000000800643c                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x0000000008006450                PROVIDE (__preinit_array_end = .)
-                0x0000000008006450                . = ALIGN (0x4)
+                0x000000000800643c                PROVIDE (__preinit_array_end = .)
+                0x000000000800643c                . = ALIGN (0x4)
 
-.init_array     0x0000000008006450        0x4
-                0x0000000008006450                . = ALIGN (0x4)
-                0x0000000008006450                PROVIDE (__init_array_start = .)
+.init_array     0x000000000800643c        0x4
+                0x000000000800643c                . = ALIGN (0x4)
+                0x000000000800643c                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x0000000008006450        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
-                0x0000000008006454                PROVIDE (__init_array_end = .)
-                0x0000000008006454                . = ALIGN (0x4)
+ .init_array    0x000000000800643c        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+                0x0000000008006440                PROVIDE (__init_array_end = .)
+                0x0000000008006440                . = ALIGN (0x4)
 
-.fini_array     0x0000000008006454        0x4
-                0x0000000008006454                . = ALIGN (0x4)
+.fini_array     0x0000000008006440        0x4
+                0x0000000008006440                . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x0000000008006454        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .fini_array    0x0000000008006440        0x4 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x0000000008006458                . = ALIGN (0x4)
-                0x0000000008006458                _sidata = LOADADDR (.data)
+                0x0000000008006444                . = ALIGN (0x4)
+                0x0000000008006444                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000       0x70 load address 0x0000000008006458
+.data           0x0000000020000000       0x70 load address 0x0000000008006444
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -4826,11 +4826,11 @@ LOAD c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000020000070                . = ALIGN (0x4)
                 0x0000000020000070                _edata = .
 
-.igot.plt       0x0000000020000070        0x0 load address 0x00000000080064c8
+.igot.plt       0x0000000020000070        0x0 load address 0x00000000080064b4
  .igot.plt      0x0000000020000070        0x0 c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/hard/crtbegin.o
                 0x0000000020000070                . = ALIGN (0x4)
 
-.bss            0x0000000020000070     0x114c load address 0x00000000080064c8
+.bss            0x0000000020000070     0x114c load address 0x00000000080064b4
                 0x0000000020000070                _sbss = .
                 0x0000000020000070                __bss_start__ = _sbss
  *(.bss)
@@ -4881,7 +4881,7 @@ LOAD c:/st/stm32cubeide_1.6.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x00000000200011bc                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x00000000200011bc      0x604 load address 0x00000000080064c8
+                0x00000000200011bc      0x604 load address 0x00000000080064b4
                 0x00000000200011c0                . = ALIGN (0x8)
  *fill*         0x00000000200011bc        0x4 
                 [!provide]                        PROVIDE (end = .)
