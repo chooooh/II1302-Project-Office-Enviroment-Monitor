@@ -1,57 +1,64 @@
 {
   "stats": {
-    "suites": 2,
-    "tests": 2,
-    "passes": 1,
+    "suites": 3,
+    "tests": 3,
+    "passes": 3,
     "pending": 0,
-    "failures": 1,
-    "start": "2021-04-20T14:56:45.074Z",
-    "end": "2021-04-20T14:56:45.092Z",
-    "duration": 18
+    "failures": 0,
+    "start": "2021-04-22T14:30:57.809Z",
+    "end": "2021-04-22T14:30:57.831Z",
+    "duration": 22
   },
   "tests": [
     {
-      "title": "Welcome Message",
-      "fullTitle": "Hello Welcome Message",
+      "title": "It should return status code 200",
+      "fullTitle": "Test GET /user It should return status code 200",
       "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
-      "duration": 0,
+      "duration": 13,
       "currentRetry": 0,
       "err": {}
     },
     {
-      "title": "It should return...",
-      "fullTitle": "Test GET /user It should return...",
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/airquality It should return status code 200",
       "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
-      "duration": 14,
+      "duration": 3,
       "currentRetry": 0,
-      "err": {
-        "stack": "TypeError: Cannot read property 'should' of undefined\n    at /Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js:26:22\n    at Test.Request.callback (node_modules/superagent/lib/node/index.js:728:3)\n    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:647:10)\n    at Socket.socketErrorListener (_http_client.js:469:9)\n    at emitErrorNT (internal/streams/destroy.js:106:8)\n    at emitErrorCloseNT (internal/streams/destroy.js:74:3)\n    at processTicksAndRejections (internal/process/task_queues.js:80:21)",
-        "message": "Cannot read property 'should' of undefined",
-        "uncaught": true
-      }
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/peopleintheroom It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "err": {}
     }
   ],
   "pending": [],
-  "failures": [
-    {
-      "title": "It should return...",
-      "fullTitle": "Test GET /user It should return...",
-      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
-      "duration": 14,
-      "currentRetry": 0,
-      "err": {
-        "stack": "TypeError: Cannot read property 'should' of undefined\n    at /Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js:26:22\n    at Test.Request.callback (node_modules/superagent/lib/node/index.js:728:3)\n    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:647:10)\n    at Socket.socketErrorListener (_http_client.js:469:9)\n    at emitErrorNT (internal/streams/destroy.js:106:8)\n    at emitErrorCloseNT (internal/streams/destroy.js:74:3)\n    at processTicksAndRejections (internal/process/task_queues.js:80:21)",
-        "message": "Cannot read property 'should' of undefined",
-        "uncaught": true
-      }
-    }
-  ],
+  "failures": [],
   "passes": [
     {
-      "title": "Welcome Message",
-      "fullTitle": "Hello Welcome Message",
+      "title": "It should return status code 200",
+      "fullTitle": "Test GET /user It should return status code 200",
       "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
-      "duration": 0,
+      "duration": 13,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/airquality It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/peopleintheroom It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 2,
       "currentRetry": 0,
       "err": {}
     }
