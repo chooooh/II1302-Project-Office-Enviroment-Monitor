@@ -47,8 +47,8 @@ router.post('/airquality', (req, res) => {
  * This is the endpoint that provides information of the current airquanlity
  */
 router.get('/airquality', (req, res) => {
-    const host = appEnv.url;
-    res.set(200).send(host);
+    const url = process.env.cloudant_url;
+    res.set(200).send(url);
 });
 
 /**
