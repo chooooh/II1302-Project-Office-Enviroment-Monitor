@@ -539,7 +539,6 @@ static void UnityTestResultsFailBegin(const UNITY_LINE_TYPE line)
     UnityTestResultsBegin(Unity.TestFile, line);
     //UnityPrint(UnityStrFail);
     printf(UnityStrFail);
-    printf(Fail);
     UNITY_OUTPUT_CHAR(':');
 }
 
@@ -555,7 +554,6 @@ void UnityConcludeTest(void)
         UnityTestResultsBegin(Unity.TestFile, Unity.CurrentTestLineNumber);
         //UnityPrint(UnityStrPass);
         printf(UnityStrPass);
-        printf(Check);
     }
     else
     {

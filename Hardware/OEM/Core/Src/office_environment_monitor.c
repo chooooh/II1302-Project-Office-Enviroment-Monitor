@@ -13,14 +13,23 @@
 
 #include "office_environment_monitor.h"
 
+/* Current return status */
+static RETURN_STATUS return_status;
+
 void office_environment_monitor(void){
-
-
-
-
 
 
 	for(;;){
 
 	}
+}
+
+/* Get return status*/
+RETURN_STATUS get_return_status(void){
+	return return_status;
+}
+
+/* Set return status */
+void set_return_status(RETURN_STATUS status_code){
+	return_status = status_code;
 }

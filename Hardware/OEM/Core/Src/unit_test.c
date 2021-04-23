@@ -11,6 +11,9 @@
 */
 
 #include "unit_test.h"
+#include "ESP8266.h"
+#include "usart.h"
+#include "stdio.h"
 
 void setUp(void){
 }
@@ -47,7 +50,7 @@ void test_esp8266_web_request(void){
 	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 	char request[256] = {0};
 	char init_send[64] = {0};
-	char uri[] = "/api/sensor/peopleintheroom?data=5";
+	char uri[] = "/api/sensor/airquality?data=22335";
 	//char uri[] = "/api/sensor";
 	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 

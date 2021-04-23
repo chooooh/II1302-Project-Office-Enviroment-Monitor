@@ -7,9 +7,8 @@
 */
 
 #include "unity.h"
-#include "usart.h"
-#include "ESP8266.h"
 #include "stdio.h"
+#include "usart.h"
 
 void unit_test(void);
 void setUp(void);
