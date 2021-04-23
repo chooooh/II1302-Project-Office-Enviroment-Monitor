@@ -38,3 +38,7 @@ RETURN_STATUS get_return_status(void);
  */
 void set_return_status(RETURN_STATUS status_code);
 
+/**
+ *
+ */
+RETURN_STATUS esp8266_start(void);

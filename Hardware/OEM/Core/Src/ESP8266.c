@@ -89,6 +89,7 @@ esp8266_send_data(const char* data){
 const char*
 esp8266_init(void){
 
+
 	/* Reset the esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0)
 		return ESP8266_AT_ERROR;

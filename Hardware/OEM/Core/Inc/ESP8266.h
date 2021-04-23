@@ -245,8 +245,8 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
  * @param char* command to send
  * @return ESP8266 response
  *
- * Usage: if(strstr(esp8266_send_command(ESP8266_AT, ESP8266_AT_OK) != NULL))
- * 		  else{ error handling }
+ * Usage: if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT) != 0))
+ * 		  	{ error handling }
  */
 const char*
 esp8266_send_command(const char*);

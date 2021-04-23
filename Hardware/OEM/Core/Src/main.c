@@ -36,7 +36,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define RUN_UNIT_TEST
-//#undef RUN_UNIT_TEST
+#undef RUN_UNIT_TEST
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/

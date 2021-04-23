@@ -4,9 +4,9 @@ ESP8266.c:38:1:hash	24	static
 ESP8266.c:48:1:esp8266_send_command	16	static
 ESP8266.c:74:1:esp8266_send_data	16	static
 ESP8266.c:90:1:esp8266_init	8	static
-ESP8266.c:125:1:esp8266_get_wifi_command	24	static
-ESP8266.c:130:1:esp8266_get_connection_command	32	static
-ESP8266.c:135:1:esp8266_get_at_send_command	16	static
-ESP8266.c:140:1:esp8266_http_get_request	40	static
-ESP8266.c:150:1:get_return	24	static
-ESP8266.c:242:1:evaluate	4	static
+ESP8266.c:126:1:esp8266_get_wifi_command	24	static
+ESP8266.c:131:1:esp8266_get_connection_command	32	static
+ESP8266.c:136:1:esp8266_get_at_send_command	16	static
+ESP8266.c:141:1:esp8266_http_get_request	40	static
+ESP8266.c:151:1:get_return	24	static
+ESP8266.c:243:1:evaluate	4	static
