@@ -18,7 +18,10 @@ static RETURN_STATUS return_status;
 
 void office_environment_monitor(void){
 
-
+	/*
+	if(esp8266_init() == ESP8266_ERROR_STATUS)
+		error_handler();
+	*/
 	for(;;){
 
 	}
@@ -33,3 +36,10 @@ RETURN_STATUS get_return_status(void){
 void set_return_status(RETURN_STATUS status_code){
 	return_status = status_code;
 }
+
+void error_handler(void){
+	while(1);
+}
+
+
+

@@ -12,8 +12,10 @@
 /* Status codes */
 typedef enum
 {
-	ERROR_STATUS = 0,
-	SUCCESS_STATUS,
+	ESP8266_ERROR_STATUS = 0,
+	ESP8266_SUCCESS_STATUS
+	// Environment sensor status codes go here
+	// Distance sensor status codes go here
 } RETURN_STATUS;
 
 /**
@@ -24,9 +26,15 @@ void office_environment_monitor(void);
 /**
  *
  */
+void error_handler(void);
+
+/**
+ *
+ */
 RETURN_STATUS get_return_status(void);
 
 /**
  *
  */
 void set_return_status(RETURN_STATUS status_code);
+

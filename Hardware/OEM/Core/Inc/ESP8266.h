@@ -261,6 +261,14 @@ const char*
 esp8266_send_data(const char*);
 
 /**
+ * @brief initiate the ESP8266, performs all necessary commands
+ * @param void
+ * @return ESP8266 response, either OK or ERROR
+ */
+const char*
+esp8266_init(void);
+
+/**
  * @brief get hash number for string
  * @param const char* string to get hash number for
  * @return const unsigned long the hash number

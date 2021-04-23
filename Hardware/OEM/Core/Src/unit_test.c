@@ -22,13 +22,7 @@ void tearDown(void){
 }
 
 void test_esp8266_init(void){
-	RUN_TEST(test_esp8266_at_rst);
-	RUN_TEST(test_esp8266_at);
-	RUN_TEST(test_esp8266_at_cwqap);
-	RUN_TEST(test_esp8266_at_cwmode_1);
-	RUN_TEST(test_esp8266_at_cwmode_1_verify);
-	RUN_TEST(test_esp8266_at_cipmux_set_single);
-	RUN_TEST(test_esp8266_at_cipmux_verify);
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_init());
 }
 
 void test_esp8266_wifi_connect(void){
@@ -88,36 +82,8 @@ void unit_test(void){
 	UNITY_END();
 }
 
-void test_esp8266_at_rst(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_RST));
-}
-
-void test_esp8266_at(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT));
-}
-
-void test_esp8266_at_cwqap(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWQAP));
-}
-
-void test_esp8266_at_cwmode_1(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE));
-}
-
-void test_esp8266_at_cwmode_1_verify(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CWMODE_1, esp8266_send_command(ESP8266_AT_CWMODE_TEST));
-}
-
 void test_esp8266_at_cwjap_verify(void){
 	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(ESP8266_AT_CWJAP_TEST));
-}
-
-void test_esp8266_at_cipmux_set_single(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CIPMUX_SINGLE));
-}
-
-void test_esp8266_at_cipmux_verify(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CIPMUX_0, esp8266_send_command(ESP8266_AT_CIPMUX_TEST));
 }
 
 void test_esp8266_at_send(char* init_send){

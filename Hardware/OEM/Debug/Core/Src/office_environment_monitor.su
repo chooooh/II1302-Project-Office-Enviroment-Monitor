@@ -1,3 +1,4 @@
 office_environment_monitor.c:19:6:office_environment_monitor	4	static
-office_environment_monitor.c:28:15:get_return_status	4	static
-office_environment_monitor.c:33:6:set_return_status	16	static
+office_environment_monitor.c:31:15:get_return_status	4	static
+office_environment_monitor.c:36:6:set_return_status	16	static
+office_environment_monitor.c:40:6:error_handler	4	static

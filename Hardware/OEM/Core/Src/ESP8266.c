@@ -86,6 +86,41 @@ esp8266_send_data(const char* data){
 	return ESP8266_AT_CLOSED;
 }
 
+const char*
+esp8266_init(void){
+
+	/* Reset the esp8266 */
+	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Get OK from esp8266 */
+	if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Disconnect the esp8266 if it auto connects... */
+	if(strcmp(esp8266_send_command(ESP8266_AT_CWQAP), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Set the esp8266 to client mode */
+	if(strcmp(esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Verify that the esp8266 is configured as client */
+	if(strcmp(esp8266_send_command(ESP8266_AT_CWMODE_TEST), ESP8266_AT_CWMODE_1) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Set the esp8266 to use single mode connection */
+	if(strcmp(esp8266_send_command(ESP8266_AT_CIPMUX_SINGLE), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* Verify that the esp8266 is configured as single mode*/
+	if(strcmp(esp8266_send_command(ESP8266_AT_CIPMUX_TEST), ESP8266_AT_CIPMUX_0) != 0)
+		return ESP8266_AT_ERROR;
+
+	/* No errors, return OK */
+	return ESP8266_AT_OK;
+}
+
 void
 esp8266_get_wifi_command(char* ref){
 	sprintf (ref, "%s\"%s\",\"%s\"\r\n", ESP8266_AT_CWJAP_SET, SSID, PWD);
