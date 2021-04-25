@@ -18,12 +18,13 @@ static RETURN_STATUS current_status;
 
 void office_environment_monitor(void){
 
-	/* Initiate the hardware */
+	/* Initiate the wifi module */
 	if(esp8266_start() == ESP8266_START_ERROR)
 		error_handler();
+
+	/* Connect to wifi */
 	if(esp8266_wifi_start() == ESP8266_WIFI_ERROR)
 		error_handler();
-
 
 
 	for(;;){
@@ -38,7 +39,11 @@ void error_handler(void){
 
 /* Initiates the wifi module */
 RETURN_STATUS esp8266_start(void){
+
+	/* Enable interrupts for UART4 */
 	init_uart_interrupt();
+
+	/* Module needs to return OK else an error has occurred */
 	if(strcmp(esp8266_init(), ESP8266_AT_OK) != 0){
 		current_status = ESP8266_START_ERROR;
 		return current_status;
@@ -50,6 +55,7 @@ RETURN_STATUS esp8266_start(void){
 /* Connects the module to wifi */
 RETURN_STATUS esp8266_wifi_start(void){
 
+	/* Module needs to return WIFI CONNECTED else an error has occurred */
 	if(strcmp(esp8266_wifi_init(), ESP8266_AT_WIFI_CONNECTED) != 0){
 		current_status = ESP8266_WIFI_ERROR;
 		return current_status;
