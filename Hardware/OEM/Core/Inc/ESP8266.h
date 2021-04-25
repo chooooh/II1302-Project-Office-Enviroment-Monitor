@@ -269,6 +269,14 @@ const char*
 esp8266_init(void);
 
 /**
+ * @brief initiate a wifi connection
+ * @param void
+ * @return ESP8266 response
+ */
+const char*
+esp8266_wifi_init(void);
+
+/**
  * @brief get hash number for string
  * @param const char* string to get hash number for
  * @return const unsigned long the hash number

@@ -26,9 +26,7 @@ void test_esp8266_init(void){
 }
 
 void test_esp8266_wifi_connect(void){
-	char wifi_command[256] = {0};
-	esp8266_get_wifi_command(wifi_command);
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(wifi_command));
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_wifi_init());
 }
 
 void test_esp8266_web_connection(void){
@@ -70,7 +68,6 @@ void unit_test(void){
 
 	/* Test connecting to wifi */
 	RUN_TEST(test_esp8266_wifi_connect);
-	RUN_TEST(test_esp8266_at_cwjap_verify);
 
 	/* Test connecting to a website */
 	RUN_TEST(test_esp8266_web_connection);

@@ -12,8 +12,10 @@
 /* Status codes */
 typedef enum
 {
-	ESP8266_ERROR_STATUS = 0,
-	ESP8266_SUCCESS_STATUS
+	ESP8266_START_SUCCESS = 0,
+	ESP8266_START_ERROR,
+	ESP8266_WIFI_SUCCESS,
+	ESP8266_WIFI_ERROR
 	// Environment sensor status codes go here
 	// Distance sensor status codes go here
 } RETURN_STATUS;
@@ -42,3 +44,8 @@ void set_return_status(RETURN_STATUS status_code);
  *
  */
 RETURN_STATUS esp8266_start(void);
+
+/**
+ *
+ */
+RETURN_STATUS esp8266_wifi_start(void);

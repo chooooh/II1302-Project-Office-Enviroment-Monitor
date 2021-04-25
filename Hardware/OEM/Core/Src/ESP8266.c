@@ -66,7 +66,7 @@ esp8266_send_command(const char* command){
 		}
 	}
 
-	//return evaluate(); would more efficient but not as clear in testing
+	//return evaluate(); would more efficient but not as clear in debugging
 	return get_return(command);
 }
 
@@ -76,6 +76,7 @@ esp8266_send_data(const char* data){
 	/* if the function is called after an error, cancel */
 	if(error_flag || fail_flag)
 		return ESP8266_AT_ERROR;
+
 	rx_buffer_index = 0;
 
 	memset(rx_buffer, 0, RX_BUFFER_SIZE);
@@ -88,7 +89,6 @@ esp8266_send_data(const char* data){
 
 const char*
 esp8266_init(void){
-
 
 	/* Reset the esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0)
@@ -120,6 +120,19 @@ esp8266_init(void){
 
 	/* No errors, return OK */
 	return ESP8266_AT_OK;
+}
+
+const char*
+esp8266_wifi_init(void){
+
+	/* Buffers */
+	char wifi_command[256] = {0};
+
+	/* Build the command */
+	esp8266_get_wifi_command(wifi_command);
+
+	/* Connect and return result */
+	return esp8266_send_command(wifi_command);
 }
 
 void

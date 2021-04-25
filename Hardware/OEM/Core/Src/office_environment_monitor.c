@@ -18,8 +18,13 @@ static RETURN_STATUS current_status;
 
 void office_environment_monitor(void){
 
-	if(esp8266_start() == ESP8266_INIT_ERROR_STATUS)
+	/* Initiate the hardware */
+	if(esp8266_start() == ESP8266_START_ERROR)
 		error_handler();
+	if(esp8266_wifi_start() == ESP8266_WIFI_ERROR)
+		error_handler();
+
+
 
 	for(;;){
 
@@ -31,14 +36,24 @@ void error_handler(void){
 	while(1);
 }
 
+/* Initiates the wifi module */
 RETURN_STATUS esp8266_start(void){
 	init_uart_interrupt();
 	if(strcmp(esp8266_init(), ESP8266_AT_OK) != 0){
-		current_status = ESP8266_INIT_ERROR_STATUS;
+		current_status = ESP8266_START_ERROR;
 		return current_status;
 	}
-	current_status = ESP8266_INIT_SUCCESS_STATUS;
+	current_status = ESP8266_START_SUCCESS;
 	return current_status;
 }
 
+/* Connects the module to wifi */
+RETURN_STATUS esp8266_wifi_start(void){
 
+	if(strcmp(esp8266_wifi_init(), ESP8266_AT_WIFI_CONNECTED) != 0){
+		current_status = ESP8266_WIFI_ERROR;
+		return current_status;
+	}
+	current_status = ESP8266_WIFI_SUCCESS;
+	return current_status;
+}
