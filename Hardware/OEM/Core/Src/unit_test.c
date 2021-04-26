@@ -11,9 +11,11 @@
 */
 
 #include "unit_test.h"
-#include "ESP8266.h"
 #include "usart.h"
 #include "stdio.h"
+#include "ESP8266.h"
+#include "CCS811_BME280.h"
+
 
 void setUp(void){
 }
@@ -61,19 +63,19 @@ void unit_test(void){
 
 	/* Test begin */
 	UNITY_BEGIN();
-
+	/*
 	/* Test initiation of ESP8266 */
-	RUN_TEST(test_esp8266_init);
-	HAL_Delay(2000);
+	//RUN_TEST(test_esp8266_init);
+	//HAL_Delay(2000);
 
 	/* Test connecting to wifi */
-	RUN_TEST(test_esp8266_wifi_connect);
+	//RUN_TEST(test_esp8266_wifi_connect);
 
 	/* Test connecting to a website */
-	RUN_TEST(test_esp8266_web_connection);
+	//RUN_TEST(test_esp8266_web_connection);
 
 	/* Test making a http web request to connected website */
-	RUN_TEST(test_esp8266_web_request);
+	//RUN_TEST(test_esp8266_web_request);
 
 	/* Test end*/
 	UNITY_END();

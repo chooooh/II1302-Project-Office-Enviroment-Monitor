@@ -2,4 +2,6 @@ launchConfigurations/
 node_modules
 /.env
 /Hardware/OEM/Core/Inc/login.h
+/Hardware/OEM/Debug
 /.metadata
+

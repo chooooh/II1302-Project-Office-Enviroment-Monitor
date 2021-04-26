@@ -1,4 +1,4 @@
 office_environment_monitor.c:19:6:office_environment_monitor	8	static
-office_environment_monitor.c:35:6:error_handler	4	static
-office_environment_monitor.c:40:15:esp8266_start	8	static
-office_environment_monitor.c:51:15:esp8266_wifi_start	8	static
+office_environment_monitor.c:36:6:error_handler	4	static
+office_environment_monitor.c:41:15:esp8266_start	8	static
+office_environment_monitor.c:56:15:esp8266_wifi_start	8	static
