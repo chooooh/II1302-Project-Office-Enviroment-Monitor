@@ -1,2 +1,0 @@
-CCS881_BME280.c:23:1:CCS881_init	16	static
-CCS881_BME280.c:37:1:CCS811_read_register	32	static
