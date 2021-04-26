@@ -1,0 +1,7 @@
+Luftkvalitetsensor_funktioner.c:24:9:initialize_sensor	4	static
+Luftkvalitetsensor_funktioner.c:39:9:assert_sensor_has_started	4	static
+Luftkvalitetsensor_funktioner.c:51:9:assert_no_error	4	static
+Luftkvalitetsensor_funktioner.c:60:9:access_status_register	4	static
+Luftkvalitetsensor_funktioner.c:72:9:set_mode	16	static
+Luftkvalitetsensor_funktioner.c:92:6:recieve_data	4	static
+Luftkvalitetsensor_funktioner.c:110:6:error_response	4	static
