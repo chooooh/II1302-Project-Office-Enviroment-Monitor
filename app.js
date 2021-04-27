@@ -24,12 +24,12 @@ app.use(express.static(`${__dirname}/client/build`));
 // get the app environment from Cloud Foundry
 const appEnv = cfenv.getAppEnv();
 
+
 // start server on the specified port and binding host
 if (!module.parent) {
     app.listen(appEnv.port, '0.0.0.0', function () {
         // print a message when the server starts listening
         console.log(message.getWelcomeMessage() + appEnv.url);
-    });
+    })
 }
-
-module.exports = app; // for testing
+module.exports = app;
