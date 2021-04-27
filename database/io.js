@@ -19,7 +19,7 @@ async function writeToDB(data, targetTable, id) {
 
 /**
  * This async function searches for the entry that has the corresponding
- * id in the specified cloudant table.
+ * id in the specified cloudant table. Returns all matching id's.
  * @param { The id to match with a specific entry } id 
  * @param { The name of the table to search from } table
  */
@@ -27,5 +27,9 @@ async function readFromDB(id, targetTable) {
   return await db.use(targetTable).get(id);
 };
 
+async function readLatestEntry(targetTable) {
+    return await db.use(targetTable).list();
+}
+
 // the functions to be used in the different route files
-module.exports = { readFromDB, writeToDB }
+module.exports = { readFromDB, writeToDB, readLatestEntry }

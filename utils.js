@@ -9,9 +9,11 @@ const getWelcomeMessage = () => {
  * A simple function that returns the current date and time
  * @returns Date and time with custom formatting
  */
-const currentDateTime = () => {
-    let now = DateTime.local();
-    return now.year + "-" + now.month + "-" + now.day + " " + now.hour + ":" + now.minute + ":" + now.second
+ const currentDateTime = () => {
+    const now = new Date()
+    var date = now.getFullYear() + '-' + (now.getMonth() + 1) +'-'+ now.getDate();
+    var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
+    return date + "::" + time
 }
 
 module.exports = {getWelcomeMessage, currentDateTime};
