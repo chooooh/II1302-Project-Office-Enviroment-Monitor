@@ -51,11 +51,11 @@ router.post('/airquality', (req, res) => {
 });
 
 /**
- * This is the endpoint that provides information of the current airquanlity
+ * This is the endpoint that provides information of the current airquality.
  */
 router.get('/airquality', (req, res) => {
-    const url = process.env.cloudant_url;
-    res.set(200).send(url);
+    const host = appEnv.url;
+    res.set(200).send(host);
 });
 
 /**
@@ -76,6 +76,14 @@ router.post('/peopleintheroom', (req, res) => {
 });
 
 /**
+ * This is the endpoint that provides information of the current airquality.
+ */
+ router.get('/peopleintheroom', (req, res) => {
+    const host = appEnv.url;
+    res.set(200).send(host);
+});
+
+/**
  * A simple function that returns the current date and time
  * @returns Date and time with custom formatting
  */
@@ -84,4 +92,5 @@ const currentDateTime = () => {
     return now.year + "-" + now.month + "-" + now.day + " " + now.hour + ":" + now.minute + ":" + now.second
 }
 
+// Exported functions references to use elsewhere
 module.exports = router;

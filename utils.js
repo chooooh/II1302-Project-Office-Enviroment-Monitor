@@ -1,6 +1,4 @@
 
-
-  
 const welcomeMessage = "server starting on ";
 
 const getWelcomeMessage = () => {
