@@ -28,7 +28,12 @@ async function readFromDB(id, targetTable) {
 };
 
 async function readLatestEntry(targetTable) {
-    return await db.use(targetTable).list();
+    console.log(targetTable);
+    return await db.use(targetTable).list({
+        fields: ["_id", "date"],
+        sort: [{"data": "desc"}],
+        limit: 2
+    });
 }
 
 // the functions to be used in the different route files
