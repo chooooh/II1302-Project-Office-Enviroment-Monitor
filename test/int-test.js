@@ -5,7 +5,6 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
 
-const { readFromDB, writeToDB } = require('../database/io.js');
 const { currentDateTime } = require('../utils');
 const { expect } = require('chai');
 
@@ -19,15 +18,26 @@ chai.should();
 
 chai.use(chaiHTTP);
 
-describe('Write data to correct cloudant table', () => {
-    it('It should contain the entry {_id: testing}', (done) => {
-        writeToDB({data:"test"}, testDbName, currentDateTime()).then(result => {
+
+/*
+describe('Make sure read and writes work from cloudant', () => {
+    const { readFromDB, writeToDB } = require('../database/io.js');
+    it('verify that db contains the entry {_id: test}', (done) => {
+        writeToDB({data:"test"}, testDbName, "test").then(result => {
+            expect(result).to.be.json;
+            expect(result).to.include({data: "test"});
+        });
+        done();
+    });
+    it('retrieve the entry with {_id: test}', (done) => {
+        readFromDB({data:"test"}, "test").then(result => {
             expect(result).to.be.json;
             expect(result).to.include({data: "test"});
         });
         done();
     });
 });
+*/
 
 /**
  * Integration test to make sure that the GET /user route
@@ -39,9 +49,19 @@ describe('Test GET /api/sensor/airquality', () => {
         .get("/api/sensor/airquality")
         .end((err, response) => {
             response.should.have.status(200);
-            done();
+            done(err);
         });
     });
+/*
+    it('it should fetch latest airquality entry', (done) => {
+        chai.request(app)
+        .get("/api/sensor/airquality")
+        .end((err, response) => {
+            response.should.have.status(200);
+            done(err);
+        })
+    })
+    */
 });
 
 /**
