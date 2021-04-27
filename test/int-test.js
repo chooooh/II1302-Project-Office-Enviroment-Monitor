@@ -19,14 +19,24 @@ chai.should();
 
 chai.use(chaiHTTP);
 
+describe('Write data to correct cloudant table', () => {
+    it('It should contain the entry {_id: testing}', (done) => {
+        writeToDB({data:"test"}, testDbName, currentDateTime()).then(result => {
+            expect(result).to.be.json;
+            expect(result).to.include({data: "test"});
+        });
+        done();
+    });
+});
+
 /**
  * Integration test to make sure that the GET /user route
  * is reachable.
  */
-describe('Test GET /user', () => {
+describe('Test GET /api/sensor/airquality', () => {
     it('It should return status code 200', (done) => {
         chai.request(app)
-        .get("/api/sensor")
+        .get("/api/sensor/airquality")
         .end((err, response) => {
             response.should.have.status(200);
             done();
@@ -52,7 +62,7 @@ describe('Test POST data to /api/sensor/airquality', () => {
 /**
  * Integration test to make sure that route for POST 
  * /api/sensor/airquality is reachable. 
- */
+
 describe('Test POST data to /api/sensor/peopleintheroom', () => {
     it('It should return status code 200', (done) => {
         chai.request(app)
@@ -63,14 +73,4 @@ describe('Test POST data to /api/sensor/peopleintheroom', () => {
         });
     });
 });
-/*
-describe('Write data to correct cloudant table', () => {
-    it('It should contain the entry {_id: testing}', (done) => {
-        writeToDB({data:"test"}, testDbName, currentDateTime()).then(result => {
-            expect(result).to.be.json;
-            expect(result).to.include({data: "test"});
-        });
-        done();
-    })
-})
 */

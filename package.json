@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "node app.js",
 		"test": "mocha",
-		"test-unit": "mocha test/integration",
+		"test-unit": "mocha test/unit-test.js",
 		"test-int": "mocha test/int-test.js",
 		"dev": "nodemon app.js"
 	},
