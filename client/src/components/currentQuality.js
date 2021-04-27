@@ -1,17 +1,34 @@
 import React from "react";
-import { Button, Navbar,Nav, Container, Row, Col, Form} from 'react-bootstrap';
+import { Button, Navbar,Nav, Container, Row, Col, Form, Tab, Tabs, Table} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css' // import bootstrap css
 
+export const CurrentQualityPage = () => {
 
-export const CurrentQualityPage = () => (
+    const [data, setData] = React.useState(null);
+
+    function fetchStatus() {
+        fetch('api/sensors/airquality')
+        .then((res) => res.json())
+        .then((res) => setData([res]))
+        .catch((e) => console.error(e));
+      }
+    
+    return (
     React.createElement(CurrentQualityView, 
         {
-            airQuality: 10,
+            callback: () => {
+                fetchStatus()
+            },
+            carbon: 10,
             soundLevel: 50, 
-            people: 10
+            people: 10,
+            temperature: 22,
+            humidity: 5,
+            date: 'hello'
+            
         }) 
-);
-
+    );
+}
 
 const colStyle = {
     paddingTop: '75px',
@@ -22,12 +39,21 @@ const rowStyle = {
     paddingTop: '40px',
 };
 
-const colColor = {
-    backgroundColor: '#434348',
-};
+const pushRowToTheLeft = {
+    paddingLeft: '15px',
+}
 
-export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
-   
+
+export const CurrentQualityView = ({carbon, people, soundLevel, temperature, humidity, date, callback}) => {  
+      
+      window.addEventListener('load', function () {
+        // Your document is loaded.
+        var fetchInterval = 5000; // 5 seconds.
+        // Invoke the request every 5 seconds.
+        setInterval(callback, fetchInterval);
+      });
+
+    return (
     <Container className =  "justify-content-left">
             <Navbar bg="dark" variant="dark" fixed = "top">
                 <Navbar.Brand href="#currentQuality">Current Quality</Navbar.Brand>
@@ -35,31 +61,90 @@ export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
                 <Nav.Link href="#history">History</Nav.Link>
                 <Nav.Link href="#home">Home</Nav.Link>
                 </Nav>
-               
             </Navbar>
             <Row>
-               <Col date-testid = "text-col" className = "text-left"  lg = {9} style = {colStyle}>
+                 <Col date-testid = "text-col" className = "text-left"  lg = {9} style = {colStyle}>
                     On this page you can find all of the current statistics being monitored.<br/>
                     If the number of poeple displayed on this page is incorrect you can change it to the proper amount.<br/>
-                    You may want to refresh the page if you suspect that the values are outdated.
+                    You may want to refresh the page if you suspect that the values are outdated.    
                </Col>
            </Row>
-           <Row>
-               <Col style = {colColor}>
-                    <Row>
-                        <Col data-testid = "currentAirQualityText" className = "text-left"  >Current air quality: </Col>
-                        <Col>{airQuality}</Col>
-                    </Row>
-                    <Row>
-                        <Col className = "text-left" >Current sound level (dBA): </Col>
-                        <Col>{soundLevel}</Col>
-                    </Row>
-                    <Row>
-                        <Col className = "text-left" >#People in the room: </Col>
-                        <Col>{people}</Col>
-                    </Row>
-                </Col>
-           </Row>
+           <Row style = {pushRowToTheLeft}>
+                    <Tabs defaultActiveKey="airQuality" id="uncontrolled-tab-example">
+                        <Tab eventKey="airQuality" title="Air Quality">
+                            <Table striped bordered hover variant="dark">
+                            <thead>
+                                <tr>
+                                <th>Date</th>
+                                <th>Carbon dioxide</th>
+                                <th>#people in room</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                <td>{date}</td>
+                                <td>{carbon}</td>
+                                <td>{people}</td>
+                                </tr>
+                            </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="sound" title="Sound Level">
+                            <Table striped bordered hover variant="dark">
+                                <thead>
+                                    <tr>
+                                    <th>Date</th>
+                                    <th>Sound level (dBa)</th>
+                                    <th>#people in room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td>{date}</td>
+                                    <td>{soundLevel}</td>
+                                    <td>{people}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>    
+                        </Tab>
+                        <Tab eventKey="temperature" title="Temperature">
+                            <Table striped bordered hover variant="dark">
+                                <thead>
+                                    <tr>
+                                    <th>Date</th>
+                                    <th>temperature</th>
+                                    <th>#people in room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td>{date}</td>
+                                    <td>{temperature}</td>
+                                    <td>{people}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>    
+                        </Tab>
+                        <Tab eventKey="humidity" title="Humidity">
+                            <Table striped bordered hover variant="dark">
+                                <thead>
+                                    <tr>
+                                    <th>Date</th>
+                                    <th>Humidity</th>
+                                    <th>#people in room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td>{date}</td>
+                                    <td>{humidity}</td>
+                                    <td>{people}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>    
+                        </Tab>
+                    </Tabs>
+                </Row>
            <Row className = "text-left" style = {rowStyle}>
                <Col>
                <Form>
@@ -78,5 +163,6 @@ export const CurrentQualityView = ({airQuality, people, soundLevel}) => (
            </Row>
            </Container>
 
-);
+    );
 
+};
