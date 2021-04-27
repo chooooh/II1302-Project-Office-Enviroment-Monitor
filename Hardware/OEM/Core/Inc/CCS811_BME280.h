@@ -23,7 +23,7 @@
 #define ALG_RES_DATA 	0x02	// Algorithm result, R, 8 bytes
 #define RAWDATAREG 		0x03	// ?
 #define HW_ID 			0x20 	// Hardware ID, R, 1 byte, should be 0x81
-#define APP_START		0xF4	// ?
+#define APP_START		0xF4	// Application start
 #define ERROR_ID		0xE0    // Reported errors, R, 1 byte
 
 typedef enum
@@ -31,16 +31,22 @@ typedef enum
 	CCS881_SUCCESS = 0,		// Success status
 	CCS881_ERROR, 			// Some internal sensor error, error status set
 	CCS881_ID_ERR, 			// HW ID returns a bad value
-	CCS881_SAT_ERR			// if a reading is out of bounds, saturated etc
-
+	CCS881_SAT_ERR,			// if a reading is out of bounds, saturated etc
+	CCS881_I2C_ERROR 		// error when writing/reading a register with i2c
 } SENSOR_STATUS;
 
 
 /**
  *
  */
-void
+SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer);
+
+/**
+ *
+ */
+SENSOR_STATUS
+CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /**
  *

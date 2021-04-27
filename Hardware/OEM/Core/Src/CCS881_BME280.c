@@ -23,30 +23,59 @@ SENSOR_STATUS
 CCS881_init(void){
 
 	uint8_t register_value = 0;
+	uint8_t write_data = 0;
+	SENSOR_STATUS status = CCS881_SUCCESS;
 
-	/* read the HW ID register to make sure the sensor is responsive */
-	CCS811_read_register(HW_ID, &register_value);
+	/* Read the HW ID register to make sure the sensor is responsive */
+	status = CCS811_read_register(HW_ID, &register_value);
+
+	if(status != CCS881_SUCCESS)
+		return CCS881_I2C_ERROR;
+
 	if(register_value != 0x81)
 		return CCS881_ID_ERR;
 
-	/* more init here */
+	/* Restart sensor */
+	/* Check for sensor errors */
+	/* is app valid? */
 
+	/* Write to app start register with no data */
+	if(CCS811_write_register(APP_START, &write_data, 1))
+		return CCS881_I2C_ERROR;
 
-	return CCS881_SUCCESS; // success
+	/* set drive mode */
+
+	return status; // success
 }
 
 /* Read a register using I2C */
-void
+SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer)
 {
-
-	HAL_I2C_Mem_Read(&hi2c3, DEVICE_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
-	while(HAL_I2C_GetState(&hi2c3) != HAL_I2C_STATE_READY);
-
+	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_I2C_Mem_Read(&hi2c3, DEVICE_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return CCS881_I2C_ERROR;
+	return CCS881_SUCCESS;
 }
 
+/* Write to a register using I2C */
+SENSOR_STATUS
+CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
+	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_I2C_Mem_Write(&hi2c3, DEVICE_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return CCS881_I2C_ERROR;
+	return CCS881_SUCCESS;
+}
 
+uint8_t
+CCS811_read_status_error(void){
+	uint8_t register_value;
+	CCS811_read_register(STATUS_REG, &register_value);
+	return (register_value & 1U);
+}
 
 
 	/*
