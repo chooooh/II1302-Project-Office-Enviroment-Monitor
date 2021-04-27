@@ -6,6 +6,7 @@
  */
 require('dotenv').config()
 const { DateTime } = require("luxon");
+const { currentDateTime } = require("../../utils");
 const express = require('express');
 const router = express.Router();
 const cfenv = require('cfenv');
@@ -83,14 +84,6 @@ router.post('/peopleintheroom', (req, res) => {
     res.set(200).send(host);
 });
 
-/**
- * A simple function that returns the current date and time
- * @returns Date and time with custom formatting
- */
-const currentDateTime = () => {
-    let now = DateTime.local();
-    return now.year + "-" + now.month + "-" + now.day + " " + now.hour + ":" + now.minute + ":" + now.second
-}
 
 // Exported functions references to use elsewhere
 module.exports = router;

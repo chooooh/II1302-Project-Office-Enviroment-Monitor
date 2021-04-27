@@ -5,8 +5,11 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
 
-const { readFromDB, writeToDB } = require('../database/io.js')
+const { readFromDB, writeToDB } = require('../database/io.js');
+const { currentDateTime } = require('../utils');
+const { expect } = require('chai');
 
+const testDbName = 'test';
 // const cfenv = require('cfenv');
 // const appEnv = cfenv.getAppEnv();
 // const host = appEnv.url;
@@ -38,7 +41,7 @@ describe('Test GET /user', () => {
 describe('Test POST data to /api/sensor/airquality', () => {
     it('It should return status code 200', (done) => {
         chai.request(app)
-        .get("/api/sensor/airquality")
+        .post("/api/sensor/airquality")
         .end((err, response) => {
             response.should.have.status(200);
             done();
@@ -53,16 +56,21 @@ describe('Test POST data to /api/sensor/airquality', () => {
 describe('Test POST data to /api/sensor/peopleintheroom', () => {
     it('It should return status code 200', (done) => {
         chai.request(app)
-        .get("/api/sensor/peopleintheroom")
+        .post("/api/sensor/peopleintheroom")
         .end((err, response) => {
             response.should.have.status(200);
             done();
         });
     });
 });
-
+/*
 describe('Write data to correct cloudant table', () => {
     it('It should contain the entry {_id: testing}', (done) => {
-
+        writeToDB({data:"test"}, testDbName, currentDateTime()).then(result => {
+            expect(result).to.be.json;
+            expect(result).to.include({data: "test"});
+        });
+        done();
     })
 })
+*/
