@@ -3,7 +3,7 @@ import React from 'react';
 
 import './App.css';
 
-import { CurrentQualityPage } from "./components/currentQuality"
+import { CurrentQualityPage } from "./components/presenters/currentQuality"
 
 
 function App() {
