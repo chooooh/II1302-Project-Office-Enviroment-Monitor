@@ -24,26 +24,47 @@ CCS881_init(void){
 
 	uint8_t register_value = 0;
 	uint8_t write_data = 0;
+
 	SENSOR_STATUS status = CCS881_SUCCESS;
 
 	/* Read the HW ID register to make sure the sensor is responsive */
 	status = CCS811_read_register(HW_ID, &register_value);
 
 	if(status != CCS881_SUCCESS)
-		return CCS881_I2C_ERROR;
+		return status;
 
 	if(register_value != 0x81)
 		return CCS881_ID_ERR;
 
-	/* Restart sensor */
+	/* Reset the device */
+	status = CCS881_reset();
+	if(status != CCS881_SUCCESS)
+		return status;
+
 	/* Check for sensor errors */
-	/* is app valid? */
+	if(CCS811_read_status_error() != 0){
+		uint8_t err = CCS811_read_error_id();
+		return CCS881_ERROR;
+	}
+
+	/* Check if app is valid */
+	if(CCS811_read_app_valid() != 1)
+		return CCS881_ERROR;
+
+	/* Check for sensor errors */
+	if(CCS811_read_status_error() != 0){
+		uint8_t err = CCS811_read_error_id();
+		return CCS881_ERROR;
+	}
 
 	/* Write to app start register with no data */
-	if(CCS811_write_register(APP_START, &write_data, 1))
+	status = CCS811_write_register(APP_START, &write_data, 1);
+	if(status != CCS881_SUCCESS)
 		return CCS881_I2C_ERROR;
 
-	/* set drive mode */
+	/* Set drive mode to 1 */
+	status = CCS811_write_mode(MEAS_MODE_1);
+
 
 	return status; // success
 }
@@ -70,12 +91,54 @@ CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 	return CCS881_SUCCESS;
 }
 
+/* Read bit 0, which is the status error bit, if 1 is returned there was an error
+   if 0 is returned no errors have occurred.	 	 							   */
 uint8_t
 CCS811_read_status_error(void){
 	uint8_t register_value;
 	CCS811_read_register(STATUS_REG, &register_value);
-	return (register_value & 1U);
+	return (register_value & 0x01);
 }
+
+uint8_t
+CCS811_read_error_id(void){
+	uint8_t register_value;
+	CCS811_read_register(ERROR_ID, &register_value);
+	return register_value;
+}
+
+/* */
+uint8_t
+CCS811_read_app_valid(void){
+	uint8_t register_value;
+	CCS811_read_register(STATUS_REG, &register_value);
+	register_value = (register_value >> 4) & 0x01;
+	return register_value;
+}
+
+SENSOR_STATUS
+CCS811_write_mode(uint8_t mode){
+	uint8_t register_value;
+	SENSOR_STATUS status = CCS881_SUCCESS;
+
+	status = CCS811_read_register(MEAS_MODE, &register_value);
+	if(status != CCS881_SUCCESS)
+		return CCS881_I2C_ERROR;
+
+	register_value = register_value & ~(mode);
+	register_value = register_value | mode;
+
+	return status;
+}
+
+SENSOR_STATUS
+CCS881_reset(void){
+	uint8_t reset_key[4] = {0x11, 0xE5, 0x72, 0x8A};
+	if(CCS811_write_register(SW_RESET, reset_key, 4) != CCS881_SUCCESS)
+		return CCS881_I2C_ERROR;
+	return CCS881_SUCCESS;
+}
+
 
 
 	/*
