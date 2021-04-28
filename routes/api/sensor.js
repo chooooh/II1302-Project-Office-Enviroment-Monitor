@@ -18,6 +18,7 @@ const { readLatestEntry, readFromDB, writeToDB } = require('../../database/io');
 var counter = 0;
 const airqualityDbName = 'airquality';
 const peopleDbName= 'people';
+
 /**
  * Route serving the sensor data.
  * @param {string} path 
@@ -32,7 +33,9 @@ router.get('/', (req, res) => {
 router.get('/airquality', (req, res) => {
     readLatestEntry(airqualityDbName)
     .then(result => {
-        res.set(200).send(result);
+        res.set(200).send(
+            "date: " + result["docs"][0]["_id"] + " time: " + result["docs"][0]["data"]
+        );
     }).catch(err => {
         console.log(err);
         res.set(400).send(err);
@@ -55,7 +58,7 @@ router.get('/airquality', (req, res) => {
  * that writes the data to the cloudant database.
  */
 router.post('/airquality', (req, res) => {
-    //const now = currentDateTime();
+    const now = currentDateTime();
     writeToDB(req.query, airqualityDbName, now)
     .then(result => {
         res.set(200).send(result)

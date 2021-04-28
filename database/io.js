@@ -27,9 +27,34 @@ async function readFromDB(id, targetTable) {
   return await db.use(targetTable).get(id);
 };
 
+
+/**
+ * This function takes a table and returns the latest entry.
+ * @param { String } targetTable The table to read from
+ * @returns A promise including the latest data
+ */
 async function readLatestEntry(targetTable) {
-    return await db.use(targetTable).list();
-}
+    const latestEntryQuery = {
+        "selector": {
+           "_id": {
+              "$gt": "0"
+           }
+        },
+        "fields": [
+           "_id",
+           "_rev",
+           "data"
+        ],
+        "sort": [
+           {
+              "_id": "desc"
+           }
+        ],
+        "limit":1
+    };
+    return await db.use(targetTable).find(latestEntryQuery);
+};
+
 
 // the functions to be used in the different route files
 module.exports = { readFromDB, writeToDB, readLatestEntry }
