@@ -28,7 +28,6 @@ async function readFromDB(id, targetTable) {
 };
 
 async function readLatestEntry(targetTable) {
-    console.log(targetTable);
     return await db.use(targetTable).list({
         fields: ["_id", "date"],
         sort: [{"data": "desc"}],

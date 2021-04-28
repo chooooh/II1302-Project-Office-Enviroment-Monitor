@@ -1,101 +1,123 @@
 
-const assert = require('assert');
 const message = require('../utils');
 const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
 
 const { currentDateTime } = require('../utils');
-const { expect } = require('chai');
 const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
 
-const testDbName = 'test';
-// const cfenv = require('cfenv');
-// const appEnv = cfenv.getAppEnv();
-// const host = appEnv.url;
-// const host = process.env['ROUTE'] || 'http://localhost:3000/route'
 //Assertion Style
 chai.should();
 chai.use(chaiHTTP);
 
-
+/*
 describe('Make sure read and writes work from cloudant', () => {
     it('verify that db contains the entry {_id: test}', (done) => {
-        writeToDB({data:"test"}, testDbName, "test")
-        .then(result => {
-            expect(result).to.be.json;
-            expect(result).to.include({data: "test"});
-            done();
-        })
-        .catch(err => {
-            done(err);
-        });
+        writeToDB({ data: "test" }, testDbName, "test")
+            .then(result => {
+                expect(result).to.be.json;
+                expect(result).to.include({ data: "test" });
+                done();
+            })
+            .catch(err => {
+                done(err);
+            });
     });
     it('retrieve the entry with {_id: test} directly from the db', (done) => {
         readLatestEntry("test")
-        .then(result => {
-            expect(result).to.be.json;
-            expect(result).to.include({data: "test"});
-            done();
-        })
-        .catch(err => {
-            done(err);
-        });
+            .then(result => {
+                expect(result).to.be.json;
+                expect(result).to.include({ data: "test" });
+                done();
+            })
+            .catch(err => {
+                done(err);
+            });
     });
 });
+*/
 
 /**
  * Integration test to make sure that the GET /user route
  * is reachable.
  */
-describe('Test GET /api/sensor/airquality', () => {
-    it('It should return status code 200', (done) => {
-        chai.request(app)
-        .get("/api/sensor/airquality")
-        .end((err, response) => {
-            response.should.have.status(200);
-            done(err);
+describe('Sensor API', () => {
+    /**
+     * Test the GET routes
+     */
+    describe('GET /api/sensor/airquality', () => {
+        it('It should GET an airquality object', (done) => {
+            chai.request(app)
+                .get("/api/sensor/airquality")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.a('object');
+                    done(err);
+            });
         });
-    });
 
-    it('it should fetch latest airquality entry via a route', (done) => {
-        chai.request(app)
-        .get("/api/sensor/airquality")
-        .end((err, response) => {
-            response.should.have.status(200);
-            done(err);
-        })
-    });
-});
-
-/**
- * Integration test to make sure that route for POST 
- * /api/sensor/airquality is reachable.
-
-describe('Test POST data to /api/sensor/airquality', () => {
-    it('It should return status code 200', (done) => {
-        chai.request(app)
-        .post("/api/sensor/airquality")
-        .end((err, response) => {
-            response.should.have.status(200);
-            done(err);
+        it('It should not GET an object', (done) => {
+            chai.request(app)
+                .get("/api/sensor/airqualit")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
         });
+
     });
-});
-*/
 
-/**
- * Integration test to make sure that route for POST 
- * /api/sensor/airquality is reachable. 
-
-describe('Test POST data to /api/sensor/peopleintheroom', () => {
-    it('It should return status code 200', (done) => {
-        chai.request(app)
-        .post("/api/sensor/peopleintheroom")
-        .end((err, response) => {
-            response.should.have.status(200);
-            done(err);
+    describe('GET /api/sensor/people', () => {
+        it('It should GET a people object', (done) => {
+            chai.request(app)
+                .get("/api/sensor/people")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.an('object');
+                    done(err);
+            });
         });
-    });
-});
-*/
+
+        it('It should not GET a people object', (done) => {
+            chai.request(app)
+                .get("/api/sensor/peopl")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+    })
+
+    /**
+     * Test the POST routes
+     */
+    describe('POST /api/sensor/airquality', () => {
+        //beforeEach()
+        const airquality = {
+            _id: 'delete',
+            data: 50
+        };
+
+        it('It should not POST new airquality data', (done) => {
+            chai.request(app)
+                .post('/api/sensor/airquality')
+                .send(airquality)
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.an('object');
+                    done(err);
+            })
+        });
+        
+        it('It should not POST new airquality data', (done) => {
+            chai.request(app)
+                .post('/api/sensor/airqualit')
+                .send(airquality)
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+                })
+        });
+    })
+})
