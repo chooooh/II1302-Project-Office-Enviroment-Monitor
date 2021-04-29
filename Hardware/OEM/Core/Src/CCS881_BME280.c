@@ -233,6 +233,7 @@ BME280_read_calibration(void){
 	uint16_t dig_H4_temp; // [11:4]
 	uint16_t dig_H5_temp; // [7:4]
 
+	/* Signed variables need to be casted to unsigned when using the read functions */
 	SENSOR_STATUS status = BME280_SUCCESS;
 	status = BME280_read_register16(dig_T1_reg, 		&dig_T1_val);
 	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_T2_val);
@@ -242,7 +243,7 @@ BME280_read_calibration(void){
 	status = BME280_read_register8 (ID_REG, 			&dig_H3_val);
 	status = BME280_read_register16(ID_REG, 			&dig_H4_temp);
 	status = BME280_read_register16(ID_REG, 			&dig_H5_temp);
-	status = BME280_read_register  (ID_REG, (uint8_t*)	&dig_H6_val);
+	status = BME280_read_register8 (ID_REG, (uint8_t*)	&dig_H6_val);
 
 	if(status != BME280_SUCCESS)
 		return status;

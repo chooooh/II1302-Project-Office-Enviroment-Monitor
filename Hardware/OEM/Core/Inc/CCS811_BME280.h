@@ -50,18 +50,6 @@
 #define dig_H6_reg		0xE7
 
 
-/* Compensation register values based on BME280 datasheet */
-uint16_t dig_T1;
-int16_t  dig_T2;
-int16_t  dig_T3;
-uint8_t  dig_H1;
-int16_t  dig_H2;
-uint8_t  dig_H3;
-int16_t  dig_H4;
-int16_t  dig_H5;
-int8_t   dig_H6;
-
-
 typedef enum
 {
 	CCS881_SUCCESS = 0,		// Success status
@@ -92,7 +80,7 @@ CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
  *
  */
 SENSOR_STATUS
-CCS881_init(void);
+CCS811_init(void);
 
 /**
  *
@@ -116,7 +104,7 @@ CCS811_read_app_valid(void);
  *
  */
 SENSOR_STATUS
-CCS881_app_start(void);
+CCS811_app_start(void);
 
 /**
  *
@@ -131,9 +119,15 @@ SENSOR_STATUS
 CCS881_reset(void);
 
 SENSOR_STATUS
-BME280_read_register(uint8_t reg_addr, uint8_t* buffer);
+BME280_read_register8(uint8_t reg_addr, uint8_t* buffer);
+
+SENSOR_STATUS
+BME280_read_register16(uint8_t reg_addr, uint16_t* buffer);
 
 SENSOR_STATUS
 BME280_init(void);
+
+SENSOR_STATUS
+BME280_read_calibration(void);
 
 #endif /* INC_CCS811_BME280_H_ */
