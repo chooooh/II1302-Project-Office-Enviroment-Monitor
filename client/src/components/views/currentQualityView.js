@@ -1,5 +1,17 @@
 import React from "react";
-import { Button, Navbar,Nav, Container, Row, Col, Form, Tab, Tabs, Table} from 'react-bootstrap';
+import { 
+        Button, 
+        Navbar,
+        Nav, 
+        Container, 
+        Row, 
+        Col, 
+        Form, 
+        Tab, 
+        Tabs, 
+        Table, 
+        Spinner
+    } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css' // import bootstrap css
 
 const colStyle = {
@@ -15,15 +27,9 @@ const pushRowToTheLeft = {
     paddingLeft: '15px',
 }
 
-export const CurrentQualityView = ({carbon, people, soundLevel, temperature, humidity, date, callback}) => {  
-    /*  
-    window.addEventListener('load', function () {
-      // Your document is loaded.
-      var fetchInterval = 5000; // 5 seconds.
-      // Invoke the request every 5 seconds.
-      setInterval(callback, fetchInterval);
-    });
-*/
+export const CurrentQualityView = ({data, carbon, people, soundLevel, temperature, humidity, date, callback}) => {  
+ 
+   console.log("JSON", data)
   return (
   <Container className =  "justify-content-left">
           <Navbar bg="dark" variant="dark" fixed = "top">
@@ -52,8 +58,8 @@ export const CurrentQualityView = ({carbon, people, soundLevel, temperature, hum
                           </thead>
                           <tbody>
                               <tr>
-                              <td data-testid = "actual-date1">{date}</td>
-                              <td>{carbon}</td>
+                              <td data-testid = "actual-date1">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
+                              <td>{data ? data.data : <Spinner animation="border" role="status"></Spinner>}</td>
                               <td>{people}</td>
                               </tr>
                           </tbody>
@@ -70,7 +76,7 @@ export const CurrentQualityView = ({carbon, people, soundLevel, temperature, hum
                               </thead>
                               <tbody>
                                   <tr>
-                                  <td data-testid = "actual-date2">{date}</td>
+                                  <td data-testid = "actual-date2">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
                                   <td>{soundLevel}</td>
                                   <td>{people}</td>
                                   </tr>
@@ -88,7 +94,7 @@ export const CurrentQualityView = ({carbon, people, soundLevel, temperature, hum
                               </thead>
                               <tbody>
                                   <tr>
-                                  <td data-testid = "actual-date3">{date}</td>
+                                  <td data-testid = "actual-date3">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
                                   <td>{temperature}</td>
                                   <td>{people}</td>
                                   </tr>
@@ -106,7 +112,7 @@ export const CurrentQualityView = ({carbon, people, soundLevel, temperature, hum
                               </thead>
                               <tbody>
                                   <tr>
-                                  <td data-testid = "actual-date4">{date}</td>
+                                  <td data-testid = "actual-date4">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
                                   <td>{humidity}</td>
                                   <td>{people}</td>
                                   </tr>

@@ -34,7 +34,7 @@ router.get('/airquality', (req, res) => {
     readLatestEntry(airqualityDbName)
     .then(result => {
         res.set(200).send(
-            "date: " + result["docs"][0]["_id"] + " time: " + result["docs"][0]["data"]
+          result
         );
     }).catch(err => {
         console.log(err);
