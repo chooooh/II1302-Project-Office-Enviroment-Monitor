@@ -12,15 +12,30 @@
 
 #include "CCS811_BME280.h"
 
-/*
-static uint8_t H_CO2 = 0;
-static uint8_t L_CO2 = 0;
-static uint8_t H_OG = 0;
-static uint8_t L_OG = 0;
-*/
+
+/* Compensation register values based on BME280 datasheet */
+uint16_t dig_T1_val;
+int16_t  dig_T2_val;
+int16_t  dig_T3_val;
+uint8_t  dig_H1_val;
+int16_t  dig_H2_val;
+uint8_t  dig_H3_val;
+int16_t  dig_H4_val;
+int16_t  dig_H5_val;
+int8_t   dig_H6_val;
+
+
+/**********************************************************************
+ **********************************************************************
+ ***																***
+ ***					CCS811 FUNCTIONS							***
+ ***																***
+ **********************************************************************
+ **********************************************************************/
+
 
 SENSOR_STATUS
-CCS881_init(void){
+CCS811_init(void){
 
 	uint8_t register_value = 0;
 	SENSOR_STATUS status = CCS881_SUCCESS;
@@ -49,7 +64,7 @@ CCS881_init(void){
 		return CCS881_ERROR;
 
 	/* Write to app start register to start */
-	status = CCS881_app_start();
+	status = CCS811_app_start();
 	if(status != CCS881_SUCCESS)
 		return CCS881_I2C_ERROR;
 
@@ -117,7 +132,7 @@ CCS811_read_app_valid(void){
 
 /* Start the application, it shouldnt send any data so this uses master transmit... */
 SENSOR_STATUS
-CCS881_app_start(void){
+CCS811_app_start(void){
 	uint8_t app_start = APP_START;
 	HAL_StatusTypeDef status = HAL_OK;
 
@@ -160,7 +175,6 @@ CCS881_reset(void){
 }
 
 
-
 /**********************************************************************
  **********************************************************************
  ***																***
@@ -169,19 +183,77 @@ CCS881_reset(void){
  **********************************************************************
  **********************************************************************/
 
+
 SENSOR_STATUS
-BME280_read_register(uint8_t reg_addr, uint8_t* buffer)
+BME280_read_register8(uint8_t reg_addr, uint8_t* buffer)
 {
 	HAL_StatusTypeDef status = HAL_OK;
 	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
 	if(status != HAL_OK)
-		 return CCS881_I2C_ERROR;
-	return CCS881_SUCCESS;
+		 return BME280_I2C_ERROR;
+	return BME280_SUCCESS;
+}
+
+SENSOR_STATUS
+BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
+{
+	uint8_t buf[2];
+	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buf, 2, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return BME280_I2C_ERROR;
+	*buffer = (uint16_t) ((buf[1] << 8) | buf[0]);
+	return BME280_SUCCESS;
 }
 
 
+SENSOR_STATUS
+BME280_init(void){
+
+	SENSOR_STATUS status = BME280_SUCCESS;
+	uint8_t register_value = 0;
+
+	/* Read the ID register to make sure the sensor is responsive */
+	status = BME280_read_register8(ID_REG, &register_value);
+	if(status != BME280_SUCCESS)
+		return status;
+	if(register_value != 0x60)
+		return BME280_ID_ERR;
+
+	/* Set normal operation */
 
 
+
+	return status;
+}
+
+SENSOR_STATUS
+BME280_read_calibration(void){
+
+	uint16_t dig_H4_temp; // [11:4]
+	uint16_t dig_H5_temp; // [7:4]
+
+	SENSOR_STATUS status = BME280_SUCCESS;
+	status = BME280_read_register16(dig_T1_reg, 		&dig_T1_val);
+	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_T2_val);
+	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_T3_val);
+	status = BME280_read_register8 (ID_REG, 			&dig_H1_val);
+	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_H2_val);
+	status = BME280_read_register8 (ID_REG, 			&dig_H3_val);
+	status = BME280_read_register16(ID_REG, 			&dig_H4_temp);
+	status = BME280_read_register16(ID_REG, 			&dig_H5_temp);
+	status = BME280_read_register  (ID_REG, (uint8_t*)	&dig_H6_val);
+
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Move h4 and h5 to correct positions */
+	dig_H4_val = ((dig_H4_temp & 0x00FF) << 4);
+	dig_H4_val = (dig_H4_val | ((dig_H4_temp & 0x0F00) >> 8));
+	dig_H5_val = dig_H5_temp >> 4;
+
+	return status;
+}
 
 
 
