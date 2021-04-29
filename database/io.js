@@ -6,27 +6,15 @@
 const cloudant = require('./setup');
 const db = cloudant.db;
 
-
 /**
- * This function recieves data and a destination and manipulates 
+ * This function recieves data and a destination and writes it 
  * the cloudant database.
  * @param { The data to be written } data 
  * @param { The path to the table to write to } dest 
  */
-async function writeToDB(data, targetTable, id) {
-  return await db.use(targetTable).insert(data, id);
+async function writeToDB(targetTable, data, id) {
+    return await db.use(targetTable).insert(data, id);
 }
-
-/**
- * This async function searches for the entry that has the corresponding
- * id in the specified cloudant table. Returns all matching id's.
- * @param { The id to match with a specific entry } id 
- * @param { The name of the table to search from } table
- */
-async function readFromDB(id, targetTable) {
-  return await db.use(targetTable).get(id);
-};
-
 
 /**
  * This function takes a table and returns the latest entry.
@@ -55,6 +43,15 @@ async function readLatestEntry(targetTable) {
     return await db.use(targetTable).find(latestEntryQuery);
 };
 
+/**
+ * This async function searches for the entry that has the corresponding
+ * id in the specified cloudant table. Returns all matching id's.
+ * @param { The id to match with a specific entry } id 
+ * @param { The name of the table to search from } table
+ */
+async function readFromDB(id, targetTable) { //to read multiple entries
+  return await db.use(targetTable).get(id);
+};
 
 // the functions to be used in the different route files
 module.exports = { readFromDB, writeToDB, readLatestEntry }

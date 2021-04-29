@@ -1,4 +1,3 @@
-const { DateTime } = require("luxon");
 
 const getWelcomeMessage = () => {
     const welcomeMessage = "server starting on ";
@@ -14,7 +13,7 @@ const currentDateTime = () => {
 
     let year = now.getFullYear();
     let month = now.getMonth() + 1;
-    let day = now.getDay();
+    let day = now.getDate();
     let hour = now.getHours();
     let minute = now.getMinutes();
     let second = now.getSeconds();
@@ -25,8 +24,8 @@ const currentDateTime = () => {
     if (minute < 10) minute = "0" + minute;
     if (second < 10) second = "0" + second;
     
-    let date = now.getFullYear() + "/" + month + "/" + day
-    let time = hour + ":" + minute + ":" + second
+    let date = now.getFullYear() + "/" + month + "/" + day;
+    let time = hour + ":" + minute + ":" + second;
     return date + " " + time;
 }
 
