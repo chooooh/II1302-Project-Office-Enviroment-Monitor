@@ -9,8 +9,6 @@ const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
 //const host = process.env.APP_URL || app;
 const host = app;
 
-
-console.log(process.env.APP_URL);
 //Assertion Style
 chai.should();
 chai.use(chaiHTTP);
