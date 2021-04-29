@@ -1,0 +1,66 @@
+{
+  "stats": {
+    "suites": 3,
+    "tests": 3,
+    "passes": 3,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-04-22T14:30:57.809Z",
+    "end": "2021-04-22T14:30:57.831Z",
+    "duration": 22
+  },
+  "tests": [
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test GET /user It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/airquality It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/peopleintheroom It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test GET /user It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/airquality It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "It should return status code 200",
+      "fullTitle": "Test POST data to /api/sensor/peopleintheroom It should return status code 200",
+      "file": "/Users/ludvigsmacbook/Documents/II1302 Projekt projektmetoder/II1302-Project-Office-Enviroment-Monitor/test/int-test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}
