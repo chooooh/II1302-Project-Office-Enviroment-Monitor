@@ -48,7 +48,7 @@ void test_esp8266_web_request(void){
 	//char uri[] = "/api/sensor";
 	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 
-//	uint8_t len = esp8266_http_get_request(request, HTTP_GET, uri, host);
+	//	uint8_t len = esp8266_http_get_request(request, HTTP_GET, uri, host);
 	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
 	esp8266_get_at_send_command(init_send, len);
 
@@ -68,6 +68,7 @@ void unit_test(void){
 	//RUN_TEST(test_esp8266_init);
 	//HAL_Delay(2000);
 	CCS811_init();
+	BME280_init();
 	/* Test connecting to wifi */
 	//RUN_TEST(test_esp8266_wifi_connect);
 

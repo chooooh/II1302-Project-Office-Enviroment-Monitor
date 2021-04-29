@@ -32,13 +32,13 @@
 /* BME280 registers */
 #define BME280_ADDR		0xEE	// 0x77 shifted to the left 1 bit, because HAL
 #define ID_REG			0xD0	// Read id, should be 0x60
-#define CTRL_MEAS		0xF4 	// Control register for measu
+#define CTRL_MEAS		0xF4 	// Control register for measurement, also temp oversample
 #define BME280_STATUS	0xF3	// Status register
-#define HUM_LSB			0xFE	// Humidity lsb
-#define HUM_MSB			0xFD	// Humidity msb
+#define HUM_LSB			0xFE
+#define HUM_MSB			0xFD
 #define TEMP_XLSB		0xFC	// Temp bits 7-4
-#define TEMP_LSB		0xFB	// Temp lsb
-#define TEMP_MSB		0xFA	// Temp msb
+#define TEMP_LSB		0xFB
+#define TEMP_MSB		0xFA
 #define dig_T1_reg		0x88
 #define dig_T2_reg		0x8A
 #define dig_T3_reg		0x8C
@@ -48,7 +48,11 @@
 #define dig_H4_reg		0xE4
 #define dig_H5_reg		0xE5
 #define dig_H6_reg		0xE7
-
+#define CONFIG_REG		0xF5	// Config for filters and rates
+#define std_cnf			0x00	// filter = off and rate = 0.5ms
+#define std_hum			0x01	// humidity oversample x1 oversampling
+#define std_temp		0x20
+#define CTRL_HUM  		0xF2
 
 typedef enum
 {
@@ -119,15 +123,35 @@ SENSOR_STATUS
 CCS881_reset(void);
 
 SENSOR_STATUS
+BME280_init(void);
+
+SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer);
 
 SENSOR_STATUS
 BME280_read_register16(uint8_t reg_addr, uint16_t* buffer);
 
 SENSOR_STATUS
-BME280_init(void);
+BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 SENSOR_STATUS
 BME280_read_calibration(void);
+
+SENSOR_STATUS
+BME280_set_mode(uint8_t mode);
+
+uint8_t
+BME280_get_mode(void);
+
+SENSOR_STATUS
+BME280_config(void);
+
+SENSOR_STATUS
+BME280_set_hum_os(void);
+
+SENSOR_STATUS
+BME280_set_temp_os(void);
+
+
 
 #endif /* INC_CCS811_BME280_H_ */

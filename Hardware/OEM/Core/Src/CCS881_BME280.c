@@ -183,6 +183,55 @@ CCS881_reset(void){
  **********************************************************************
  **********************************************************************/
 
+SENSOR_STATUS
+BME280_init(void){
+
+	SENSOR_STATUS status = BME280_SUCCESS;
+	uint8_t register_value = 0;
+
+	/* Read the ID register to make sure the sensor is responsive */
+	status = BME280_read_register8(ID_REG, &register_value);
+	if(status != BME280_SUCCESS)
+		return status;
+	if(register_value != 0x60)
+		return BME280_ID_ERR;
+
+	/* Read calibration data for humidity and temperature */
+	status = BME280_read_calibration();
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Standard config for filter and rate */
+	status = BME280_config();
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Set mode to 0 */
+	status = BME280_set_mode(0);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Set humidity oversample */
+	status = BME280_set_hum_os();
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Set temperature oversample ****last for hum changes to be applied*****/
+	status = BME280_set_temp_os();
+	if(status != BME280_SUCCESS)
+		return status;
+
+	uint8_t mode = 0;
+	mode = BME280_get_mode();
+
+	/* Set normal operation */
+	status = BME280_set_mode(3);
+	//if(status != BME280_SUCCESS)
+	//	return status;
+
+	mode = BME280_get_mode();
+	return status;
+}
 
 SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer)
@@ -202,29 +251,21 @@ BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buf, 2, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
+
+	/* Convert the 8bit array to 16 bit value */
 	*buffer = (uint16_t) ((buf[1] << 8) | buf[0]);
 	return BME280_SUCCESS;
 }
 
-
 SENSOR_STATUS
-BME280_init(void){
+BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
-	SENSOR_STATUS status = BME280_SUCCESS;
-	uint8_t register_value = 0;
+	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_I2C_Mem_Write(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return BME280_I2C_ERROR;
+	return BME280_SUCCESS;
 
-	/* Read the ID register to make sure the sensor is responsive */
-	status = BME280_read_register8(ID_REG, &register_value);
-	if(status != BME280_SUCCESS)
-		return status;
-	if(register_value != 0x60)
-		return BME280_ID_ERR;
-
-	/* Set normal operation */
-
-
-
-	return status;
 }
 
 SENSOR_STATUS
@@ -233,27 +274,127 @@ BME280_read_calibration(void){
 	uint16_t dig_H4_temp; // [11:4]
 	uint16_t dig_H5_temp; // [7:4]
 
+	// TODO: refactor this? --> && all statuses in one if?
 	/* Signed variables need to be casted to unsigned when using the read functions */
 	SENSOR_STATUS status = BME280_SUCCESS;
-	status = BME280_read_register16(dig_T1_reg, 		&dig_T1_val);
-	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_T2_val);
-	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_T3_val);
-	status = BME280_read_register8 (ID_REG, 			&dig_H1_val);
-	status = BME280_read_register16(ID_REG, (uint16_t*) &dig_H2_val);
-	status = BME280_read_register8 (ID_REG, 			&dig_H3_val);
-	status = BME280_read_register16(ID_REG, 			&dig_H4_temp);
-	status = BME280_read_register16(ID_REG, 			&dig_H5_temp);
-	status = BME280_read_register8 (ID_REG, (uint8_t*)	&dig_H6_val);
-
+	status = BME280_read_register16(dig_T1_reg, 			&dig_T1_val);
 	if(status != BME280_SUCCESS)
 		return status;
 
-	/* Move h4 and h5 to correct positions */
+	status = BME280_read_register16(dig_T2_reg, (uint16_t*) &dig_T2_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register16(dig_T3_reg, (uint16_t*) &dig_T3_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register8 (dig_H1_reg, 			&dig_H1_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register16(dig_H2_reg, (uint16_t*) &dig_H2_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register8 (dig_H3_reg, 			&dig_H3_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register16(dig_H4_reg, 			&dig_H4_temp);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register16(dig_H5_reg, 			&dig_H5_temp);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	status = BME280_read_register8 (dig_H6_reg, (uint8_t*)	&dig_H6_val);
+	if(status != BME280_SUCCESS)
+		return status;
+
+	/* Move h4 and h5 to correct positions :)))) */
 	dig_H4_val = ((dig_H4_temp & 0x00FF) << 4);
 	dig_H4_val = (dig_H4_val | ((dig_H4_temp & 0x0F00) >> 8));
 	dig_H5_val = dig_H5_temp >> 4;
 
 	return status;
+}
+
+SENSOR_STATUS
+BME280_set_mode(uint8_t mode){
+
+	uint8_t register_value = 0;
+	SENSOR_STATUS status = BME280_SUCCESS;
+
+	status = BME280_read_register8 (CTRL_MEAS, &register_value);
+	if(status != BME280_SUCCESS)
+		return status;
+	register_value = register_value & 0xFC;
+	register_value = register_value | mode;
+
+	status = BME280_write_register(CTRL_MEAS, &register_value, 1);
+
+	return status;
+}
+
+uint8_t
+BME280_get_mode(void){
+	uint8_t register_value = 0;
+	BME280_read_register8 (CTRL_MEAS, &register_value);
+	return (register_value & 0x03);
+}
+
+/* Set standard config for filter and rate */
+SENSOR_STATUS
+BME280_config(void){
+
+	uint8_t register_value = 0;
+	SENSOR_STATUS status = BME280_SUCCESS;
+
+	status = BME280_read_register8 (CONFIG_REG, &register_value);
+	if(status != BME280_SUCCESS)
+		return status;
+	register_value = register_value & 0b00000010;
+	register_value = register_value | std_cnf;
+
+	status = BME280_write_register(CONFIG_REG, &register_value, 1);
+
+	return status;
+}
+
+/* Set humidity oversampling to 1x */
+SENSOR_STATUS
+BME280_set_hum_os(void){
+
+	SENSOR_STATUS status = BME280_SUCCESS;
+	uint8_t register_value = 0;
+
+	status = BME280_read_register8 (CTRL_HUM, &register_value);
+	register_value = register_value & 0b11111000;
+	register_value = register_value | std_hum;
+
+	status = BME280_write_register(CONFIG_REG, &register_value, 1);
+
+	return status;
+
+}
+
+/* Set temperature oversampling to 1x */
+SENSOR_STATUS
+BME280_set_temp_os(void){
+
+	SENSOR_STATUS status = BME280_SUCCESS;
+	uint8_t register_value = 0;
+
+	status = BME280_read_register8 (CTRL_MEAS, &register_value);
+	register_value = register_value & 0b00011111;
+	register_value = register_value | std_temp;
+
+	status = BME280_write_register(CONFIG_REG, &register_value, 1);
+
+	return status;
+
 }
 
 
