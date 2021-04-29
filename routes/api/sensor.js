@@ -41,7 +41,6 @@ router.get('/airquality', (req, res) => {
 
 router.get('/test', (req, res) => {
     res.set(200).send(process.env.APP_URL);
-
 });
 
 /*
