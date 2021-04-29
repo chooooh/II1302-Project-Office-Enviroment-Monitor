@@ -81,5 +81,5 @@ router.post('/airquality', (req, res) => {
 */
 
 
-// Exports to use elsewhere in the program
+// Exports to use elsewhere in the application
 module.exports = router;

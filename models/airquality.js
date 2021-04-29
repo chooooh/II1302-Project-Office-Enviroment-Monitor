@@ -9,6 +9,10 @@ class AirQuality {
         this.airqualityDBName = 'airquality';
     };
 
+    /**
+     * Helper function to create "unique" id's for database entries.
+     * @returns Custom formatted string with time and date.
+     */
     currentDateTime() {
         return currentDateTime();
     };
@@ -27,9 +31,10 @@ class AirQuality {
      * @param { String } targetTable The table to read from.
      * @returns A promise including the latest data.
      */
-    readLatestEntry(targetTable) {
+    readLatestEntry() {
         return db.readLatestEntry(this.airqualityDBName);
     };
 }
 
+// Exports to use elsewhere in the application
 module.exports = { AirQuality }

@@ -3,6 +3,7 @@
  * Dependencies are local modules such as utils.
  * @package
  */
+
 const cloudant = require('./setup');
 const db = cloudant.db;
 
@@ -53,5 +54,5 @@ async function readFromDB(id, targetTable) { //to read multiple entries
   return await db.use(targetTable).get(id);
 };
 
-// the functions to be used in the different route files
+// Exports to use elsewhere in the application
 module.exports = { readFromDB, writeToDB, readLatestEntry }
