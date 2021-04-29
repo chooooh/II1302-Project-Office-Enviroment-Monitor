@@ -17,7 +17,8 @@
 
 #include "i2c.h"
 
-#define DEVICE_ADDR 	0xB6 	// Default I2C Address
+/* CCS881 registers */
+#define CCS881_ADDR 	(0x5B << 1) 	// Default I2C Address
 #define STATUS_REG 		0x00	// Status register, R, 1 byte
 #define MEAS_MODE 		0x01	// Measurement mode and conditions register, R/W, 1 byte
 #define ALG_RES_DATA 	0x02	// Algorithm result, R, 8 bytes
@@ -25,8 +26,12 @@
 #define HW_ID 			0x20 	// Hardware ID, R, 1 byte, should be 0x81
 #define APP_START		0xF4	// Application start
 #define ERROR_ID		0xE0    // Reported errors, R, 1 byte
-#define MEAS_MODE_1 	0x10
+#define MEAS_MODE_1 	0x10	// Set to measure each second
 #define SW_RESET		0xFF	// Register for resetting the device, W, 4 bytes
+
+/* BME280 registers */
+#define BME280_ADDR		0xEE
+#define ID_REG			0xD0	// Read id, should be 0x60
 
 typedef enum
 {
@@ -78,6 +83,12 @@ CCS811_read_app_valid(void);
  *
  */
 SENSOR_STATUS
+CCS881_app_start(void);
+
+/**
+ *
+ */
+SENSOR_STATUS
 CCS811_write_mode(uint8_t mode);
 
 /**
@@ -85,5 +96,10 @@ CCS811_write_mode(uint8_t mode);
  */
 SENSOR_STATUS
 CCS881_reset(void);
+
+SENSOR_STATUS
+BME280_read_register(uint8_t reg_addr, uint8_t* buffer);
+
+
 
 #endif /* INC_CCS811_BME280_H_ */

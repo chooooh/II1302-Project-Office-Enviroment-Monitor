@@ -23,27 +23,24 @@ SENSOR_STATUS
 CCS881_init(void){
 
 	uint8_t register_value = 0;
-	uint8_t write_data = 0;
-
 	SENSOR_STATUS status = CCS881_SUCCESS;
 
 	/* Read the HW ID register to make sure the sensor is responsive */
 	status = CCS811_read_register(HW_ID, &register_value);
-
 	if(status != CCS881_SUCCESS)
 		return status;
-
 	if(register_value != 0x81)
 		return CCS881_ID_ERR;
 
-	/* Reset the device */
+	/* Reset the device & wait a bit */
 	status = CCS881_reset();
 	if(status != CCS881_SUCCESS)
 		return status;
+	HAL_Delay(100);
 
 	/* Check for sensor errors */
 	if(CCS811_read_status_error() != 0){
-		uint8_t err = CCS811_read_error_id();
+		//uint8_t err = CCS811_read_error_id();
 		return CCS881_ERROR;
 	}
 
@@ -51,22 +48,23 @@ CCS881_init(void){
 	if(CCS811_read_app_valid() != 1)
 		return CCS881_ERROR;
 
-	/* Check for sensor errors */
-	if(CCS811_read_status_error() != 0){
-		uint8_t err = CCS811_read_error_id();
-		return CCS881_ERROR;
-	}
-
-	/* Write to app start register with no data */
-	status = CCS811_write_register(APP_START, &write_data, 1);
+	/* Write to app start register to start */
+	status = CCS881_app_start();
 	if(status != CCS881_SUCCESS)
 		return CCS881_I2C_ERROR;
 
-	/* Set drive mode to 1 */
-	status = CCS811_write_mode(MEAS_MODE_1);
+	/* Set drive mode to 1; measurement each second */
+	status = CCS811_write_mode(1);
+	if(status != CCS881_SUCCESS)
+		return status;
 
+	/* Check for sensor errors before exiting */
+	if(CCS811_read_status_error() != 0){
+		//uint8_t err = CCS811_read_error_id();
+		return CCS881_ERROR;
+	}
 
-	return status; // success
+	return status;
 }
 
 /* Read a register using I2C */
@@ -74,7 +72,7 @@ SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer)
 {
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, DEVICE_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Read(&hi2c3, CCS881_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return CCS881_I2C_ERROR;
 	return CCS881_SUCCESS;
@@ -85,7 +83,7 @@ SENSOR_STATUS
 CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Write(&hi2c3, DEVICE_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Write(&hi2c3, CCS881_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return CCS881_I2C_ERROR;
 	return CCS881_SUCCESS;
@@ -100,6 +98,7 @@ CCS811_read_status_error(void){
 	return (register_value & 0x01);
 }
 
+/* Read error id register and return error bits */
 uint8_t
 CCS811_read_error_id(void){
 	uint8_t register_value;
@@ -107,7 +106,7 @@ CCS811_read_error_id(void){
 	return register_value;
 }
 
-/* */
+/* Check that the app is valid */
 uint8_t
 CCS811_read_app_valid(void){
 	uint8_t register_value;
@@ -116,21 +115,42 @@ CCS811_read_app_valid(void){
 	return register_value;
 }
 
+/* Start the application, it shouldnt send any data so this uses master transmit... */
+SENSOR_STATUS
+CCS881_app_start(void){
+	uint8_t app_start = APP_START;
+	HAL_StatusTypeDef status = HAL_OK;
+
+	status = HAL_I2C_Master_Transmit(&hi2c3, CCS881_ADDR, &app_start, 1, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		return CCS881_I2C_ERROR;
+	return CCS881_SUCCESS;
+}
+
+/* Set mode, changes the interval of measurements */
 SENSOR_STATUS
 CCS811_write_mode(uint8_t mode){
-	uint8_t register_value;
+	uint8_t register_value = 0;
 	SENSOR_STATUS status = CCS881_SUCCESS;
 
+	/* Check what's in the register */
 	status = CCS811_read_register(MEAS_MODE, &register_value);
 	if(status != CCS881_SUCCESS)
 		return CCS881_I2C_ERROR;
 
-	register_value = register_value & ~(mode);
-	register_value = register_value | mode;
+	/* Clear current, and add new mode that should be set */
+	register_value = register_value & ~(0x70);
+	register_value = register_value | (mode << 4);
+
+	/* Write the mode */
+	status = CCS811_write_register(MEAS_MODE, &register_value, 1);
+	if(status != CCS881_SUCCESS)
+		return CCS881_I2C_ERROR;
 
 	return status;
 }
 
+/* Reset the sensor */
 SENSOR_STATUS
 CCS881_reset(void){
 	uint8_t reset_key[4] = {0x11, 0xE5, 0x72, 0x8A};
@@ -138,6 +158,30 @@ CCS881_reset(void){
 		return CCS881_I2C_ERROR;
 	return CCS881_SUCCESS;
 }
+
+
+
+/**********************************************************************
+ **********************************************************************
+ ***																***
+ ***						BME FUNCTIONS							***
+ ***																***
+ **********************************************************************
+ **********************************************************************/
+
+SENSOR_STATUS
+BME280_read_register(uint8_t reg_addr, uint8_t* buffer)
+{
+	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return CCS881_I2C_ERROR;
+	return CCS881_SUCCESS;
+}
+
+
+
+
 
 
 
