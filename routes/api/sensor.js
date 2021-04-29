@@ -55,7 +55,7 @@ router.get('/airquality', (req, res) => {
  * that writes the data to the cloudant database.
  */
 router.post('/airquality', (req, res) => {
-    //const now = currentDateTime();
+    const now = currentDateTime();
     writeToDB(req.query, airqualityDbName, now)
     .then(result => {
         res.set(200).send(result)
@@ -82,7 +82,6 @@ router.post('/people', (req, res) => {
         res.set(400).send(err);
     });
 });
-
 /**
  * This is the endpoint that provides information of the current airquality.
  */

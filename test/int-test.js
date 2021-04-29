@@ -4,9 +4,11 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
 
-const { currentDateTime } = require('../utils');
 const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
 
+const host = process.env.APP_URL || app;
+
+console.log(process.env.APP_URL);
 //Assertion Style
 chai.should();
 chai.use(chaiHTTP);
@@ -48,7 +50,7 @@ describe('Sensor API', () => {
      */
     describe('GET /api/sensor/airquality', () => {
         it('It should GET an airquality object', (done) => {
-            chai.request(app)
+            chai.request(host)
                 .get("/api/sensor/airquality")
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -58,7 +60,7 @@ describe('Sensor API', () => {
         });
 
         it('It should not GET an object', (done) => {
-            chai.request(app)
+            chai.request(host)
                 .get("/api/sensor/airqualit")
                 .end((err, response) => {
                     response.should.have.status(404);
@@ -70,7 +72,7 @@ describe('Sensor API', () => {
 
     describe('GET /api/sensor/people', () => {
         it('It should GET a people object', (done) => {
-            chai.request(app)
+            chai.request(host)
                 .get("/api/sensor/people")
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -80,7 +82,7 @@ describe('Sensor API', () => {
         });
 
         it('It should not GET a people object', (done) => {
-            chai.request(app)
+            chai.request(host)
                 .get("/api/sensor/peopl")
                 .end((err, response) => {
                     response.should.have.status(404);
@@ -99,8 +101,8 @@ describe('Sensor API', () => {
             data: 50
         };
 
-        it('It should not POST new airquality data', (done) => {
-            chai.request(app)
+        it('It should POST new people data', (done) => {
+            chai.request(host)
                 .post('/api/sensor/airquality')
                 .send(airquality)
                 .end((err, response) => {
@@ -110,8 +112,8 @@ describe('Sensor API', () => {
             })
         });
         
-        it('It should not POST new airquality data', (done) => {
-            chai.request(app)
+        it('It should not POST new people data', (done) => {
+            chai.request(host)
                 .post('/api/sensor/airqualit')
                 .send(airquality)
                 .end((err, response) => {
