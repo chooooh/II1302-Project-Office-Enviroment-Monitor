@@ -1,10 +1,7 @@
 import React from "react";
 import {CurrentQualityView} from '../views/currentQualityView';
 
-
-
 function parser(data){
- 
     return {
         date: data["docs"][0]["_id"],
         data: data["docs"][0]["data"],
@@ -31,7 +28,6 @@ export const CurrentQualityPage = () => {
             temperature: 22,
             humidity: 5,
             date: "not the actual date"
-            
             
         }) 
     );
