@@ -6,8 +6,7 @@ const app = require('../app');
 
 const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
 
-//const host = process.env.APP_URL || app;
-const host = app;
+const host = process.env.APP_URL || app;
 
 //Assertion Style
 chai.should();
