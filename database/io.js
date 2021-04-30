@@ -50,7 +50,7 @@ async function readLatestEntry(targetTable) {
  * @param { The id to match with a specific entry } id 
  * @param { The name of the table to search from } table
  */
-async function readFromDB(id, targetTable) { //to read multiple entries
+async function readFromDB(targetTable, id) { //to read multiple entries
   return await db.use(targetTable).get(id);
 };
 
