@@ -1,8 +1,0 @@
-/*
- * unit_test.h
- *
- *  Created on: Mar 26, 2021
- *      Author: Jonatan Lundqvist Silins, jonls@kth.se
- */
-
-void unit_test(void);
