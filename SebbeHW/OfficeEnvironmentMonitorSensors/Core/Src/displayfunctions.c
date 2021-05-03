@@ -13,36 +13,6 @@
 //#define DISPLAY_ADDR_WRITE 0x78
 //#define DISPLAY_ADDR_READ 0x79
 
-//Define Initialization instructions
-#define INSTR1 0xA8
-#define INSTR2 0x20
-#define INSTR3 0x00
-#define INSTR4 0xB0
-#define INSTR5 0xC8
-#define INSTR6 0x00
-#define INSTR7 0x10
-#define INSTR8 0x40
-#define INSTR9 0x81
-#define INSTR10 0xFF
-#define INSTR11 0xA1
-#define INSTR12 0xA6
-#define INSTR13 0xA8
-#define INSTR14 63
-#define INSTR15 0xA4
-#define INSTR16 0xD3
-#define INSTR17 0x00
-#define INSTR18 0xD5
-#define INSTR19 0xF0
-#define INSTR20 0xD9
-#define INSTR21 0x22
-#define INSTR22 0xDA
-#define INSTR23 0x32
-#define INSTR24 0xDB
-#define INSTR25 0x20
-#define INSTR26 0x8D
-#define INSTR27 0x14
-#define INSTR28 0xAF
-
 //I2C transfer defines
 #define COMMAND_MODE 0x00
 #define DATA_MODE 0x40
@@ -55,125 +25,21 @@
 //screen buffer
 static uint8_t buffer[BUFFERSIZE];
 
+uint8_t instruct[28] = {0xA8, 0x20, 0x00, 0xB0, 0xC8, 0x00, 0x10, 0x40, 0x81, 0xFF, 0xA1, 0xA6, 0xA8, 63, 0xA4,
+		                0xD3, 0x00, 0xD5, 0xF0, 0xD9, 0x22, 0xDA, 0x32, 0xDB, 0x20, 0x8D, 0x14, 0xAF};
+
 void display_init(void)
 {
 	HAL_Delay(100);
 
-uint8_t status;
-uint8_t instr;
+uint8_t status = 0;
 
-instr = INSTR1;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR2;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR3;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR4;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR5;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR6;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR7;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR8;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR9;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR10;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR11;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR12;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR13;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR14;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR15;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR16;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR17;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR18;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR19;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR20;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR21;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR22;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR23;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR24;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR25;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR26;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR27;
-if ((status = command(instr)) != 0)
-reset();
-
-instr = INSTR28;
-if ((status = command(instr)) != 0)
-reset();
-
+for (int i = 0; i < 28; i++)
+{
+status += command(instruct[i]);
+}
+if (status > 0)
+	reset();
 }
 uint8_t command(uint8_t command)
 {
@@ -255,7 +121,7 @@ for(uint8_t i = 0; i < 8; i++)
 	command(0x00);
 	command(0x10);
 
-	HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, DATA_MODE, &buffer, 1024, W, 10);
+	HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, DATA_MODE, 8, &buffer, W, 10);
 }
 }
 
