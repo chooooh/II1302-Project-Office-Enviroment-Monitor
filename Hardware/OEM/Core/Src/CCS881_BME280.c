@@ -232,12 +232,26 @@ BME280_init(void){
 	mode = BME280_get_mode();
 
 	/* read status 0xF3 ? */
+	HAL_Delay(100);
 
 	/* Read temp first to set t_fine */
 	float temp = BME280_read_temp();
 
+	HAL_Delay(100);
+
 	/* Read humidity */
 	float hum = BME280_read_hum();
+
+	/*
+	while(1){
+		HAL_Delay(500);
+		temp = BME280_read_temp();
+		HAL_Delay(500);
+		hum = BME280_read_hum();
+		printf("temp: %f\nhum: %f\n", temp, hum);
+		printf("----------------------------\n");
+	}
+	*/
 
 	return status;
 }
@@ -277,7 +291,6 @@ BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
 
 	return BME280_SUCCESS;
 }
-
 
 SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
@@ -398,6 +411,10 @@ BME280_set_hum_os(void){
 
 	status = BME280_write_register(CTRL_HUM, &register_value, 1);
 
+	uint8_t temp;
+	status = BME280_read_register8 (CTRL_HUM, &temp, 1);
+
+
 	return status;
 
 }
@@ -421,9 +438,9 @@ BME280_set_temp_os(void){
 float
 BME280_read_temp(void){
 
-	uint8_t buf[3];
-	BME280_read_register8(TEMP_MSB, buf, 3);
-	int32_t adc_Temp = ((uint32_t)buf[0] << 12) | ((uint32_t)buf[2] << 4) | ((buf[3] >> 4) & 0x0F);
+	uint8_t buf[8];
+	BME280_read_register8(0xF7, buf, 8);
+	int32_t adc_Temp = ((uint32_t)buf[3] << 12) | ((uint32_t)buf[4] << 4) | ((buf[5] >> 4) & 0x0F);
 
 	/* TEMPERATURE CONVERSION FROM DATASHEET */
 	int64_t var1;
@@ -456,8 +473,8 @@ BME280_read_hum(void){
 	var1 = (var1 - (((((var1 >> 15) * (var1 >> 15)) >> 7) * ((int32_t)dig_H1_val)) >> 4));
 	var1 = (var1 < 0 ? 0 : var1);
 	var1 = (var1 > 419430400 ? 419430400 : var1);
-	var1 = var1 >> 12;
-	return (float)(var1 / 1024.0);
+
+	return (float)(var1>>12) / 1024.0;
 }
 
 

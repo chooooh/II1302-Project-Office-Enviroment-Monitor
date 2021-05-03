@@ -16,6 +16,7 @@
 
 
 #include "i2c.h"
+#include "stdio.h"
 
 /* CCS881 registers */
 #define CCS881_ADDR 	0xB6 	// Default I2C Address, shifted 1 bit to the left because HAL
@@ -51,7 +52,7 @@
 #define CONFIG_REG		0xF5	// Config for filters and rates
 #define std_cnf			0x00	// filter = off and rate = 0.5ms
 #define std_hum			0x01	// humidity oversample x1 oversampling
-#define std_temp		0x20
+#define std_temp		0x20	// temperature oversample x1 oversampling
 #define CTRL_HUM  		0xF2
 
 typedef enum
