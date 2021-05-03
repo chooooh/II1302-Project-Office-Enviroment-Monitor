@@ -52,7 +52,7 @@ exports[`matches snapshot 1`] = `
     >
       On this page you can find all of the current statistics being monitored.
       <br />
-      If the number of poeple displayed on this page is incorrect you can change it to the proper amount.
+      If the number of people displayed on this page is incorrect you can change it to the proper amount.
       <br />
     </div>
   </div>
@@ -158,8 +158,21 @@ exports[`matches snapshot 1`] = `
             <tr>
               <td
                 data-testid="actual-date1"
-              />
-              <td />
+              >
+                <div
+                  className="spinner-border"
+                  data-testid="Spinner"
+                  role="status"
+                />
+              </td>
+              <td
+                data-testid="actual-carbon"
+              >
+                <div
+                  className="spinner-border"
+                  role="status"
+                />
+              </td>
               <td />
             </tr>
           </tbody>
@@ -198,7 +211,12 @@ exports[`matches snapshot 1`] = `
             <tr>
               <td
                 data-testid="actual-date2"
-              />
+              >
+                <div
+                  className="spinner-border"
+                  role="status"
+                />
+              </td>
               <td />
               <td />
             </tr>
@@ -238,7 +256,12 @@ exports[`matches snapshot 1`] = `
             <tr>
               <td
                 data-testid="actual-date3"
-              />
+              >
+                <div
+                  className="spinner-border"
+                  role="status"
+                />
+              </td>
               <td />
               <td />
             </tr>
@@ -278,7 +301,12 @@ exports[`matches snapshot 1`] = `
             <tr>
               <td
                 data-testid="actual-date4"
-              />
+              >
+                <div
+                  className="spinner-border"
+                  role="status"
+                />
+              </td>
               <td />
               <td />
             </tr>

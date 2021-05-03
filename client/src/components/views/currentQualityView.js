@@ -10,7 +10,8 @@ import {
         Tab, 
         Tabs, 
         Table, 
-        Spinner
+        Spinner,
+        Jumbotron
     } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css' // import bootstrap css
 
@@ -42,7 +43,7 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
           <Row>
                <Col date-testid = "page-info" className = "text-left"  lg = {9} style = {colStyle}>
                   On this page you can find all of the current statistics being monitored.<br/>
-                  If the number of poeple displayed on this page is incorrect you can change it to the proper amount.<br/>
+                  If the number of people displayed on this page is incorrect you can change it to the proper amount.<br/>
              </Col>
          </Row>
          <Row style = {pushRowToTheLeft}>
@@ -58,8 +59,8 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
                           </thead>
                           <tbody>
                               <tr>
-                              <td data-testid = "actual-date1">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
-                              <td>{data ? data.data : <Spinner animation="border" role="status"></Spinner>}</td>
+                              <td data-testid = "actual-date1">{data ? data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</td>
+                              <td data-testid = "actual-carbon">{data ? data.data : <Spinner animation="border" role="status"></Spinner>}</td>
                               <td>{people}</td>
                               </tr>
                           </tbody>

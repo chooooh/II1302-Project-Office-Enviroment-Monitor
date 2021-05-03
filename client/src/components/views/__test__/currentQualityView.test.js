@@ -7,6 +7,8 @@ import {render, screen, cleanup} from '@testing-library/react';
 
 import renderer from "react-test-renderer";
 
+import {within} from "@testing-library/dom";
+
 
 
 
@@ -80,6 +82,7 @@ describe("Testing the people header in each table", () => {
     })
 })
 
+//This test ensures that temperature, humidity, carbon and the sound level headers are correctly displayed in each table
 describe("Testing, temp, humidity, carbon and sound header, ensuring the correct text is displayed for each header", () => {
     //This test ensures that the table header carbon is correctly rendered
     it("renders carbon header correctly", () => {
@@ -104,31 +107,53 @@ describe("Testing, temp, humidity, carbon and sound header, ensuring the correct
     })
 })
 
+
+//This test ensures that all date columns in each table displays the value they have been given.
 describe("Testing the date prop and that it renders correctly on all places", () => {
+    const data = {
+        date: "2021-04-28"
+    }
 
     it("Renders the given date correctly", () => {
-        const date = "2021-04-28"
-        const {getByTestId} = render(<CurrentQualityView date = {date}/>);
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
         expect(getByTestId("actual-date1")).toHaveTextContent("2021-04-28");
     })
     it("Renders the given date correctly", () => {
-        const date = "2022-04-28"
-        const {getByTestId} = render(<CurrentQualityView date = {date}/>);
-        expect(getByTestId("actual-date2")).toHaveTextContent("2022-04-28");
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-date2")).toHaveTextContent("2021-04-28");
     })
     it("Renders the given date correctly", () => {
-        const date = "2023-04-28"
-        const {getByTestId} = render(<CurrentQualityView date = {date}/>);
-        expect(getByTestId("actual-date3")).toHaveTextContent("2023-04-28");
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-date3")).toHaveTextContent("2021-04-28");
     })
     it("Renders the given date correctly", () => {
-        const date = "2024-04-28"
-        const {getByTestId} = render(<CurrentQualityView date = {date}/>);
-        expect(getByTestId("actual-date4")).toHaveTextContent("2024-04-28");
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-date4")).toHaveTextContent("2021-04-28");
     })
 
 })
 
+//This test ensures that the carbon property dispays the value it is given
+describe("Testing the carbon prop, ensuring it displays the value its given", () => {
+    const data = {
+        data: "10"
+    }
+
+    it("Renders the given carbon correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-carbon")).toHaveTextContent("10");
+    })
+
+})
+
+//This test ensures that the spinner (a loading indicator) is rendered when waiting for actual data 
+test('Data columns renders Spinner when awaiting', () => {
+    const data = null;
+    const {getAllByTestId, getByTestId } = render(<CurrentQualityView data = {data}/>);
+    const date = getByTestId('actual-date1')
+    const spinnerInDate = within(date).getAllByTestId('Spinner')
+    expect(spinnerInDate.length).toBe(1);
+  });
 
 
 
