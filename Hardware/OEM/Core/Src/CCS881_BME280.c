@@ -23,7 +23,7 @@ uint8_t  dig_H3_val;
 int16_t  dig_H4_val;
 int16_t  dig_H5_val;
 int8_t   dig_H6_val;
-
+int32_t  t_fine;
 
 /**********************************************************************
  **********************************************************************
@@ -190,7 +190,7 @@ BME280_init(void){
 	uint8_t register_value = 0;
 
 	/* Read the ID register to make sure the sensor is responsive */
-	status = BME280_read_register8(ID_REG, &register_value);
+	status = BME280_read_register8(ID_REG, &register_value, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 	if(register_value != 0x60)
@@ -226,18 +226,27 @@ BME280_init(void){
 
 	/* Set normal operation */
 	status = BME280_set_mode(3);
-	//if(status != BME280_SUCCESS)
-	//	return status;
+	if(status != BME280_SUCCESS)
+		return status;
 
 	mode = BME280_get_mode();
+
+	/* read status 0xF3 ? */
+
+	/* Read temp first to set t_fine */
+	float temp = BME280_read_temp();
+
+	/* Read humidity */
+	float hum = BME280_read_hum();
+
 	return status;
 }
 
 SENSOR_STATUS
-BME280_read_register8(uint8_t reg_addr, uint8_t* buffer)
+BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
 	return BME280_SUCCESS;
@@ -256,6 +265,19 @@ BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 	*buffer = (uint16_t) ((buf[1] << 8) | buf[0]);
 	return BME280_SUCCESS;
 }
+
+SENSOR_STATUS
+BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
+	HAL_StatusTypeDef status = HAL_OK;
+	reg_addr = reg_addr | (BME280_ADDR << 8);
+
+	status = HAL_I2C_Master_Receive(&hi2c3, reg_addr, buffer, size, HAL_MAX_DELAY);
+	if(status != HAL_OK)
+		 return BME280_I2C_ERROR;
+
+	return BME280_SUCCESS;
+}
+
 
 SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
@@ -289,7 +311,7 @@ BME280_read_calibration(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	status = BME280_read_register8 (dig_H1_reg, 			&dig_H1_val);
+	status = BME280_read_register8 (dig_H1_reg, 			&dig_H1_val, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 
@@ -297,7 +319,7 @@ BME280_read_calibration(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	status = BME280_read_register8 (dig_H3_reg, 			&dig_H3_val);
+	status = BME280_read_register8 (dig_H3_reg, 			&dig_H3_val, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 
@@ -309,7 +331,7 @@ BME280_read_calibration(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	status = BME280_read_register8 (dig_H6_reg, (uint8_t*)	&dig_H6_val);
+	status = BME280_read_register8 (dig_H6_reg, (uint8_t*)	&dig_H6_val, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 
@@ -327,7 +349,7 @@ BME280_set_mode(uint8_t mode){
 	uint8_t register_value = 0;
 	SENSOR_STATUS status = BME280_SUCCESS;
 
-	status = BME280_read_register8 (CTRL_MEAS, &register_value);
+	status = BME280_read_register8 (CTRL_MEAS, &register_value, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 	register_value = register_value & 0xFC;
@@ -341,7 +363,7 @@ BME280_set_mode(uint8_t mode){
 uint8_t
 BME280_get_mode(void){
 	uint8_t register_value = 0;
-	BME280_read_register8 (CTRL_MEAS, &register_value);
+	BME280_read_register8 (CTRL_MEAS, &register_value, 1);
 	return (register_value & 0x03);
 }
 
@@ -352,7 +374,7 @@ BME280_config(void){
 	uint8_t register_value = 0;
 	SENSOR_STATUS status = BME280_SUCCESS;
 
-	status = BME280_read_register8 (CONFIG_REG, &register_value);
+	status = BME280_read_register8 (CONFIG_REG, &register_value, 1);
 	if(status != BME280_SUCCESS)
 		return status;
 	register_value = register_value & 0b00000010;
@@ -370,11 +392,11 @@ BME280_set_hum_os(void){
 	SENSOR_STATUS status = BME280_SUCCESS;
 	uint8_t register_value = 0;
 
-	status = BME280_read_register8 (CTRL_HUM, &register_value);
+	status = BME280_read_register8 (CTRL_HUM, &register_value, 1);
 	register_value = register_value & 0b11111000;
 	register_value = register_value | std_hum;
 
-	status = BME280_write_register(CONFIG_REG, &register_value, 1);
+	status = BME280_write_register(CTRL_HUM, &register_value, 1);
 
 	return status;
 
@@ -387,15 +409,57 @@ BME280_set_temp_os(void){
 	SENSOR_STATUS status = BME280_SUCCESS;
 	uint8_t register_value = 0;
 
-	status = BME280_read_register8 (CTRL_MEAS, &register_value);
+	status = BME280_read_register8 (CTRL_MEAS, &register_value, 1);
 	register_value = register_value & 0b00011111;
 	register_value = register_value | std_temp;
 
-	status = BME280_write_register(CONFIG_REG, &register_value, 1);
+	status = BME280_write_register(CTRL_MEAS, &register_value, 1);
 
 	return status;
-
 }
+
+float
+BME280_read_temp(void){
+
+	uint8_t buf[3];
+	BME280_read_register8(TEMP_MSB, buf, 3);
+	int32_t adc_Temp = ((uint32_t)buf[0] << 12) | ((uint32_t)buf[2] << 4) | ((buf[3] >> 4) & 0x0F);
+
+	/* TEMPERATURE CONVERSION FROM DATASHEET */
+	int64_t var1;
+	int64_t var2;
+
+	var1 = ((((adc_Temp>>3) - ((int32_t)dig_T1_val<<1))) * ((int32_t)dig_T2_val)) >> 11;
+	var2 = (((((adc_Temp>>4) - ((int32_t)dig_T1_val)) * ((adc_Temp>>4) - ((int32_t)dig_T1_val))) >> 12) * ((int32_t)dig_T3_val)) >> 14;
+	t_fine = var1 + var2;
+	float output = (t_fine * 5 + 128) >> 8;
+
+	output = output / 100 + 0.f;
+
+	return output;
+}
+
+float
+BME280_read_hum(void){
+
+	uint8_t buf[8];
+	BME280_read_register8(0xF7, buf, 8);
+
+	/* HUMIDITY CONVERSION FROM DATASHEET */
+	int32_t adc_H = ((uint32_t)buf[6] << 8) | ((uint32_t)buf[7]);
+
+	int32_t var1;
+	var1 = (t_fine - ((int32_t)76800));
+	var1 = (((((adc_H << 14) - (((int32_t)dig_H4_val) << 20) - (((int32_t)dig_H5_val) * var1)) +
+	((int32_t)16384)) >> 15) * (((((((var1 * ((int32_t)dig_H6_val)) >> 10) * (((var1 * ((int32_t)dig_H3_val)) >> 11) + ((int32_t)32768))) >> 10) + ((int32_t)2097152)) *
+	((int32_t)dig_H2_val) + 8192) >> 14));
+	var1 = (var1 - (((((var1 >> 15) * (var1 >> 15)) >> 7) * ((int32_t)dig_H1_val)) >> 4));
+	var1 = (var1 < 0 ? 0 : var1);
+	var1 = (var1 > 419430400 ? 419430400 : var1);
+	var1 = var1 >> 12;
+	return (float)(var1 / 1024.0);
+}
+
 
 
 

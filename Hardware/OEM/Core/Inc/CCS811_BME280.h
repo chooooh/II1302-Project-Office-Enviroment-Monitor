@@ -126,10 +126,13 @@ SENSOR_STATUS
 BME280_init(void);
 
 SENSOR_STATUS
-BME280_read_register8(uint8_t reg_addr, uint8_t* buffer);
+BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 SENSOR_STATUS
 BME280_read_register16(uint8_t reg_addr, uint16_t* buffer);
+
+SENSOR_STATUS
+BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size);
 
 SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
@@ -152,6 +155,10 @@ BME280_set_hum_os(void);
 SENSOR_STATUS
 BME280_set_temp_os(void);
 
+float
+BME280_read_temp(void);
 
+float
+BME280_read_hum(void);
 
 #endif /* INC_CCS811_BME280_H_ */
