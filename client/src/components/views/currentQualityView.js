@@ -3,128 +3,118 @@ import {
         Button, 
         Navbar,
         Nav, 
-        Container, 
         Row, 
         Col, 
         Form, 
-        Tab, 
-        Tabs, 
-        Table, 
         Spinner,
-        Jumbotron
+        Jumbotron,
+        Card,
+        ListGroup
     } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css' // import bootstrap css
 
-const colStyle = {
-    paddingTop: '75px',
-    marginBottom: '15px',
+
+const formStyle = {
+    width: '300px'
 };
+
+const cardTextStyle = {
+    color: 'black',
+}
+
+const jumbotronStyle = {
+    marginTop: '10px',
+    color: 'black'
+}
 
 const rowStyle = {
-    paddingTop: '40px',
-};
-
-const pushRowToTheLeft = {
-    paddingLeft: '15px',
+    marginTop: '15px'
 }
 
 export const CurrentQualityView = ({data, carbon, people, soundLevel, temperature, humidity, date, callback}) => {  
  
    console.log("JSON", data)
   return (
-  <Container className =  "justify-content-left">
+      <div>
           <Navbar bg="dark" variant="dark" fixed = "top">
-              <Navbar.Brand href="#currentQuality">Current Quality</Navbar.Brand>
+              <Navbar.Brand href="#home">Home</Navbar.Brand>
               <Nav className="mr-auto">
               <Nav.Link href="#history">History</Nav.Link>
-              <Nav.Link href="#home">Home</Nav.Link>
+              <Nav.Link href="#currentQuality">Current Quality</Nav.Link>
               </Nav>
           </Navbar>
-          <Row>
-               <Col date-testid = "page-info" className = "text-left"  lg = {9} style = {colStyle}>
-                  On this page you can find all of the current statistics being monitored.<br/>
-                  If the number of people displayed on this page is incorrect you can change it to the proper amount.<br/>
-             </Col>
-         </Row>
-         <Row style = {pushRowToTheLeft}>
-                  <Tabs defaultActiveKey="airQuality" id="uncontrolled-tab-example">
-                      <Tab eventKey="airQuality" title="Air Quality">
-                          <Table striped bordered hover variant="dark">
-                          <thead>
-                              <tr>
-                              <th data-testid = "date1">Date</th>
-                              <th data-testid = "carbon-header">Carbon dioxide</th>
-                              <th data-testid = "people1">#people in room</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                              <td data-testid = "actual-date1">{data ? data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</td>
-                              <td data-testid = "actual-carbon">{data ? data.data : <Spinner animation="border" role="status"></Spinner>}</td>
-                              <td>{people}</td>
-                              </tr>
-                          </tbody>
-                          </Table>
-                      </Tab>
-                      <Tab eventKey="sound" title="Sound Level">
-                          <Table striped bordered hover variant="dark">
-                              <thead>
-                                  <tr>
-                                  <th data-testid = "date2">Date</th>
-                                  <th data-testid = "sound-lvl">Sound level (dBa)</th>
-                                  <th data-testid = "people2">#people in room</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                  <td data-testid = "actual-date2">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
-                                  <td>{soundLevel}</td>
-                                  <td>{people}</td>
-                                  </tr>
-                              </tbody>
-                          </Table>    
-                      </Tab>
-                      <Tab eventKey="temperature" title="Temperature">
-                          <Table striped bordered hover variant="dark">
-                              <thead>
-                                  <tr>
-                                  <th data-testid = "date3">Date</th>
-                                  <th data-testid = "temp">temperature</th>
-                                  <th data-testid = "people3">#people in room</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                  <td data-testid = "actual-date3">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
-                                  <td>{temperature}</td>
-                                  <td>{people}</td>
-                                  </tr>
-                              </tbody>
-                          </Table>    
-                      </Tab>
-                      <Tab eventKey="humidity" title="Humidity">
-                          <Table striped bordered hover variant="dark">
-                              <thead>
-                                  <tr>
-                                  <th data-testid = "date4">Date</th>
-                                  <th data-testid = "humidity">Humidity</th>
-                                  <th data-testid = "people4">#people in room</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                  <td data-testid = "actual-date4">{data ? data.date : <Spinner animation="border" role="status"></Spinner>}</td>
-                                  <td>{humidity}</td>
-                                  <td>{people}</td>
-                                  </tr>
-                              </tbody>
-                          </Table>    
-                      </Tab>
-                  </Tabs>
-              </Row>
-         <Row className = "text-left" style = {rowStyle}>
-             <Col>
-             <Form>
+          <Jumbotron style = {jumbotronStyle}>
+            <h1>Office Environment Monitor!</h1>
+                <p>
+                On this page you can find all of the current statistics being monitored.<br/>
+                    If the number of people displayed on this page is incorrect you can change it to the proper amount below.<br/>
+                </p>
+            <p>
+                <Button variant="primary">Learn more</Button>
+            </p>
+        </Jumbotron>
+        <Form>
+            <Form.Row>
+                <Col>
+                    <h4>Number of people in the room: 10 </h4>
+                </Col>
+                <Col>
+                    <Form.Control placeholder="Insert the current number of people here.." />
+                </Col>
+                <Col>
+                    <Button data-testid = "submit-button" variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Col>
+            </Form.Row>
+        </Form>
+        <Row>
+            <Col>
+            <Card border = "success">
+                <Card.Body>
+                <Card.Title style = {cardTextStyle}>Humidity</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Text style = {cardTextStyle}>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item data-testid = "actual-humidity"><h2>{data ? data.data + " %" : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</h2> </ListGroup.Item>
+                        </ListGroup>
+                    </Card.Text>
+                    <Card.Link href="#">History</Card.Link>
+                </Card.Body>
+            </Card>
+            </Col>
+            <Col>
+            <Card border = "success">
+                <Card.Body>
+                    <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Text style = {cardTextStyle}>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item data-testid = "actual-carbon"><h5>{data ? "Carbon: " + data.data + " unit": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h5> </ListGroup.Item>
+                            <ListGroup.Item data-testid = "actual-carbon"><h5>{data ? "Volatile gases: " + data.data + " unit": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h5> </ListGroup.Item>
+                        </ListGroup>
+                    </Card.Text>
+                    <Card.Link href="#">History</Card.Link>
+                </Card.Body>
+            </Card>
+            </Col>
+            <Col>
+            <Card border = "success" >
+                <Card.Body>
+                <Card.Title style = {cardTextStyle}>Temperature</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Text style = {cardTextStyle}>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item data-testid = "actual-temperature"><h2>{data ? data.data + " C": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h2></ListGroup.Item>
+                        </ListGroup>
+                    </Card.Text>
+                    <Card.Link href="#">History</Card.Link>
+                </Card.Body>
+            </Card>
+            </Col>
+        </Row>
+        <Row style = {rowStyle} className = "justify-content-center">
+             <Form style = {formStyle}>
                   <Form.Group controlId="formBasicEmail">
                       <Form.Label>Here you can insert the current number of poeple in the room</Form.Label>
                       <Form.Control type="people" placeholder="Enter number of people" />
@@ -136,10 +126,8 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
                       Submit
                   </Button>
               </Form>
-             </Col>
-         </Row>
-         </Container>
-
+         </Row>   
+        </div>
   );
 
 };
