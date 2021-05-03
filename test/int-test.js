@@ -1,5 +1,5 @@
 
-const message = require('../utils');
+const { currentDateTime } = require('../utils');
 const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
@@ -8,19 +8,20 @@ const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
 
 const host = process.env.APP_URL || app;
 
-console.log(process.env.APP_URL);
 //Assertion Style
 chai.should();
 chai.use(chaiHTTP);
 
 
 describe('Make sure read and writes work from cloudant', () => {
+    const testDbName = 'test';
     let dateTime = currentDateTime();
+    
     it('verifies that the correct db table gets written to', (done) => {
         writeToDB(testDbName, {data: "testdata"}, dateTime)
         .then(result => {
-            expect(result).to.be.an('object');
-            expect(result).to.include({id: dateTime});
+            result.should.be.an('object');
+            result.should.include({id: dateTime});
             done();
         })
         .catch(err => {
@@ -28,19 +29,12 @@ describe('Make sure read and writes work from cloudant', () => {
         });
     });
 
-    //{"docs":[
-    //  {"_id":"2021/04/30 11:36:25",
-    //  "_rev":"1-22af5ece874c3f504839159abb443691",
-    //  "data":"testdata"}], 
-    //...}
-    //result["docs"][0]["_id"] DATE
-    //result["docs"][0]["data"] DATA
     it('find the entry with {_id: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
         readLatestEntry("test")
         .then(result => {
-            expect(result).to.be.an('object');
-            expect(result.docs[0]).to.include({"_id": dateTime});
-            expect(result.docs[0]).to.include({"data": "testdata"});
+            result.should.to.be.an('object');
+            result.docs[0].should.include({"_id": dateTime});
+            result.docs[0].should.include({"data": "testdata"});
             done();
         })
         .catch(err => {
@@ -54,6 +48,7 @@ describe('Make sure read and writes work from cloudant', () => {
  * is reachable.
  */
 describe('Sensor API', () => {
+
     /**
      * Test the GET routes
      */
@@ -74,11 +69,44 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(404);
                     done(err);
-            })
+            });
         });
 
     });
 
+    /**
+     * Test the POST routes with data coming from the hardware
+     */
+    describe('POST /api/sensor/airquality', () => {
+        //beforeEach()
+        const airquality = {
+            _id: 'delete',
+            data: 50
+        };
+        
+        it('It should POST new people data', (done) => {
+            chai.request(host)
+            .post('/api/sensor/airquality')
+            .send(airquality)
+            .end((err, response) => {
+                response.should.have.status(200);
+                response.should.be.an('object');
+                done(err);
+            });
+        });
+        
+        it('It should not POST new people data', (done) => {
+            chai.request(host)
+            .post('/api/sensor/airqualit')
+            .send(airquality)
+            .end((err, response) => {
+                response.should.have.status(404);
+                done(err);
+            });
+        });
+    });
+
+    /*
     describe('GET /api/sensor/people', () => {
         it('It should GET a people object', (done) => {
             chai.request(host)
@@ -89,7 +117,7 @@ describe('Sensor API', () => {
                     done(err);
             });
         });
-
+    
         it('It should not GET a people object', (done) => {
             chai.request(host)
                 .get("/api/sensor/peopl")
@@ -98,37 +126,6 @@ describe('Sensor API', () => {
                     done(err);
             })
         });
-    })
-
-    /**
-     * Test the POST routes
-     */
-    describe('POST /api/sensor/airquality', () => {
-        //beforeEach()
-        const airquality = {
-            _id: 'delete',
-            data: 50
-        };
-
-        it('It should POST new people data', (done) => {
-            chai.request(host)
-                .post('/api/sensor/airquality')
-                .send(airquality)
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.should.be.an('object');
-                    done(err);
-            })
-        });
-        
-        it('It should not POST new people data', (done) => {
-            chai.request(host)
-                .post('/api/sensor/airqualit')
-                .send(airquality)
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-                })
-        });
-    })
-})
+    });
+    */
+});
