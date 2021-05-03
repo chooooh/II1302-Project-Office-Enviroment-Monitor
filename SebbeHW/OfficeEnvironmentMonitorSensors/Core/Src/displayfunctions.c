@@ -39,7 +39,11 @@ for (int i = 0; i < 28; i++)
 status += command(instruct[i]);
 }
 if (status > 0)
+{
+	HAL_Delay(1000);
 	reset();
+}
+
 }
 uint8_t command(uint8_t command)
 {
@@ -49,7 +53,7 @@ uint8_t command(uint8_t command)
 	send[1] = command;
 	*/
 HAL_StatusTypeDef status;
-status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, COMMAND_MODE, 8, &command, 8, 10);
+status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, COMMAND_MODE, I2C_MEMADD_SIZE_8BIT, &command, 1, HAL_MAX_DELAY);
 
 if (status == HAL_OK)
 {
@@ -73,7 +77,7 @@ uint8_t data(uint8_t data)
 	send[1] = data;
 	*/
 	HAL_StatusTypeDef status;
-	status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, DATA_MODE, 8, &data, 8, 10);
+	status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, COMMAND_MODE, I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
 
 	if (status == HAL_OK)
 	{
