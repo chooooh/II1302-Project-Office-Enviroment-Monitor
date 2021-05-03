@@ -4,12 +4,9 @@
  * sensor model. A helper method providing time and date is also present.
  * @package
  */
-require('dotenv').config()
 const { currentDateTime } = require("../../utils");
 const express = require('express');
 const router = express.Router();
-const cfenv = require('cfenv');
-const appEnv = cfenv.getAppEnv();
 //const AQ = require('../../models/airquality');
 
 const { readLatestEntry, readFromDB, writeToDB } = require('../../database/io');
@@ -90,8 +87,7 @@ router.post('/people', (req, res) => {
  * This is the endpoint that provides information of the current airquality.
  */
  router.get('/people', (req, res) => {
-    const host = appEnv.url;
-    res.set(200).send(host);
+    res.set(200).send('this is /people');
 });
 
 
