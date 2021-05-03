@@ -9,13 +9,14 @@ import {
         Spinner,
         Jumbotron,
         Card,
-        ListGroup
+        ListGroup,
+        Container
     } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css' // import bootstrap css
 
 
 const formStyle = {
-    width: '300px'
+    padding: '10px'
 };
 
 const cardTextStyle = {
@@ -23,19 +24,53 @@ const cardTextStyle = {
 }
 
 const jumbotronStyle = {
-    marginTop: '10px',
-    color: 'black'
+    marginTop: '20px',
+    color: 'black',
+    
 }
 
 const rowStyle = {
-    marginTop: '15px'
+    margin: '15px'
+}
+
+const fontSize = {
+    fontSize: '12px',
+}
+
+/**
+ * A simple function that returns the current date and time
+ * @returns Date and time with custom formatting
+ */
+ const currentDateTime = () => {
+    const now = new Date();
+
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let second = now.getSeconds();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+    if (hour < 10) hour = "0" + hour;
+    if (minute < 10) minute = "0" + minute;
+    if (second < 10) second = "0" + second;
+
+    let date = now.getFullYear() + "/" + month + "/" + day;
+    let time = hour + ":" + minute + ":" + second;
+    return date + " " + time;
 }
 
 export const CurrentQualityView = ({data, carbon, people, soundLevel, temperature, humidity, date, callback}) => {  
- 
-   console.log("JSON", data)
+    
+    let lastFetch = null;
+    if (data != null) {
+            lastFetch = currentDateTime();
+      }
+
   return (
-      <div>
+      <Container fluid>
           <Navbar bg="dark" variant="dark" fixed = "top">
               <Navbar.Brand href="#home">Home</Navbar.Brand>
               <Nav className="mr-auto">
@@ -53,33 +88,23 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
                 <Button variant="primary">Learn more</Button>
             </p>
         </Jumbotron>
-        <Form>
-            <Form.Row>
-                <Col>
-                    <h4>Number of people in the room: 10 </h4>
-                </Col>
-                <Col>
-                    <Form.Control placeholder="Insert the current number of people here.." />
-                </Col>
-                <Col>
-                    <Button data-testid = "submit-button" variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Col>
-            </Form.Row>
-        </Form>
-        <Row>
+        <Container fluid data-testid = "air-quality-content">
+        {data == null ? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>
+         :<Card className="text-center">
+        <Card.Header style = {cardTextStyle}><h1>Current Quality</h1></Card.Header>
+        <Card.Body>
+            <Card.Title style = {cardTextStyle}>The current measurements are displayed here</Card.Title>
+            <Row style = {rowStyle}>
             <Col>
             <Card border = "success">
                 <Card.Body>
                 <Card.Title style = {cardTextStyle}>Humidity</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.date}</Card.Subtitle>
                     <Card.Text style = {cardTextStyle}>
                         <ListGroup variant="flush">
-                            <ListGroup.Item data-testid = "actual-humidity"><h2>{data ? data.data + " %" : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</h2> </ListGroup.Item>
+                            <ListGroup.Item data-testid = "actual-humidity"><h2>{data.carbon + " %" }</h2> </ListGroup.Item>
                         </ListGroup>
                     </Card.Text>
-                    <Card.Link href="#">History</Card.Link>
                 </Card.Body>
             </Card>
             </Col>
@@ -87,14 +112,13 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
             <Card border = "success">
                 <Card.Body>
                     <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.date }</Card.Subtitle>
                     <Card.Text style = {cardTextStyle}>
                         <ListGroup variant="flush">
-                            <ListGroup.Item data-testid = "actual-carbon"><h5>{data ? "Carbon: " + data.data + " unit": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h5> </ListGroup.Item>
-                            <ListGroup.Item data-testid = "actual-carbon"><h5>{data ? "Volatile gases: " + data.data + " unit": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h5> </ListGroup.Item>
+                            <ListGroup.Item data-testid = "actual-carbon"><h5>{"Carbon: " + data.carbon + " ppm"} </h5> </ListGroup.Item>
+                            <ListGroup.Item data-testid = "actual-volatile-gases"><h5>{"Volatile gases: " + data.carbon + " unit"} </h5> </ListGroup.Item>
                         </ListGroup>
                     </Card.Text>
-                    <Card.Link href="#">History</Card.Link>
                 </Card.Body>
             </Card>
             </Col>
@@ -102,19 +126,25 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
             <Card border = "success" >
                 <Card.Body>
                 <Card.Title style = {cardTextStyle}>Temperature</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{data ? "Last update: " + data.date : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}</Card.Subtitle>
+                    <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.date}</Card.Subtitle>
                     <Card.Text style = {cardTextStyle}>
                         <ListGroup variant="flush">
-                            <ListGroup.Item data-testid = "actual-temperature"><h2>{data ? data.data + " C": <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>} </h2></ListGroup.Item>
+                            <ListGroup.Item data-testid = "actual-temperature"><h2>{data.carbon + " C"} </h2></ListGroup.Item>
                         </ListGroup>
                     </Card.Text>
-                    <Card.Link href="#">History</Card.Link>
                 </Card.Body>
             </Card>
             </Col>
         </Row>
+            <Button variant="primary">History</Button>
+        </Card.Body>
+        <Card.Footer className="text-muted">{"Last fetch: " + lastFetch}</Card.Footer>
+        </Card>
+        }
+        </Container>
         <Row style = {rowStyle} className = "justify-content-center">
              <Form style = {formStyle}>
+             <h4 data-testid = "people">{"Present people: " +  people }</h4>
                   <Form.Group controlId="formBasicEmail">
                       <Form.Label>Here you can insert the current number of poeple in the room</Form.Label>
                       <Form.Control type="people" placeholder="Enter number of people" />
@@ -126,8 +156,9 @@ export const CurrentQualityView = ({data, carbon, people, soundLevel, temperatur
                       Submit
                   </Button>
               </Form>
-         </Row>   
-        </div>
+         </Row>  
+         
+        </Container>
   );
 
 };

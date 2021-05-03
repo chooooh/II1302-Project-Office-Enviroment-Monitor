@@ -11,7 +11,7 @@ import {CurrentQualityView} from '../views/currentQualityView';
 function parser(data){
     return {
         date: data["docs"][0]["_id"],
-        data: data["docs"][0]["data"],
+        carbon: data["docs"][0]["data"],
     }
 }
 
@@ -36,7 +36,7 @@ export const CurrentQualityPage = () => {
 
         const intervalId = setInterval(() => {
           toggle()
-        }, 5000);
+        }, 60000);
 
         return () => clearInterval(intervalId)
 
