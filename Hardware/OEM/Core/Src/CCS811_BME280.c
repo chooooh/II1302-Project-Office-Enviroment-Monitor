@@ -252,13 +252,13 @@ CCS811_get_tvoc(void){
 	return tVOC;
 }
 
-/**********************************************************************
- **********************************************************************
- ***																***
- ***						BME FUNCTIONS							***
- ***																***
- **********************************************************************
- **********************************************************************/
+/*****************************************************************************************
+ *****************************************************************************************
+ ***																				   ***
+ ***								BME FUNCTIONS									   ***
+ ***																			   	   ***
+ *****************************************************************************************
+ *****************************************************************************************/
 
 ENV_SENSOR_STATUS
 BME280_init(void){
@@ -293,7 +293,7 @@ BME280_init(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	/* Set temperature oversample ****last for hum changes to be applied*****/
+	/* Set temperature oversample  ****last for humidity control register changes to be applied*****/
 	status = BME280_set_temp_os();
 	if(status != BME280_SUCCESS)
 		return status;
@@ -423,7 +423,8 @@ BME280_read_calibration(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	/* Move h4 and h5 to correct positions :)))) */
+	/* Move h4 and h5 to correct positions :))))
+	   could probably be done nicer  	 	 	 */
 	dig_H4_val = ((dig_H4_temp & 0x00FF) << 4);
 	dig_H4_val = (dig_H4_val | ((dig_H4_temp & 0x0F00) >> 8));
 	dig_H5_val = dig_H5_temp >> 4;

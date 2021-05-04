@@ -14,10 +14,20 @@
 #include "office_environment_monitor.h"
 
 /* Current return statuses */
-static RETURN_STATUS current_status;			// return status for functions within this program
+static RETURN_STATUS 	 current_status;			// return status for functions within this program
 static ENV_SENSOR_STATUS current_sensor_status; // return status for environmental sensor functions
 
+/* Temperature and humidity */
+static float	 		 temperature;
+static float			 humidity;
+
 void office_environment_monitor(void){
+
+	/* Initiate display, if the init fails, leds will flash and it will try to init again */
+	display_init();
+	display_start_screen();
+	HAL_Delay(2000);
+	reset_screen_canvas();
 
 	/* Initiate the wifi module */
 	current_status = esp8266_start();
@@ -39,8 +49,25 @@ void office_environment_monitor(void){
 	if(current_status == BME280_START_ERROR)
 		error_handler();
 
+
+
+
 	for(;;){
 
+		if(CCS811_data_available() == CCS811_NEW_DATA){
+
+			CCS811_read_alg_res();
+			temperature = BME280_read_temp();
+			humidity = BME280_read_hum();
+			CCS811_set_temp_hum(temperature, humidity);
+
+			printf("CO2: %dppm\ntVoc: %dppb\n", CCS811_get_co2(), CCS811_get_tvoc());
+			printf("temp: %f\nhum: %f\n", temperature, humidity);
+			printf("----------------------------\n");
+		}
+		else if(CCS811_read_status_error()){
+			error_handler();
+		}
 	}
 }
 
@@ -49,6 +76,16 @@ void error_handler(void){
 
 	/* Display errors here */
 	while(1);
+}
+
+
+void display_startscreen(void){
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+	display_write_string("Office", WHITE);
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+	display_write_string("Environment", WHITE);
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+	display_write_string("Monitor", WHITE);
 }
 
 /* Initiates the wifi module */

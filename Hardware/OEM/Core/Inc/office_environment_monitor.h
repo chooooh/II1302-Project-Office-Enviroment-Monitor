@@ -9,6 +9,7 @@
 #include "stdio.h"
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
+#include "disp.h"
 
 /* Status codes */
 typedef enum
@@ -24,6 +25,11 @@ typedef enum
 	// Environment sensor status codes go here
 	// Distance sensor status codes go here
 } RETURN_STATUS;
+
+/**
+ *
+ */
+void display_startscreen(void)
 
 /**
  *

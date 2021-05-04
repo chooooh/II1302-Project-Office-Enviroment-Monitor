@@ -56,7 +56,7 @@
 #define std_temp		0x20	// temperature oversample x1 oversampling
 #define CTRL_HUM  		0xF2
 
-/* Sensor return codes */
+/* Environmental sensor return codes */
 typedef enum
 {
 	CCS811_SUCCESS = 0,		// Success status
