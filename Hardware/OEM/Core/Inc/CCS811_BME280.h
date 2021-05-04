@@ -19,7 +19,7 @@
 #include "stdio.h"
 
 /* CCS881 registers */
-#define CCS881_ADDR 	0xB6 	// Default I2C Address, shifted 1 bit to the left because HAL
+#define CCS811_ADDR 	0xB6 	// Default I2C Address, shifted 1 bit to the left because HAL
 #define STATUS_REG 		0x00	// Status register, R, 1 byte
 #define MEAS_MODE 		0x01	// Measurement mode and conditions register, R/W, 1 byte
 #define ALG_RES_DATA 	0x02	// Algorithm result, R, 8 bytes
@@ -29,6 +29,7 @@
 #define ERROR_ID		0xE0    // Reported errors, R, 1 byte
 #define MEAS_MODE_1 	0x10	// Set to measure each second
 #define SW_RESET		0xFF	// Register for resetting the device, W, 4 bytes
+#define ENV_DATA		0x05	// Set current humidity and temperature, W, 4 bytes
 
 /* BME280 registers */
 #define BME280_ADDR		0xEE	// 0x77 shifted to the left 1 bit, because HAL
@@ -55,13 +56,16 @@
 #define std_temp		0x20	// temperature oversample x1 oversampling
 #define CTRL_HUM  		0xF2
 
+/* Sensor return codes */
 typedef enum
 {
-	CCS881_SUCCESS = 0,		// Success status
-	CCS881_ERROR, 			// Some internal sensor error, error status set
-	CCS881_ID_ERR, 			// HW ID returns a bad value
-	CCS881_SAT_ERR,			// if a reading is out of bounds, saturated etc
-	CCS881_I2C_ERROR, 		// error when writing/reading a register with i2c
+	CCS811_SUCCESS = 0,		// Success status
+	CCS811_ERROR, 			// Some internal sensor error, error status set
+	CCS811_ID_ERR, 			// HW ID returns a bad value
+	CCS811_SAT_ERR,			// if a reading is out of bounds, saturated etc
+	CCS811_NEW_DATA,
+	CCS811_NO_NEW_DATA,
+	CCS811_I2C_ERROR, 		// error when writing/reading a register with i2c
 	BME280_SUCCESS,
 	BME280_ERROR,
 	BME280_ID_ERR,
@@ -73,7 +77,7 @@ typedef enum
  *
  */
 SENSOR_STATUS
-CCS811_read_register(uint8_t reg_addr, uint8_t* buffer);
+CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /**
  *
@@ -121,44 +125,101 @@ CCS811_write_mode(uint8_t mode);
  *
  */
 SENSOR_STATUS
-CCS881_reset(void);
+CCS811_reset(void);
 
+/*
+ *
+ */
+SENSOR_STATUS
+CCS811_data_available(void);
+
+/*
+ *
+ */
+SENSOR_STATUS
+CCS811_set_temp_hum(float temp, float hum);
+
+/*
+ *
+ */
+SENSOR_STATUS
+CCS811_read_alg_res(void);
+
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_init(void);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_read_register16(uint8_t reg_addr, uint16_t* buffer);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_read_calibration(void);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_set_mode(uint8_t mode);
 
+/*
+ *
+ */
 uint8_t
 BME280_get_mode(void);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_config(void);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_set_hum_os(void);
 
+/*
+ *
+ */
 SENSOR_STATUS
 BME280_set_temp_os(void);
 
+/*
+ *
+ */
 float
 BME280_read_temp(void);
 
+/*
+ *
+ */
 float
 BME280_read_hum(void);
 

@@ -12,18 +12,21 @@
 
 #include "CCS811_BME280.h"
 
+/* Global variables */
+static uint16_t CO2;
+static uint16_t tVOC;
 
 /* Compensation register values based on BME280 datasheet */
-uint16_t dig_T1_val;
-int16_t  dig_T2_val;
-int16_t  dig_T3_val;
-uint8_t  dig_H1_val;
-int16_t  dig_H2_val;
-uint8_t  dig_H3_val;
-int16_t  dig_H4_val;
-int16_t  dig_H5_val;
-int8_t   dig_H6_val;
-int32_t  t_fine;
+static uint16_t dig_T1_val;
+static int16_t  dig_T2_val;
+static int16_t  dig_T3_val;
+static uint8_t  dig_H1_val;
+static int16_t  dig_H2_val;
+static uint8_t  dig_H3_val;
+static int16_t  dig_H4_val;
+static int16_t  dig_H5_val;
+static int8_t   dig_H6_val;
+static int32_t  t_fine;
 
 /**********************************************************************
  **********************************************************************
@@ -33,50 +36,49 @@ int32_t  t_fine;
  **********************************************************************
  **********************************************************************/
 
-
 SENSOR_STATUS
 CCS811_init(void){
 
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = CCS881_SUCCESS;
+	SENSOR_STATUS status = CCS811_SUCCESS;
 
 	/* Read the HW ID register to make sure the sensor is responsive */
-	status = CCS811_read_register(HW_ID, &register_value);
-	if(status != CCS881_SUCCESS)
+	status = CCS811_read_register(HW_ID, &register_value, 1);
+	if(status != CCS811_SUCCESS)
 		return status;
 	if(register_value != 0x81)
-		return CCS881_ID_ERR;
+		return CCS811_ID_ERR;
 
 	/* Reset the device & wait a bit */
-	status = CCS881_reset();
-	if(status != CCS881_SUCCESS)
+	status = CCS811_reset();
+	if(status != CCS811_SUCCESS)
 		return status;
 	HAL_Delay(100);
 
 	/* Check for sensor errors */
 	if(CCS811_read_status_error() != 0){
 		//uint8_t err = CCS811_read_error_id();
-		return CCS881_ERROR;
+		return CCS811_ERROR;
 	}
 
 	/* Check if app is valid */
 	if(CCS811_read_app_valid() != 1)
-		return CCS881_ERROR;
+		return CCS811_ERROR;
 
 	/* Write to app start register to start */
 	status = CCS811_app_start();
-	if(status != CCS881_SUCCESS)
-		return CCS881_I2C_ERROR;
+	if(status != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
 
 	/* Set drive mode to 1; measurement each second */
 	status = CCS811_write_mode(1);
-	if(status != CCS881_SUCCESS)
+	if(status != CCS811_SUCCESS)
 		return status;
 
 	/* Check for sensor errors before exiting */
 	if(CCS811_read_status_error() != 0){
 		//uint8_t err = CCS811_read_error_id();
-		return CCS881_ERROR;
+		return CCS811_ERROR;
 	}
 
 	return status;
@@ -84,13 +86,13 @@ CCS811_init(void){
 
 /* Read a register using I2C */
 SENSOR_STATUS
-CCS811_read_register(uint8_t reg_addr, uint8_t* buffer)
+CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, CCS881_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Read(&hi2c3, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
-		 return CCS881_I2C_ERROR;
-	return CCS881_SUCCESS;
+		 return CCS811_I2C_ERROR;
+	return CCS811_SUCCESS;
 }
 
 /* Write to a register using I2C */
@@ -98,10 +100,10 @@ SENSOR_STATUS
 CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Write(&hi2c3, CCS881_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Write(&hi2c3, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
-		 return CCS881_I2C_ERROR;
-	return CCS881_SUCCESS;
+		 return CCS811_I2C_ERROR;
+	return CCS811_SUCCESS;
 }
 
 /* Read bit 0, which is the status error bit, if 1 is returned there was an error
@@ -109,7 +111,7 @@ CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 uint8_t
 CCS811_read_status_error(void){
 	uint8_t register_value;
-	CCS811_read_register(STATUS_REG, &register_value);
+	CCS811_read_register(STATUS_REG, &register_value, 1);
 	return (register_value & 0x01);
 }
 
@@ -117,7 +119,7 @@ CCS811_read_status_error(void){
 uint8_t
 CCS811_read_error_id(void){
 	uint8_t register_value;
-	CCS811_read_register(ERROR_ID, &register_value);
+	CCS811_read_register(ERROR_ID, &register_value, 1);
 	return register_value;
 }
 
@@ -125,7 +127,7 @@ CCS811_read_error_id(void){
 uint8_t
 CCS811_read_app_valid(void){
 	uint8_t register_value;
-	CCS811_read_register(STATUS_REG, &register_value);
+	CCS811_read_register(STATUS_REG, &register_value, 1);
 	register_value = (register_value >> 4) & 0x01;
 	return register_value;
 }
@@ -136,22 +138,25 @@ CCS811_app_start(void){
 	uint8_t app_start = APP_START;
 	HAL_StatusTypeDef status = HAL_OK;
 
-	status = HAL_I2C_Master_Transmit(&hi2c3, CCS881_ADDR, &app_start, 1, HAL_MAX_DELAY);
+	status = HAL_I2C_Master_Transmit(&hi2c3, CCS811_ADDR, &app_start, 1, HAL_MAX_DELAY);
 	if(status != HAL_OK)
-		return CCS881_I2C_ERROR;
-	return CCS881_SUCCESS;
+		return CCS811_I2C_ERROR;
+	return CCS811_SUCCESS;
 }
 
 /* Set mode, changes the interval of measurements */
 SENSOR_STATUS
 CCS811_write_mode(uint8_t mode){
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = CCS881_SUCCESS;
+	SENSOR_STATUS status = CCS811_SUCCESS;
+
+	if(mode > 4 || mode < 0)
+		return CCS811_ERROR;
 
 	/* Check what's in the register */
-	status = CCS811_read_register(MEAS_MODE, &register_value);
-	if(status != CCS881_SUCCESS)
-		return CCS881_I2C_ERROR;
+	status = CCS811_read_register(MEAS_MODE, &register_value, 1);
+	if(status != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
 
 	/* Clear current, and add new mode that should be set */
 	register_value = register_value & ~(0x70);
@@ -159,21 +164,83 @@ CCS811_write_mode(uint8_t mode){
 
 	/* Write the mode */
 	status = CCS811_write_register(MEAS_MODE, &register_value, 1);
-	if(status != CCS881_SUCCESS)
-		return CCS881_I2C_ERROR;
+	if(status != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
 
 	return status;
 }
 
 /* Reset the sensor */
 SENSOR_STATUS
-CCS881_reset(void){
+CCS811_reset(void){
 	uint8_t reset_key[4] = {0x11, 0xE5, 0x72, 0x8A};
-	if(CCS811_write_register(SW_RESET, reset_key, 4) != CCS881_SUCCESS)
-		return CCS881_I2C_ERROR;
-	return CCS881_SUCCESS;
+	if(CCS811_write_register(SW_RESET, reset_key, 4) != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
+	return CCS811_SUCCESS;
 }
 
+SENSOR_STATUS
+CCS811_data_available(void){
+
+	uint8_t register_value = 0;
+	SENSOR_STATUS status = CCS811_SUCCESS;
+
+	/* Check what's in the register */
+	status = CCS811_read_register(STATUS_REG, &register_value, 1);
+	if(status != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
+
+	register_value = (register_value & 0x08) >> 3;
+	if(register_value == 0)
+		return CCS811_NO_NEW_DATA;
+
+	return CCS811_NEW_DATA;
+}
+
+/* Set environmental values taken from BME280 sensor */
+SENSOR_STATUS
+CCS811_set_temp_hum(float temp, float hum){
+
+	SENSOR_STATUS status = CCS811_SUCCESS;
+
+	/* values larger or smaller than this will not fit into the registers */
+	if(temp < -25 || temp > 50 || hum < 0 || hum > 100)
+		return CCS811_SAT_ERR;
+
+	uint32_t hum_t = hum * 1024;
+	uint32_t temp_t = temp * 1000;
+
+	uint8_t data[4] = {};				/* signed or not signed ???*/
+	data[0] = (hum_t + 250) / 500;
+	data[1] = 0x00;
+	data[2] = (temp_t + 25250) / 500;
+	data[3] = 0x00;
+
+	if(CCS811_write_register(ENV_DATA, data, 4) != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
+	return status;
+}
+
+/* Read CO2 and tVoc values */
+SENSOR_STATUS
+CCS811_read_alg_res(void){
+
+	uint8_t data[4];
+	SENSOR_STATUS status = CCS811_SUCCESS;
+
+	status = CCS811_read_register(ALG_RES_DATA, data, 4);
+	if(status != CCS811_SUCCESS)
+		return CCS811_I2C_ERROR;
+
+	/* data[0]: eCO2 High Byte
+	 * data[1]: eCO2 Low Byte
+	 * data[2]: TVOC High Byte
+	 * data[3]: TVOC Low Byte 	*/
+	CO2 = ((uint16_t)data[0] << 8) | data[1];
+	tVOC = ((uint16_t)data[2] << 8) | data[3];
+
+	return status;
+}
 
 /**********************************************************************
  **********************************************************************
@@ -242,16 +309,19 @@ BME280_init(void){
 	/* Read humidity */
 	float hum = BME280_read_hum();
 
-	/*
+
+
 	while(1){
+		CCS811_read_alg_res();
+		printf("CO2: %dppm\ntVoc: %dppb\n", CO2, tVOC);
 		HAL_Delay(500);
 		temp = BME280_read_temp();
 		HAL_Delay(500);
 		hum = BME280_read_hum();
+		CCS811_set_temp_hum(temp, hum);
 		printf("temp: %f\nhum: %f\n", temp, hum);
 		printf("----------------------------\n");
 	}
-	*/
 
 	return status;
 }
@@ -359,6 +429,9 @@ BME280_read_calibration(void){
 SENSOR_STATUS
 BME280_set_mode(uint8_t mode){
 
+	if(mode > 3 || mode < 0)
+		return BME280_ERROR;
+
 	uint8_t register_value = 0;
 	SENSOR_STATUS status = BME280_SUCCESS;
 
@@ -413,7 +486,6 @@ BME280_set_hum_os(void){
 
 	uint8_t temp;
 	status = BME280_read_register8 (CTRL_HUM, &temp, 1);
-
 
 	return status;
 
@@ -476,87 +548,3 @@ BME280_read_hum(void){
 
 	return (float)(var1>>12) / 1024.0;
 }
-
-
-
-
-	/*
-uint8_t initialize_sensor(void)
-{
-	while (assert_sensor_has_started() != 0)
-	{
-	//Pull nWake down during transmission
-uint8_t nulldata = 0x00;
-HAL_I2C_Mem_Write(&hi2c1, DEVICE_ADDR, APP_START, 8, &nulldata, 0, 1000);
-//Pull up nWake
-	}
-return 0;
-	return 0;
-}
-    */
-
-	/*
-uint8_t assert_sensor_has_started(void)
-{
-	uint8_t status = access_status_register();      //Get status from air quality sensor
-	if (((status >> 4) & 9) == 9)        //Check that loadable firmware exists and operational mode is in application mode
-    {return 0;}                          //if so, return normal operation-code 0
-    else
-    {return 1;}                          //otherwise return error code 1
-	return 0;
-}
-    */
-
-	/*
-uint8_t assert_no_error(void)
-{
-	uint8_t status = access_status_register();
-	return status & 0x1;
-	return 0;
-}
-	*/
-
-
-	/*
-uint8_t set_mode(uint8_t mode)
-{
-	if (mode < 0 || mode > 4)
-	{return 1;}
-	else
-	{
-		//Pull down nWake
-		uint8_t set = (((mode << 4) & 0x70) + 4);        //Sets the set measurement mode, and sets data ready-interrupt
-		HAL_I2C_Mem_Write(&hi2c, DEVICE_ADDR, MEASREG, 8, &set, 1, 1000);   //Transmit mode via I2C
-		//Pull up nWake
-	}
-	if (mode == 4)
-		return 4;
-	else
-		return 0;
-	return 0;
-}
-	*/
-
-	/*
-void recieve_data(void)
-{
-uint8_t datarr[8];
-//pull down nWake
-HAL_I2C_Mem_Read(&hi2c, DEVICE_ADDR, ALG_RESDATA, 8, datarr, 8, 1000);  //Receive all 8 bytes from the data results-register
-if (assert_no_error() == 0)
-{
-	H_CO2 = datarr[0];
-	L_CO2 = datarr[1];
-	H_OG = datarr[2];
-	L_OG = datarr[3];
-}
-else
-	error_response();
-}
-
-void error_response(void)
-{
-
-}
-
-	*/
