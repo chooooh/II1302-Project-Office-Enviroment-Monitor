@@ -2,4 +2,6 @@ applications:
 - name: II1302-Project-Office-Enviroment-Monitor
   memory: 128M
   buildpack: sdk-for-nodejs
+  services:
+  - II1302-Project-Environment-Monitor-Database
 
