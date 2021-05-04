@@ -1,5 +1,10 @@
-
-const message = require('../utils');
+/**
+ * @fileoverview This file implements the integration tests. The scope
+ * is primarily the routes and database functions.
+ * Dependencies are server app instance, chai, chai-http that handles allows
+ * http test requests
+ * @package
+ */
 const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
