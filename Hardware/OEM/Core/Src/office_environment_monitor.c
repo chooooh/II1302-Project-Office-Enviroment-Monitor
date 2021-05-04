@@ -13,19 +13,31 @@
 
 #include "office_environment_monitor.h"
 
-/* Current return status */
-static RETURN_STATUS current_status;
+/* Current return statuses */
+static RETURN_STATUS current_status;			// return status for functions within this program
+static ENV_SENSOR_STATUS current_sensor_status; // return status for environmental sensor functions
 
 void office_environment_monitor(void){
 
 	/* Initiate the wifi module */
-	if(esp8266_start() == ESP8266_START_ERROR)
+	current_status = esp8266_start();
+	if(current_status == ESP8266_START_ERROR)
 		error_handler();
 
 	/* Connect to wifi */
-	if(esp8266_wifi_start() == ESP8266_WIFI_ERROR)
+	current_status = esp8266_wifi_start();
+	if(current_status == ESP8266_WIFI_ERROR)
 		error_handler();
 
+	/* Initiate CCS811 for CO2 and tVOC measurements */
+	current_status = ccs811_start();
+	if(current_status == CCS811_START_ERROR)
+		error_handler();
+
+	/* Initiate BME280 for humidity and temperature */
+	current_status = bme280_start();
+	if(current_status == BME280_START_ERROR)
+		error_handler();
 
 	for(;;){
 
@@ -34,6 +46,8 @@ void office_environment_monitor(void){
 
 
 void error_handler(void){
+
+	/* Display errors here */
 	while(1);
 }
 
@@ -62,4 +76,24 @@ RETURN_STATUS esp8266_wifi_start(void){
 	}
 	current_status = ESP8266_WIFI_SUCCESS;
 	return current_status;
+}
+
+/* Initiate CCS811 */
+RETURN_STATUS ccs811_start(void){
+
+	current_sensor_status = CCS811_init();
+	if(current_sensor_status != CCS811_SUCCESS){
+		return CCS811_START_ERROR;
+	}
+	return CCS811_START_SUCCESS;
+}
+
+/* Initiate BME280 */
+RETURN_STATUS bme280_start(void){
+
+	current_sensor_status = BME280_init();
+	if(current_sensor_status != BME280_SUCCESS){
+			return BME280_START_ERROR;
+	}
+	return BME280_START_SUCCESS;
 }

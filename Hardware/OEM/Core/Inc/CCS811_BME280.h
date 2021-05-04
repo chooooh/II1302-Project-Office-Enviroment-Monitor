@@ -62,7 +62,6 @@ typedef enum
 	CCS811_SUCCESS = 0,		// Success status
 	CCS811_ERROR, 			// Some internal sensor error, error status set
 	CCS811_ID_ERR, 			// HW ID returns a bad value
-	CCS811_SAT_ERR,			// if a reading is out of bounds, saturated etc
 	CCS811_NEW_DATA,
 	CCS811_NO_NEW_DATA,
 	CCS811_I2C_ERROR, 		// error when writing/reading a register with i2c
@@ -70,25 +69,25 @@ typedef enum
 	BME280_ERROR,
 	BME280_ID_ERR,
 	BME280_I2C_ERROR
-} SENSOR_STATUS;
+} ENV_SENSOR_STATUS;
 
 
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_init(void);
 
 /**
@@ -112,79 +111,91 @@ CCS811_read_app_valid(void);
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_app_start(void);
 
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_write_mode(uint8_t mode);
 
 /**
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_reset(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_data_available(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_set_temp_hum(float temp, float hum);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_read_alg_res(void);
 
 /*
  *
  */
-SENSOR_STATUS
+uint16_t
+CCS811_get_co2(void);
+
+/*
+ *
+ */
+uint16_t
+CCS811_get_tvoc(void);
+
+/*
+ *
+ */
+ENV_SENSOR_STATUS
 BME280_init(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_register16(uint8_t reg_addr, uint16_t* buffer);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_calibration(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_mode(uint8_t mode);
 
 /*
@@ -196,19 +207,19 @@ BME280_get_mode(void);
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_config(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_hum_os(void);
 
 /*
  *
  */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_temp_os(void);
 
 /*

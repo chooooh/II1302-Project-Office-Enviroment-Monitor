@@ -36,11 +36,11 @@ static int32_t  t_fine;
  **********************************************************************
  **********************************************************************/
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_init(void){
 
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = CCS811_SUCCESS;
+	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
 	/* Read the HW ID register to make sure the sensor is responsive */
 	status = CCS811_read_register(HW_ID, &register_value, 1);
@@ -85,7 +85,7 @@ CCS811_init(void){
 }
 
 /* Read a register using I2C */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
@@ -96,7 +96,7 @@ CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 }
 
 /* Write to a register using I2C */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
@@ -133,7 +133,7 @@ CCS811_read_app_valid(void){
 }
 
 /* Start the application, it shouldnt send any data so this uses master transmit... */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_app_start(void){
 	uint8_t app_start = APP_START;
 	HAL_StatusTypeDef status = HAL_OK;
@@ -145,10 +145,10 @@ CCS811_app_start(void){
 }
 
 /* Set mode, changes the interval of measurements */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_write_mode(uint8_t mode){
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = CCS811_SUCCESS;
+	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
 	if(mode > 4 || mode < 0)
 		return CCS811_ERROR;
@@ -171,7 +171,7 @@ CCS811_write_mode(uint8_t mode){
 }
 
 /* Reset the sensor */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_reset(void){
 	uint8_t reset_key[4] = {0x11, 0xE5, 0x72, 0x8A};
 	if(CCS811_write_register(SW_RESET, reset_key, 4) != CCS811_SUCCESS)
@@ -179,11 +179,11 @@ CCS811_reset(void){
 	return CCS811_SUCCESS;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_data_available(void){
 
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = CCS811_SUCCESS;
+	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
 	/* Check what's in the register */
 	status = CCS811_read_register(STATUS_REG, &register_value, 1);
@@ -198,14 +198,14 @@ CCS811_data_available(void){
 }
 
 /* Set environmental values taken from BME280 sensor */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_set_temp_hum(float temp, float hum){
 
-	SENSOR_STATUS status = CCS811_SUCCESS;
+	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
 	/* values larger or smaller than this will not fit into the registers */
 	if(temp < -25 || temp > 50 || hum < 0 || hum > 100)
-		return CCS811_SAT_ERR;
+		return CCS811_ERROR;
 
 	uint32_t hum_t = hum * 1024;
 	uint32_t temp_t = temp * 1000;
@@ -222,11 +222,11 @@ CCS811_set_temp_hum(float temp, float hum){
 }
 
 /* Read CO2 and tVoc values */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 CCS811_read_alg_res(void){
 
 	uint8_t data[4];
-	SENSOR_STATUS status = CCS811_SUCCESS;
+	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
 	status = CCS811_read_register(ALG_RES_DATA, data, 4);
 	if(status != CCS811_SUCCESS)
@@ -242,6 +242,16 @@ CCS811_read_alg_res(void){
 	return status;
 }
 
+uint16_t
+CCS811_get_co2(void){
+	return CO2;
+}
+
+uint16_t
+CCS811_get_tvoc(void){
+	return tVOC;
+}
+
 /**********************************************************************
  **********************************************************************
  ***																***
@@ -250,10 +260,10 @@ CCS811_read_alg_res(void){
  **********************************************************************
  **********************************************************************/
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_init(void){
 
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 	uint8_t register_value = 0;
 
 	/* Read the ID register to make sure the sensor is responsive */
@@ -288,27 +298,22 @@ BME280_init(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-	uint8_t mode = 0;
-	mode = BME280_get_mode();
-
 	/* Set normal operation */
 	status = BME280_set_mode(3);
 	if(status != BME280_SUCCESS)
 		return status;
 
-	mode = BME280_get_mode();
-
-	/* read status 0xF3 ? */
+/*
+	// read status 0xF3 ?
 	HAL_Delay(100);
 
-	/* Read temp first to set t_fine */
+	//Read temp first to set t_fine
 	float temp = BME280_read_temp();
 
 	HAL_Delay(100);
 
-	/* Read humidity */
+	// Read humidity
 	float hum = BME280_read_hum();
-
 
 
 	while(1){
@@ -322,11 +327,11 @@ BME280_init(void){
 		printf("temp: %f\nhum: %f\n", temp, hum);
 		printf("----------------------------\n");
 	}
-
+*/
 	return status;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
@@ -336,7 +341,7 @@ BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 	return BME280_SUCCESS;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 {
 	uint8_t buf[2];
@@ -350,7 +355,7 @@ BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 	return BME280_SUCCESS;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
 	HAL_StatusTypeDef status = HAL_OK;
 	reg_addr = reg_addr | (BME280_ADDR << 8);
@@ -362,7 +367,7 @@ BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
 	return BME280_SUCCESS;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
@@ -373,7 +378,7 @@ BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_read_calibration(void){
 
 	uint16_t dig_H4_temp; // [11:4]
@@ -381,7 +386,7 @@ BME280_read_calibration(void){
 
 	// TODO: refactor this? --> && all statuses in one if?
 	/* Signed variables need to be casted to unsigned when using the read functions */
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 	status = BME280_read_register16(dig_T1_reg, 			&dig_T1_val);
 	if(status != BME280_SUCCESS)
 		return status;
@@ -426,14 +431,14 @@ BME280_read_calibration(void){
 	return status;
 }
 
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_mode(uint8_t mode){
 
 	if(mode > 3 || mode < 0)
 		return BME280_ERROR;
 
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 
 	status = BME280_read_register8 (CTRL_MEAS, &register_value, 1);
 	if(status != BME280_SUCCESS)
@@ -454,11 +459,11 @@ BME280_get_mode(void){
 }
 
 /* Set standard config for filter and rate */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_config(void){
 
 	uint8_t register_value = 0;
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 
 	status = BME280_read_register8 (CONFIG_REG, &register_value, 1);
 	if(status != BME280_SUCCESS)
@@ -472,10 +477,10 @@ BME280_config(void){
 }
 
 /* Set humidity oversampling to 1x */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_hum_os(void){
 
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 	uint8_t register_value = 0;
 
 	status = BME280_read_register8 (CTRL_HUM, &register_value, 1);
@@ -492,10 +497,10 @@ BME280_set_hum_os(void){
 }
 
 /* Set temperature oversampling to 1x */
-SENSOR_STATUS
+ENV_SENSOR_STATUS
 BME280_set_temp_os(void){
 
-	SENSOR_STATUS status = BME280_SUCCESS;
+	ENV_SENSOR_STATUS status = BME280_SUCCESS;
 	uint8_t register_value = 0;
 
 	status = BME280_read_register8 (CTRL_MEAS, &register_value, 1);
@@ -548,3 +553,5 @@ BME280_read_hum(void){
 
 	return (float)(var1>>12) / 1024.0;
 }
+
+

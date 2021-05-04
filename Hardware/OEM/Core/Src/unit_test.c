@@ -67,8 +67,8 @@ void unit_test(void){
 	/* Test initiation of ESP8266 */
 	//RUN_TEST(test_esp8266_init);
 	//HAL_Delay(2000);
-	CCS811_init();
-	BME280_init();
+	//CCS811_init();
+	//BME280_init();
 	/* Test connecting to wifi */
 	//RUN_TEST(test_esp8266_wifi_connect);
 
