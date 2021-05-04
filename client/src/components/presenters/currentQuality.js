@@ -14,13 +14,25 @@ function parser(data){
         carbon: data["docs"][0]["data"],
     }
 }
-
+/**
+ * This function is responsible for creating a react component and providing it
+ * with the data it needs to render. It sends props down to the view and event up to the model.
+ * 
+ * @returns A React funtional component, specifically the currentQuality component
+ */
 export const CurrentQualityPage = () => {
-
+    
+    //State variabel which holds the data fetched from the database
     const [data, setData] = React.useState(null);
+    //State variabel which is used for fetching data
     const [fetching, setShouldFetch] = React.useState(true);
+    //State variabel which holds the number of people currently in the room, set by a user.
+    const [people, setPeople] = React.useState(null);
 
-
+    /**
+     * A toggle funciton, this function toggles the value of the state variabel fetching
+     * The purpose of the function is to trigger a new fetch of data from the database
+     */
     function toggle(){
         setShouldFetch(!fetching)
     }
@@ -40,19 +52,18 @@ export const CurrentQualityPage = () => {
 
         return () => clearInterval(intervalId)
 
-    }, [fetching])
+    }, [fetching, people])
 
 
     return (
     React.createElement(CurrentQualityView, 
         {
-            data,
-            soundLevel: 50, 
+            data, 
             people: 10,
-            temperature: 22,
-            humidity: 5,
-            date: "not the actual date"
-            
+            onSubmit: (amount) => {
+                console.log("Amount", amount);
+                //Send amount to database
+            }
         }) 
     );
 }
