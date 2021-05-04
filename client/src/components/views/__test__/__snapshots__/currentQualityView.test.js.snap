@@ -42,7 +42,7 @@ exports[`matches snapshot 1`] = `
     style={
       Object {
         "color": "black",
-        "marginTop": "20px",
+        "marginTop": "70px",
       }
     }
   >
@@ -54,15 +54,6 @@ exports[`matches snapshot 1`] = `
       <br />
       If the number of people displayed on this page is incorrect you can change it to the proper amount below.
       <br />
-    </p>
-    <p>
-      <button
-        className="btn btn-primary"
-        disabled={false}
-        type="button"
-      >
-        Learn more
-      </button>
     </p>
   </div>
   <div
@@ -85,17 +76,18 @@ exports[`matches snapshot 1`] = `
   >
     <form
       className=""
+      data-testid="form-component"
       style={
         Object {
           "padding": "10px",
         }
       }
     >
-      <h4
-        data-testid="people"
-      >
-        Present people: undefined
-      </h4>
+      <div
+        className="spinner-border"
+        data-testid="Spinner"
+        role="status"
+      />
       <div
         className="form-group"
       >
@@ -108,8 +100,9 @@ exports[`matches snapshot 1`] = `
         <input
           className="form-control"
           id="formBasicEmail"
+          onChange={[Function]}
           placeholder="Enter number of people"
-          type="people"
+          type="text"
         />
         <small
           className="text-muted form-text"
@@ -121,6 +114,7 @@ exports[`matches snapshot 1`] = `
         className="btn btn-primary"
         data-testid="submit-button"
         disabled={false}
+        onClick={[Function]}
         type="submit"
       >
         Submit

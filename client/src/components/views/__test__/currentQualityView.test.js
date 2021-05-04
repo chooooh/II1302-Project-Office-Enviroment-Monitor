@@ -53,14 +53,6 @@ describe("Testing the date prop in each card", () => {
     })
 })
 
-//This test ensures that the correct number of people is presented
-describe("Testing that the given number of people is displayed", () => {
-    const people = 20;
-    it("renders number of people correctly", () => {
-        const {getByTestId} = render(<CurrentQualityView people = {people}/>);
-        expect(getByTestId("people")).toHaveTextContent("Present people: 20");
-    })
-})
 
 //This test ensures that all date columns in each table displays the value they have been given.
 describe("Testing the date prop and that it renders correctly on all places", () => {
@@ -84,38 +76,58 @@ describe("Testing the date prop and that it renders correctly on all places", ()
     })
 })
 
-//This test ensures that the carbon property dispays the value it is given
-describe("Testing the carbon, volatile gases, humidity and temperature props are correctly displayed", () => {
+//This test ensures that all the values which resides in the data object which is sent from the presenter to the view
+//are correctly handled and presented in the view.
+describe("Testing the carbon, people, volatile gases, humidity and temperature props are correctly displayed", () => {
     const data = {
-        carbon: "10"
+        carbon: "10",
+        volatileGases: 12,
+        people: 15,
+        humidity: 30,
+        temperature: 24
     }
 
     it("Renders the given carbon correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-carbon")).toHaveTextContent("10");
+        expect(getByTestId("actual-carbon")).toHaveTextContent("Carbon: 10 ppm");
     })
     it("Renders the given volatile gases correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("10");
+        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("Volatile gases: 12 unit");
     })
     it("Renders the given temperature correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-temperature")).toHaveTextContent("10");
+        expect(getByTestId("actual-temperature")).toHaveTextContent("24 C");
     })
     it("Renders the given humidity correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-humidity")).toHaveTextContent("10");
+        expect(getByTestId("actual-humidity")).toHaveTextContent("30 %");
+    })
+    it("Renders the given people correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("people")).toHaveTextContent("Present people: 15");
     })
 })
 
 //This test ensures that the spinner (a loading indicator) is rendered when waiting for actual data 
-test('Data columns renders Spinner when awaiting', () => {
+test('Spinner is rendered instead of the main Card component', () => {
     const data = null;
     const {getAllByTestId, getByTestId } = render(<CurrentQualityView data = {data}/>);
     const date = getByTestId('air-quality-content')
     const spinnerInDate = within(date).getAllByTestId('Spinner')
     expect(spinnerInDate.length).toBe(1);
 });
+//Similar to the previous test this test ensures that a spinner is rendered when waiting for the data.people prop to be fetched
+test('Spinner is rendered instead of the Form component', () => {
+    const data = null;
+    const {getAllByTestId, getByTestId } = render(<CurrentQualityView data = {data}/>);
+    const form = getByTestId('form-component')
+    const spinnerInDate = within(form).getAllByTestId('Spinner')
+    expect(spinnerInDate.length).toBe(1);
+});
+
+
+
 
 
 

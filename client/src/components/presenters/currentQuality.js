@@ -12,6 +12,10 @@ function parser(data){
     return {
         date: data["docs"][0]["_id"],
         carbon: data["docs"][0]["data"],
+        volatileGases: 12,
+        people: 10,
+        humidity: 30,
+        temperature: 24
     }
 }
 /**

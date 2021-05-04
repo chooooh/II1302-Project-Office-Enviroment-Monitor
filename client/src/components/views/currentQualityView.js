@@ -42,13 +42,13 @@ const fontSize = {
  * @param {*} param0 
  * @returns 
  */
-export const CurrentQualityView = ({data, people, onSubmit}) => {  
+export const CurrentQualityView = ({data, onSubmit}) => {  
     
     let lastFetch = null;
     if (data != null) lastFetch = currentDateTime(); 
 
     const textInput = React.createRef(); 
-    const [peeps, setPeople] = React.useState(people);
+    const [peeps, setPeople] = React.useState(null);
 
     return (
         <Container fluid>
@@ -80,7 +80,7 @@ export const CurrentQualityView = ({data, people, onSubmit}) => {
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.date}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.carbon + " %" } </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.humidity + " %" } </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -94,7 +94,7 @@ export const CurrentQualityView = ({data, people, onSubmit}) => {
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.carbon + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.carbon + " unit"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.volatileGases + " unit"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -107,7 +107,7 @@ export const CurrentQualityView = ({data, people, onSubmit}) => {
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.date}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{data.carbon + " C"}</ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{data.temperature + " C"}</ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -120,8 +120,8 @@ export const CurrentQualityView = ({data, people, onSubmit}) => {
             </Card>}
             </Container>
             <Row style = {rowStyle} className = "justify-content-center">
-                <Form style = {formStyle}>
-                <Form.Label data-testid = "people">{"Present people: " +  people }</Form.Label>
+                <Form style = {formStyle} data-testid = "form-component">
+                {data == null? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner> :<Form.Label data-testid = "people">{"Present people: " +  data.people }</Form.Label>}
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Here you can insert the current number of poeple in the room</Form.Label>
                         <Form.Control placeholder="Enter number of people" ref = {textInput}  onChange = {() => { setPeople(textInput.current.value); console.log(textInput.current.value) }} type = "text"/>
