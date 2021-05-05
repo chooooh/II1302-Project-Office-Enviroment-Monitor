@@ -64,6 +64,7 @@ esp8266_send_command(const char* command){
 			fail_flag = true;
 			break;
 		}
+
 	}
 
 	//return evaluate(); would more efficient but not as clear in debugging
@@ -124,6 +125,8 @@ esp8266_init(void){
 
 const char*
 esp8266_wifi_init(void){
+
+	HAL_Delay(1000);
 
 	/* Buffers */
 	char wifi_command[256] = {0};

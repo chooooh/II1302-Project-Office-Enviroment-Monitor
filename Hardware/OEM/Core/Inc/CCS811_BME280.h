@@ -62,6 +62,7 @@ typedef enum
 	CCS811_SUCCESS = 0,		// Success status
 	CCS811_ERROR, 			// Some internal sensor error, error status set
 	CCS811_ID_ERR, 			// HW ID returns a bad value
+	CCS811_NOT_READY,
 	CCS811_NEW_DATA,
 	CCS811_NO_NEW_DATA,
 	CCS811_I2C_ERROR, 		// error when writing/reading a register with i2c

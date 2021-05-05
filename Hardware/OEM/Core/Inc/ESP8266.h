@@ -49,6 +49,7 @@ static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
 static const char ESP8266_AT_ERROR[] 			 = "ERROR";
 static const char ESP8266_AT_FAIL[] 			 = "FAIL";
+static const char ESP8266_AT_READY[] 			 = "ready\r\n";
 static const char ESP8266_AT_GOT_IP[] 			 = "WIFI GOT IP";
 static const char ESP8266_AT_WIFI_CONNECTED[] 	 = "WIFI CONNECTED";
 static const char ESP8266_AT_WIFI_DISCONNECTED[] = "WIFI DISCONNECTED";

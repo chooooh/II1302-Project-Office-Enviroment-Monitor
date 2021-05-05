@@ -39,58 +39,59 @@ static int32_t  t_fine;
 ENV_SENSOR_STATUS
 CCS811_init(void){
 
+	volatile uint8_t temp = 0;
 	uint8_t register_value = 0;
 	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 
-	printf("1");
+	HAL_Delay(1000);
+
 	/* Read the HW ID register to make sure the sensor is responsive */
-	status = CCS811_read_register(HW_ID, &register_value, 1);
-	if(status != CCS811_SUCCESS)
-		return status;
+	//status = CCS811_read_register(HW_ID, &register_value, 1);
+	// mem read here, otherwise i2c seems to break
+	status = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
+	if(status == 1){
+		HAL_Delay(100);
+		CCS811_init();
+	}
+
 	if(register_value != 0x81)
 		return CCS811_ID_ERR;
-	HAL_Delay(10);
 
-	printf("2");
 	/* Reset the device & wait a bit */
 	status = CCS811_reset();
 	if(status != CCS811_SUCCESS)
 		return status;
-	HAL_Delay(500);
 
-	printf("3");
+	HAL_Delay(100);
+
 	/* Check for sensor errors */
 	if(CCS811_read_status_error() != 0){
 		//uint8_t err = CCS811_read_error_id();
 		return CCS811_ERROR;
 	}
-	HAL_Delay(10);
-	printf("4");
 
 	/* Check if app is valid */
 	if(CCS811_read_app_valid() != 1)
 		return CCS811_ERROR;
-	HAL_Delay(10);
+	HAL_Delay(100);
 
-	printf("5");
 	/* Write to app start register to start */
 	status = CCS811_app_start();
 	if(status != CCS811_SUCCESS)
 		return CCS811_I2C_ERROR;
-	HAL_Delay(10);
-	printf("6");
+	HAL_Delay(100);
+
 	/* Set drive mode to 1; measurement each second */
 	status = CCS811_write_mode(1);
 	if(status != CCS811_SUCCESS)
 		return status;
-	HAL_Delay(10);
-	printf("7");
+
 	/* Check for sensor errors before exiting */
 	if(CCS811_read_status_error() != 0){
 		//uint8_t err = CCS811_read_error_id();
 		return CCS811_ERROR;
 	}
-	printf("8");
+
 	return status;
 }
 
@@ -99,8 +100,8 @@ ENV_SENSOR_STATUS
 CCS811_read_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
-	while (HAL_I2C_GetState(&hi2c3) != HAL_I2C_STATE_READY);
+	status = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY);
 	if(status != HAL_OK)
 		 return CCS811_I2C_ERROR;
 	return CCS811_SUCCESS;
@@ -111,7 +112,7 @@ ENV_SENSOR_STATUS
 CCS811_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Write(&hi2c3, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Write(&hi2c1, CCS811_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return CCS811_I2C_ERROR;
 	return CCS811_SUCCESS;
@@ -149,7 +150,7 @@ CCS811_app_start(void){
 	uint8_t app_start = APP_START;
 	HAL_StatusTypeDef status = HAL_OK;
 
-	status = HAL_I2C_Master_Transmit(&hi2c3, CCS811_ADDR, &app_start, 1, HAL_MAX_DELAY);
+	status = HAL_I2C_Master_Transmit(&hi2c1, CCS811_ADDR, &app_start, 1, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		return CCS811_I2C_ERROR;
 	return CCS811_SUCCESS;
@@ -346,7 +347,7 @@ ENV_SENSOR_STATUS
 BME280_read_register8(uint8_t reg_addr, uint8_t* buffer, uint8_t size)
 {
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Read(&hi2c1, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
 	return BME280_SUCCESS;
@@ -357,7 +358,7 @@ BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 {
 	uint8_t buf[2];
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Read(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buf, 2, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Read(&hi2c1, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buf, 2, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
 
@@ -371,7 +372,7 @@ BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
 	HAL_StatusTypeDef status = HAL_OK;
 	reg_addr = reg_addr | (BME280_ADDR << 8);
 
-	status = HAL_I2C_Master_Receive(&hi2c3, reg_addr, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Master_Receive(&hi2c1, reg_addr, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
 
@@ -382,7 +383,7 @@ ENV_SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
-	status = HAL_I2C_Mem_Write(&hi2c3, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
+	status = HAL_I2C_Mem_Write(&hi2c1, BME280_ADDR, (uint8_t) reg_addr, I2C_MEMADD_SIZE_8BIT, buffer, size, HAL_MAX_DELAY);
 	if(status != HAL_OK)
 		 return BME280_I2C_ERROR;
 	return BME280_SUCCESS;
