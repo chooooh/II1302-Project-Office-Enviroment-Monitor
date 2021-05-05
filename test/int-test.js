@@ -125,5 +125,16 @@ describe('Sensor API', () => {
                     done(err);
                 })
         });
-    })
+    });
+
+    describe('test to ensure fail', () => {
+        it('should have status 200', (done) => {
+            chai.request(host)
+                .get('/api/sensor/fail')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    done(err);
+            });
+        });
+    }); 
 })
