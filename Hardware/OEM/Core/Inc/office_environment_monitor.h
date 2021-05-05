@@ -10,6 +10,7 @@
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
 #include "disp.h"
+#include "math.h"
 
 /* Status codes */
 typedef enum
@@ -29,7 +30,12 @@ typedef enum
 /**
  *
  */
-void display_startscreen(void)
+void display_startscreen(void);
+
+/**
+ *
+ */
+void show_measurements(void);
 
 /**
  *

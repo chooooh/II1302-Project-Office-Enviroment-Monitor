@@ -60,7 +60,7 @@ void reset_screen_canvas(void);
 void retry(void);
 void display_update(void);
 void display_write_char(char, FontDef, Display_ColourDef);
-void display_write_string(char*, Display_ColourDef);
+void display_write_string(const char*, Display_ColourDef);
 void display_set_position(uint16_t, uint16_t);
 void display_error_message(void);
 

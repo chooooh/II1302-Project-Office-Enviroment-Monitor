@@ -88,8 +88,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /* USER CODE END UART4_MspInit 1 */
   }
-
-
 }
 
 void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)

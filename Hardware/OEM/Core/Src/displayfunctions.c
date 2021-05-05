@@ -228,7 +228,7 @@ void display_write_char(char c, FontDef Font, Display_ColourDef colour)
  *
  * @retval none
  */
-void display_write_string(char *str, Display_ColourDef colour)
+void display_write_string(const char *str, Display_ColourDef colour)
 {
 	uint8_t char_counter = 0;
 	uint8_t row_counter = 0;
