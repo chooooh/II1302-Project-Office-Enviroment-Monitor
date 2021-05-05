@@ -19,6 +19,10 @@ typedef enum
 	ESP8266_START_ERROR,
 	ESP8266_WIFI_SUCCESS,
 	ESP8266_WIFI_ERROR,
+	ESP8266_WEB_CONNECTED,
+	ESP8266_WEB_DISCONNECTED,
+	ESP8266_WEB_REQUEST_SUCCESS,
+	ESP8266_WEB_REQUEST_ERROR,
 	CCS811_START_SUCCESS,
 	CCS811_START_ERROR,
 	BME280_START_SUCCESS,
@@ -35,7 +39,7 @@ void display_startscreen(void);
 /**
  *
  */
-void show_measurements(void);
+void show_measurements(uint16_t co2, uint16_t tVoc);
 
 /**
  *
@@ -66,6 +70,16 @@ RETURN_STATUS esp8266_start(void);
  *
  */
 RETURN_STATUS esp8266_wifi_start(void);
+
+/**
+ *
+ */
+RETURN_STATUS esp8266_web_connection(void);
+
+/**
+ *
+ */
+RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc);
 
 /**
  *

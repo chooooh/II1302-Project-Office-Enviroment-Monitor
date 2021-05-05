@@ -80,16 +80,29 @@ void office_environment_monitor(void){
 	display_write_string("STARTED", WHITE);
 	reset_screen_canvas();
 
-
+	uint8_t count = 0;
 	for(;;){
 
 		if(CCS811_data_available() == CCS811_NEW_DATA){
 
+			count++;
 			CCS811_read_alg_res();
 			temperature = BME280_read_temp();
 			humidity = BME280_read_hum();
 			CCS811_set_temp_hum(temperature, humidity);
-			show_measurements();
+			uint16_t co2 = CCS811_get_co2();
+			uint16_t tVoc = CCS811_get_tvoc();
+
+			show_measurements(co2, tVoc);
+
+			if(count == 60){
+				count = 0;
+				if(esp8266_web_connection() != ESP8266_WEB_CONNECTED)
+					while(1); // temporary
+				if(esp8266_web_request(co2, tVoc) != ESP8266_WEB_REQUEST_SUCCESS)
+					while(1); // temporary
+			}
+
 		}
 		else if(CCS811_read_status_error()){
 			reset_screen_canvas();
@@ -116,7 +129,8 @@ void display_startscreen(void){
 						 "Monitor           ", WHITE);
 }
 
-void show_measurements(void){
+// TODO: make the output be one single string so the display updates smoothly
+void show_measurements(uint16_t co2, uint16_t tVoc){
 
 	/* String buffers */
 	char buffer    [38] = {};
@@ -124,10 +138,6 @@ void show_measurements(void){
 	char humbuffer [15] = {};
 	char co2buffer [19] = {};
 	char tvocbuffer[19] = {};
-
-	/* CO2 and tVOC values */
-	uint16_t co2 = CCS811_get_co2();
-	uint16_t tVoc = CCS811_get_tvoc();
 
 	/* Make temperature and humidity output and print on screen */
 	snprintf (tempbuffer, 15, "Temp: %f" , temperature);
@@ -154,7 +164,8 @@ RETURN_STATUS esp8266_start(void){
 	init_uart_interrupt();
 
 	/* Module needs to return OK else an error has occurred */
-	if(strcmp(esp8266_init(), ESP8266_AT_OK) != 0){
+	esp8266_return_string = esp8266_init();
+	if(strcmp(esp8266_return_string, ESP8266_AT_OK) != 0){
 		current_status = ESP8266_START_ERROR;
 		return current_status;
 	}
@@ -172,6 +183,52 @@ RETURN_STATUS esp8266_wifi_start(void){
 		return current_status;
 	}
 	current_status = ESP8266_WIFI_SUCCESS;
+	return current_status;
+}
+
+/* Start connection to website */
+RETURN_STATUS esp8266_web_connection(void){
+	char connection_command[256] = {0};
+	char remote_ip[] 			 = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
+	char type[] 				 = "TCP";
+	char remote_port[] 		     = "80";
+
+	esp8266_get_connection_command(connection_command, type, remote_ip, remote_port);
+	esp8266_return_string = esp8266_send_command(connection_command); // ,
+	if(strcmp(esp8266_return_string, ESP8266_AT_CONNECT) != 0){
+		current_status = ESP8266_WEB_DISCONNECTED;
+		return current_status;
+	}
+	current_status = ESP8266_WEB_CONNECTED;
+	return current_status;
+}
+
+RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
+	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
+	///api/sensor/airquality?carbon=10&volatile=10 HTTP/1.1
+	char request[256] = {0};
+	char init_send[64] = {0};
+	char uri[50] = "api/sensor/airquality?";
+	char data[40] = {0};
+	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
+	sprintf  (data, "carbon=%d&volatile=%d", co2, tvoc);
+	strcat(uri,data);
+
+	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
+	esp8266_get_at_send_command(init_send, len);
+
+	esp8266_return_string = esp8266_send_command(init_send);
+	if(strcmp(esp8266_return_string, ESP8266_AT_SEND_OK) != 0){
+		current_status = ESP8266_WEB_REQUEST_ERROR;
+		return current_status;
+	}
+
+	esp8266_return_string = esp8266_send_data(request);
+	if(strcmp(esp8266_return_string, ESP8266_AT_CLOSED) != 0){
+		current_status = ESP8266_WEB_REQUEST_ERROR;
+		return current_status;
+	}
+	current_status = ESP8266_WEB_REQUEST_SUCCESS;
 	return current_status;
 }
 
@@ -194,3 +251,5 @@ RETURN_STATUS bme280_start(void){
 	}
 	return BME280_START_SUCCESS;
 }
+
+

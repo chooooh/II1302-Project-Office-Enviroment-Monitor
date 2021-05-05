@@ -39,29 +39,31 @@ static int32_t  t_fine;
 ENV_SENSOR_STATUS
 CCS811_init(void){
 
-	volatile uint8_t temp = 0;
 	uint8_t register_value = 0;
 	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
+	HAL_StatusTypeDef temp = HAL_OK;
 
-	HAL_Delay(1000);
+	HAL_Delay(100);
 
 	/* Read the HW ID register to make sure the sensor is responsive */
 	//status = CCS811_read_register(HW_ID, &register_value, 1);
 	// mem read here, otherwise i2c seems to break
-	status = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
-	if(status == 1){
-		HAL_Delay(100);
+	temp = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
+	if((temp != HAL_OK) ||  (register_value != 0x81)){
+		HAL_Delay(1000);
 		CCS811_init();
 	}
 
-	if(register_value != 0x81)
+	/*
+	if(register_value != 0x81){
 		return CCS811_ID_ERR;
+	}
+	*/
 
 	/* Reset the device & wait a bit */
 	status = CCS811_reset();
 	if(status != CCS811_SUCCESS)
 		return status;
-
 	HAL_Delay(100);
 
 	/* Check for sensor errors */
@@ -81,7 +83,11 @@ CCS811_init(void){
 		return CCS811_I2C_ERROR;
 	HAL_Delay(100);
 
-	/* Set drive mode to 1; measurement each second */
+	/* Set drive mode to 1; measurement each second
+	 * mode 2; measurement every 10 seconds
+	 * mode 3; measurement every 60 seconds
+	 * mode 4; measurement every 250ms
+	 * */
 	status = CCS811_write_mode(1);
 	if(status != CCS811_SUCCESS)
 		return status;
