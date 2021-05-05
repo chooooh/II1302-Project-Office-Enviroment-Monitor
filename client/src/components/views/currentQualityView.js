@@ -42,8 +42,9 @@ const fontSize = {
  * @param {*} param0 
  * @returns 
  */
-export const CurrentQualityView = ({data, onSubmit}) => {  
-    
+export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
+    console.log("DATA", data)
+
     let lastFetch = null;
     if (data != null) lastFetch = currentDateTime(); 
 
@@ -77,7 +78,7 @@ export const CurrentQualityView = ({data, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                     <Card.Title style = {cardTextStyle}>Humidity</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.date}</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.airQualityDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.humidity + " %" } </ListGroup.Item>
@@ -90,7 +91,7 @@ export const CurrentQualityView = ({data, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                         <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.date }</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.airQualityDate }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.carbon + " ppm"}  </ListGroup.Item>
@@ -121,7 +122,7 @@ export const CurrentQualityView = ({data, onSubmit}) => {
             </Container>
             <Row style = {rowStyle} className = "justify-content-center">
                 <Form style = {formStyle} data-testid = "form-component">
-                {data == null? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner> :<Form.Label data-testid = "people">{"Present people: " +  data.people }</Form.Label>}
+                {data == null? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner> :<Form.Label data-testid = "people">{"Present people: " +  numberOfPeople }</Form.Label>}
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Here you can insert the current number of poeple in the room</Form.Label>
                         <Form.Control placeholder="Enter number of people" ref = {textInput}  onChange = {() => { setPeople(textInput.current.value); console.log(textInput.current.value) }} type = "text"/>

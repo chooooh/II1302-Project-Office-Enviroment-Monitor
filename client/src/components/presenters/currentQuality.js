@@ -1,23 +1,7 @@
 import React from "react";
 import {CurrentQualityView} from '../views/currentQualityView';
+import { fetchAllData } from "../../apiHandling/datafetcher";
 
-
-/**
- * The functions parses the data it is given to a simple object
- * 
- * @param {*} data the data to be parsed
- * @returns an object which contains the parsed data
- */
-function parser(data){
-    return {
-        date: data["docs"][0]["_id"],
-        carbon: data["docs"][0]["data"],
-        volatileGases: 12,
-        people: 10,
-        humidity: 30,
-        temperature: 24
-    }
-}
 /**
  * This function is responsible for creating a react component and providing it
  * with the data it needs to render. It sends props down to the view and event up to the model.
@@ -25,14 +9,12 @@ function parser(data){
  * @returns A React funtional component, specifically the currentQuality component
  */
 export const CurrentQualityPage = () => {
-    
     //State variabel which holds the data fetched from the database
     const [data, setData] = React.useState(null);
-    //State variabel which is used for fetching data
-    const [fetching, setShouldFetch] = React.useState(true);
-    //State variabel which holds the number of people currently in the room, set by a user.
-    const [people, setPeople] = React.useState(null);
-
+    //
+    const [fetching, setShouldFetch] = React.useState(false);
+    //
+    const [numberOfPeople, setPeople] = React.useState(false);
     /**
      * A toggle funciton, this function toggles the value of the state variabel fetching
      * The purpose of the function is to trigger a new fetch of data from the database
@@ -40,33 +22,27 @@ export const CurrentQualityPage = () => {
     function toggle(){
         setShouldFetch(!fetching)
     }
-   
     //React hook which will run every 5 seconds
-    //The hook will fetch data from the datbase and set the state variabel data to the data which was fetched
+    //Is ran at intial render and each time the state of fetching changes
+    //The hook fetches the latest data regarding carbon dioxide levels and when the reading was done
     React.useEffect(() => {
-
-        fetch('/api/sensor/airquality')
-        .then((res) => res.json())
-        .then((json) => parser(json))
-        .then((parsed) => setData(parsed))
-
+        setData(fetchAllData());
         const intervalId = setInterval(() => {
           toggle()
         }, 60000);
 
         return () => clearInterval(intervalId)
 
-    }, [fetching, people])
-
+    }, [fetching])
 
     return (
     React.createElement(CurrentQualityView, 
         {
-            data, 
-            people: 10,
+            data,
+            numberOfPeople, 
             onSubmit: (amount) => {
                 console.log("Amount", amount);
-                //Send amount to database
+                setPeople(amount)
             }
         }) 
     );
