@@ -49,9 +49,8 @@ router.get('/airquality', (req, res) => {
 router.post('/airquality', (req, res) => {
     AQInstance.writeToDB(req.query)
     .then(result => {
-        res.set(200).send(result)
+        res.set(200).send(result);
     }).catch(err => {
-        console.log(err)
         res.set(400).send(err);
     });
 });

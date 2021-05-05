@@ -22,7 +22,11 @@ class AirQuality {
      * function with nessecary arguments
      * @param {The airquality data recieved from the hardware} data 
      */
-    writeToDB(data) {
+    writeToDB({carbon, volatile}) {
+        const data = {
+            carbon,
+            volatile
+        };
         return db.writeToDB(this.airqualityDBName, data, currentDateTime());
     };
 

@@ -5,6 +5,7 @@
  */
 
 const cloudant = require('./setup');
+const { v4: uuidv4 } = require('uuid');
 const db = cloudant.db;
 
 /**
@@ -13,8 +14,8 @@ const db = cloudant.db;
  * @param { The data to be written } data 
  * @param { The path to the table to write to } dest 
  */
-async function writeToDB(targetTable, data, id) {
-    return await db.use(targetTable).insert(data, id);
+async function writeToDB(targetTable, data, date) {
+   return await db.use(targetTable).insert({data, date}, `${targetTable}:${uuidv4()}`);
 }
 
 /**
