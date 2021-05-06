@@ -16,11 +16,60 @@
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
 
+#define RUN_ESP8266_TEST
+#define RUN_CCS811_TEST
+#define RUN_BME280_TEST
 
-void setUp(void){
+
+
+void unit_test(void){
+
+/* Set up */
+init_uart_interrupt();
+
+/* Test begin */
+UNITY_BEGIN();
+
+#ifdef RUN_ESP8266_TEST
+
+	/* Test initiation of ESP8266 */
+  	RUN_TEST(test_esp8266_init);
+
+    /* Test connecting to wifi */
+    RUN_TEST(test_esp8266_wifi_connect);
+
+    /* Test connecting to a website */
+    RUN_TEST(test_esp8266_web_connection);
+
+    /* Test making a http web request to connected website */
+    RUN_TEST(test_esp8266_web_request);
+    HAL_Delay(2000);
+
+#endif
+
+#ifdef RUN_CCS811_TEST
+
+    /* Test initiation of CCS811 */
+    RUN_TEST(test_CCS811_init);
+#endif
+
+#ifdef RUN_BME280_TEST
+    /* Test initiation of BME280 */
+    RUN_TEST(test_BME280_init);
+#endif
+
+/* Test end*/
+UNITY_END();
 }
 
-void tearDown(void){
+/* Setup */
+void setUp(void){}
+
+/* Teardown */
+void tearDown(void){}
+
+void test_BME280_init(void){
+	TEST_ASSERT_EQUAL_UINT(BME280_SUCCESS, BME280_init());
 }
 
 void test_esp8266_init(void){
@@ -56,30 +105,8 @@ void test_esp8266_web_request(void){
 	test_esp8266_send_data(request);
 }
 
-void unit_test(void){
-
-	/* Set up */
-	init_uart_interrupt();
-
-	/* Test begin */
-	UNITY_BEGIN();
-	/*
-	/* Test initiation of ESP8266 */
-	//RUN_TEST(test_esp8266_init);
-	//HAL_Delay(2000);
-	//CCS811_init();
-	//BME280_init();
-	/* Test connecting to wifi */
-	//RUN_TEST(test_esp8266_wifi_connect);
-
-	/* Test connecting to a website */
-	//RUN_TEST(test_esp8266_web_connection);
-
-	/* Test making a http web request to connected website */
-	//RUN_TEST(test_esp8266_web_request);
-
-	/* Test end*/
-	UNITY_END();
+void test_CCS811_init(void){
+	TEST_ASSERT_EQUAL_UINT(CCS811_SUCCESS, CCS811_init());
 }
 
 void test_esp8266_at_cwjap_verify(void){
