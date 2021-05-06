@@ -46,19 +46,14 @@ CCS811_init(void){
 	HAL_Delay(100);
 
 	/* Read the HW ID register to make sure the sensor is responsive */
-	//status = CCS811_read_register(HW_ID, &register_value, 1);
 	// mem read here, otherwise i2c seems to break
 	temp = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
+
+	/* If we fail here, try again. If the module is connected correctly it should work eventually */
 	if((temp != HAL_OK) ||  (register_value != 0x81)){
 		HAL_Delay(1000);
 		CCS811_init();
 	}
-
-	/*
-	if(register_value != 0x81){
-		return CCS811_ID_ERR;
-	}
-	*/
 
 	/* Reset the device & wait a bit */
 	status = CCS811_reset();
@@ -80,7 +75,7 @@ CCS811_init(void){
 	/* Write to app start register to start */
 	status = CCS811_app_start();
 	if(status != CCS811_SUCCESS)
-		return CCS811_I2C_ERROR;
+		return status;
 	HAL_Delay(100);
 
 	/* Set drive mode to 1; measurement each second
@@ -183,7 +178,7 @@ CCS811_write_mode(uint8_t mode){
 	/* Write the mode */
 	status = CCS811_write_register(MEAS_MODE, &register_value, 1);
 	if(status != CCS811_SUCCESS)
-		return CCS811_I2C_ERROR;
+		return status;
 
 	return status;
 }
@@ -234,7 +229,8 @@ CCS811_set_temp_hum(float temp, float hum){
 	data[2] = (temp_t + 25250) / 500;
 	data[3] = 0x00;
 
-	if(CCS811_write_register(ENV_DATA, data, 4) != CCS811_SUCCESS)
+	status = CCS811_write_register(ENV_DATA, data, 4);
+	if(status != CCS811_SUCCESS)
 		return CCS811_I2C_ERROR;
 	return status;
 }

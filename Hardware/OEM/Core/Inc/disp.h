@@ -6,8 +6,8 @@
  *              Jonatan Lundqvist Silins, jonls@kth.se
  */
 
-#ifndef INC_DISP_H_
-#define INC_DISP_H_
+#ifndef INC_SSD1306_H_
+#define INC_SSD1306_H_
 
 #include "i2c.h"
 #include "fonts.h"
@@ -45,6 +45,8 @@ typedef enum
 typedef struct {
     uint16_t thisX;
     uint16_t thisY;
+    HAL_StatusTypeDef Init_Status;
+    HAL_StatusTypeDef Update_Status;
 } Display_t;
 
 /*
@@ -52,16 +54,20 @@ typedef struct {
  */
 uint16_t display_get_y(void);
 uint16_t display_get_x(void);
+HAL_StatusTypeDef display_get_init_status(void);
+HAL_StatusTypeDef display_get_update_status(void);
 void display_init(void);
-uint8_t command(uint8_t);
-uint8_t data(uint8_t);
+HAL_StatusTypeDef command(uint8_t);
 void draw_pixel(uint8_t, uint8_t, Display_ColourDef);
 void reset_screen_canvas(void);
 void retry(void);
 void display_update(void);
 void display_write_char(char, FontDef, Display_ColourDef);
 void display_write_string(const char*, Display_ColourDef);
+void display_write_string_no_update(const char*, Display_ColourDef);
 void display_set_position(uint16_t, uint16_t);
 void display_error_message(void);
+void display_string_on_line(const char*, Display_ColourDef, uint8_t);
+void display_string_on_line_no_update(const char*, Display_ColourDef, uint8_t);
 
-#endif /* INC_DISP_H_ */
+#endif /* INC_SSD1306_H_ */

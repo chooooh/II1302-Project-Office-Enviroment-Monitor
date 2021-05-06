@@ -6,10 +6,11 @@
  *              Jonatan Lundqvist Silins, jonls@kth.se
  */
 
-#include "disp.h"
+#include <disp.h>
 #include "i2c.h"
 #include "fonts.h"
 #include "stdio.h"
+//#include "ERR.h"
 
 //Define write and read device address
 #define DISPLAY_ADDR 0x78
@@ -50,6 +51,17 @@ display_get_x(void){
 	return display.thisY;
 }
 
+HAL_StatusTypeDef
+display_get_init_status(void)
+{
+	return display.Init_Status;
+}
+
+HAL_StatusTypeDef
+display_get_update_status(void)
+{
+    return display.Update_Status;
+}
 /**
  * @brief a function for initializing the display with the recommended initialization sequence
  *
@@ -63,22 +75,20 @@ void display_init(void)
 	uint8_t status = 0;
 
 	for (int i = 0; i < 28; i++)
-		status += command(instruct[i]);
-
-	/* Init failed, try again */
-	if (status > 0)
 	{
-		HAL_Delay(1000);
-
-		/* blink here to indicate that we have to try again */
-
-		retry();
+	    status = command(instruct[i]);
+	    if (status == HAL_ERROR){
+	    	display.Init_Status = HAL_ERROR;
+	    	return;
+	    }
 	}
 
 	reset_screen_canvas();
 
 	display.thisX = 0;
 	display.thisY = 0;
+
+	display.Init_Status = HAL_OK;
 
 }
 
@@ -88,25 +98,12 @@ void display_init(void)
  * @param command - the command the user wishes to send
  * @retval status - status codes for the I2C transmission
  */
-uint8_t command(uint8_t command)
+HAL_StatusTypeDef command(uint8_t command)
 {
 	HAL_StatusTypeDef status;
 	status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, COMMAND_MODE, I2C_MEMADD_SIZE_8BIT, &command, 1, HAL_MAX_DELAY);
 
-	if (status == HAL_OK)
-	{
-		return 0;
-	}
-	if (status == HAL_ERROR)
-	{
-		return 1;
-	}
-	if (status == HAL_TIMEOUT)
-	{
-		return 2;
-	}
-
-	return 3; // something else than ok, error, timeout...
+	return status;
 }
 
 
@@ -135,8 +132,15 @@ void reset_screen_canvas(void)
  * @param none
  * @retval none
  */
+
 void retry(void)
 {
+	for (uint8_t i = 0; i < 20; i++)
+	{
+	//HAL_GPIO_WritePin(SSD1306_ERR_LED_GPIO_Port, SSD1306_ERR_LED_Pin, GPIO_PIN_SET);
+	HAL_Delay(50);
+	//HAL_GPIO_WritePin(SSD1306_ERR_LED_GPIO_Port, SSD1306_ERR_LED_Pin, GPIO_PIN_RESET);
+	}
 	display_init();
 }
 
@@ -177,15 +181,42 @@ void draw_pixel(uint8_t w, uint8_t h, Display_ColourDef colour)
  */
 void display_update(void)
 {
-	uint8_t status;
+	HAL_StatusTypeDef status;
 	for(uint8_t i = 0; i < 8; i++)
 	{
-		status +=	command(0xB0 + i);
-		status +=	command(0x00);
-		status +=	command(0x10);
+		 status = command(0xB0 + i);
+		 if (status != HAL_OK)
+		 {
+		    display.Update_Status = HAL_ERROR;
+		    goto end;
+		 }
 
-		HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, DATA_MODE, 1, &buffer[W * i], W, HAL_MAX_DELAY);
+		 status = command(0x00);
+		 if (status != HAL_OK)
+		 {
+			display.Update_Status = HAL_ERROR;
+			goto end;
+		 }
+
+		 status = command(0x10);
+		 if (status != HAL_OK)
+		 {
+			display.Update_Status = HAL_ERROR;
+			goto end;
+		 }
+
+		status = HAL_I2C_Mem_Write(&hi2c2, DISPLAY_ADDR, DATA_MODE, 1, &buffer[W * i], W, HAL_MAX_DELAY);
+		 if (status != HAL_OK)
+		 {
+			 display.Update_Status = HAL_ERROR;
+			 goto end;
+		 }
+
 	}
+	display.Update_Status = HAL_OK;
+
+	end:
+	return;
 }
 
 /**
@@ -253,9 +284,54 @@ void display_write_string(const char *str, Display_ColourDef colour)
 		}
 		str++;
 	}
-		display_update();
+	display_update();
+}
+void display_write_string_no_update(const char *str, Display_ColourDef colour)
+{
+	uint8_t char_counter = 0;
+	uint8_t row_counter = 0;
+
+	while (*str != 0)
+	{
+		display_write_char(*str, Font_7x10, colour);
+		char_counter++;
+		if (char_counter == MAX_CHARS)
+		{
+			row_counter++;
+			if (row_counter > MAX_ROWS)
+			{
+				display_error_message();
+				return;
+			}
+			else
+			{
+				display_set_position(1, (display.thisY + ROW_SIZE));
+				char_counter = 0;
+			}
+		}
+		str++;
+	}
 }
 
+void display_string_on_line(const char *str, Display_ColourDef colour, uint8_t Line)
+{
+	if (Line < 1 || Line > MAX_ROWS)
+	{return;}
+
+	display_set_position(1, Line * ROW_SIZE);
+	HAL_Delay(10);
+	display_write_string(str, colour);
+	}
+
+void display_string_on_line_no_update(const char *str, Display_ColourDef colour, uint8_t Line)
+{
+	if (Line < 1 || Line > MAX_ROWS)
+	{return;}
+
+	display_set_position(1, Line * ROW_SIZE);
+	HAL_Delay(10);
+	display_write_string_no_update(str, colour);
+	}
 /**
  * @brief a function for displaying error messages on the display
  *
@@ -267,6 +343,7 @@ void display_error_message(void)
 	reset_screen_canvas();
 	HAL_Delay(100);
 	display_write_string("String too large! Please shorten it", WHITE);
+	display_update();
     HAL_Delay(100);
 }
 

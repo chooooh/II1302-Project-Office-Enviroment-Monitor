@@ -1,8 +1,12 @@
 /**
 ******************************************************************************
-@brief Header for the office environment monitor main program
+@brief header for the office environment monitor project.
+@details bla bla bla
 @file office_environment_monitor.h
-@author Jonatan Lundqvist Silins, jonls@kth.se
+@author  Jonatan Lundqvist Silins, jonls@kth.se
+@author  Sebastian Divander,       sdiv@kth.se
+@date 29-03-2021
+@version 1.0
 ******************************************************************************
 */
 
@@ -10,21 +14,21 @@
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
 #include "disp.h"
-#include "math.h"
 
 /* Status codes */
 typedef enum
 {
 	ESP8266_START_SUCCESS = 0,
 	ESP8266_START_ERROR,
-	ESP8266_WIFI_SUCCESS,
-	ESP8266_WIFI_ERROR,
+	ESP8266_WIFI_CON_SUCCESS,
+	ESP8266_WIFI_CON_ERROR,
 	ESP8266_WEB_CONNECTED,
 	ESP8266_WEB_DISCONNECTED,
 	ESP8266_WEB_REQUEST_SUCCESS,
 	ESP8266_WEB_REQUEST_ERROR,
 	CCS811_START_SUCCESS,
 	CCS811_START_ERROR,
+	CCS811_RUNNING_ERROR,
 	BME280_START_SUCCESS,
 	BME280_START_ERROR
 	// Environment sensor status codes go here

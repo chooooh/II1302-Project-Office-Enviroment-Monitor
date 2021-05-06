@@ -34,8 +34,6 @@ void office_environment_monitor(void){
 	display_write_string("Starting ESP8266", WHITE);
 	current_status = esp8266_start();
 	if(current_status == ESP8266_START_ERROR){
-		reset_screen_canvas();
-		display_write_string("ESP8266 ERROR", WHITE);
 		error_handler();
 	}
 	display_set_position(1, (display_get_y() + ROW_SIZE));
@@ -45,9 +43,7 @@ void office_environment_monitor(void){
 	/* Connect to WIFI */
 	display_write_string("Connecting to WIFI", WHITE);
 	current_status = esp8266_wifi_start();
-	if(current_status == ESP8266_WIFI_ERROR){
-		reset_screen_canvas();
-		display_write_string("WIFI ERROR", WHITE);
+	if(current_status == ESP8266_WIFI_CON_ERROR){
 		error_handler();
 	}
 	display_set_position(1, (display_get_y() + ROW_SIZE));
@@ -58,10 +54,6 @@ void office_environment_monitor(void){
 	display_write_string("Starting CCS811", WHITE);
 	current_status = ccs811_start();
 	if(current_status == CCS811_START_ERROR){
-		reset_screen_canvas();
-		char buf2[10] = {};
-		sprintf (buf2,"%d", CCS811_read_error_id());
-		display_write_string(buf2, WHITE);
 		error_handler();
 	}
 	display_set_position(1, (display_get_y() + ROW_SIZE));
@@ -81,7 +73,10 @@ void office_environment_monitor(void){
 	reset_screen_canvas();
 
 	uint8_t count = 0;
+
 	for(;;){
+
+		// TODO: BLINK GREEN LED WHILE RUNNING
 
 		if(CCS811_data_available() == CCS811_NEW_DATA){
 
@@ -98,17 +93,14 @@ void office_environment_monitor(void){
 			if(count == 60){
 				count = 0;
 				if(esp8266_web_connection() != ESP8266_WEB_CONNECTED)
-					while(1); // temporary
+					error_handler();
 				if(esp8266_web_request(co2, tVoc) != ESP8266_WEB_REQUEST_SUCCESS)
-					while(1); // temporary
+					error_handler();
 			}
-
 		}
+		/* Check for CCS811 errors */
 		else if(CCS811_read_status_error()){
-			reset_screen_canvas();
-			char buf[10] = {};
-			sprintf (buf,"%d", CCS811_read_error_id());
-			display_write_string(buf, WHITE);
+			current_status = CCS811_RUNNING_ERROR;
 			error_handler();
 		}
 	}
@@ -117,8 +109,71 @@ void office_environment_monitor(void){
 
 void error_handler(void){
 
-	/* Display errors here */
-	while(1);
+	char buf[28];
+	reset_screen_canvas();
+	switch (current_status) {
+
+		case ESP8266_START_ERROR:
+			 display_write_string_no_update("ESP8266 START ERR", WHITE);
+			 display_string_on_line_no_update("Check connections", WHITE, 2);
+			 display_update();
+
+		case ESP8266_WIFI_CON_ERROR:
+			 display_write_string_no_update("WIFI CON ERROR:", WHITE);
+			 display_string_on_line_no_update(esp8266_return_string, WHITE, 2);
+			 display_update();
+			 break;
+
+		case ESP8266_WEB_DISCONNECTED:
+			 display_write_string_no_update("WEB FAIL:", WHITE);
+			 display_string_on_line_no_update(esp8266_return_string, WHITE, 2);
+			 display_update();
+			 break;
+
+		case ESP8266_WEB_REQUEST_ERROR:
+			 display_write_string_no_update("WEB REQUEST FAIL", WHITE);
+			 display_string_on_line_no_update(esp8266_return_string, WHITE, 2);
+			 display_update();
+			 break;
+
+		case CCS811_START_ERROR:
+			 display_write_string_no_update("CCS811 START ERROR", WHITE);
+			 if(current_sensor_status == CCS811_I2C_ERROR){
+				 display_string_on_line_no_update("I2C FAILURE", WHITE, 2);
+			 	 display_string_on_line_no_update("CHECK CONNECTIONS!", WHITE, 3);
+			 	 display_string_on_line_no_update("OR RESET...", WHITE, 4);
+			 }
+			 display_update();
+			 break;
+
+		case CCS811_RUNNING_ERROR:
+			 sprintf (buf, "%d", CCS811_read_error_id());
+			 display_write_string_no_update("CCS811 RUNNING ERR", WHITE);
+			 display_string_on_line_no_update("ERROR CODE:", WHITE, 2);
+			 display_string_on_line_no_update(buf, WHITE, 3);
+			 display_update();
+			 break;
+
+		case BME280_START_ERROR:
+			 display_write_string_no_update("BME280 START ERROR", WHITE);
+			 if(current_sensor_status == BME280_I2C_ERROR || current_sensor_status == BME280_ID_ERR){
+				 display_string_on_line_no_update("I2C FAILURE", WHITE, 2);
+			 	 display_string_on_line_no_update("CHECK CONNECTIONS!", WHITE, 3);
+			 }
+			 display_update();
+			 break;
+
+		default:
+			display_write_string_no_update("UNKNOWN ERROR", WHITE);
+			display_string_on_line_no_update("PLEASE RESTART", WHITE, 2);
+			display_update();
+			break;
+
+		/* Errors printed, freeze here */
+		while(1){
+			// TODO: BLINK RED LED WHILE RUNNING
+		}
+	}
 }
 
 
@@ -143,18 +198,18 @@ void show_measurements(uint16_t co2, uint16_t tVoc){
 	snprintf (tempbuffer, 15, "Temp: %f" , temperature);
 	snprintf (humbuffer,  15, "Hum:  %f" , humidity);
 	sprintf  (buffer, "%s    %s    ", tempbuffer, humbuffer);
-	display_write_string(buffer, WHITE);
+	display_write_string_no_update(buffer, WHITE);
 
 	/* Make co2 output and print on screen */
 	sprintf  (co2buffer, "CO2:  %dppm   ", co2);
-	display_write_string(co2buffer, WHITE);
+	display_write_string_no_update(co2buffer, WHITE);
 	display_set_position(1, (display_get_y() + ROW_SIZE));
 
 	/* Make tVOC output and print on screen */
 	sprintf  (tvocbuffer, "tVoc: %dppb   ", tVoc);
-	display_write_string(tvocbuffer, WHITE);
+	display_write_string_no_update(tvocbuffer, WHITE);
 	display_set_position(1, 1);
-
+	display_update();
 }
 
 /* Initiates the wifi module */
@@ -166,11 +221,10 @@ RETURN_STATUS esp8266_start(void){
 	/* Module needs to return OK else an error has occurred */
 	esp8266_return_string = esp8266_init();
 	if(strcmp(esp8266_return_string, ESP8266_AT_OK) != 0){
-		current_status = ESP8266_START_ERROR;
-		return current_status;
+		return ESP8266_START_ERROR;
 	}
-	current_status = ESP8266_START_SUCCESS;
-	return current_status;
+
+	return ESP8266_START_SUCCESS;
 }
 
 /* Connects the module to wifi */
@@ -179,11 +233,9 @@ RETURN_STATUS esp8266_wifi_start(void){
 	/* Module needs to return WIFI CONNECTED else an error has occurred */
 	esp8266_return_string = esp8266_wifi_init();
 	if(strcmp(esp8266_return_string, ESP8266_AT_WIFI_CONNECTED) != 0){
-		current_status = ESP8266_WIFI_ERROR;
-		return current_status;
+		return ESP8266_WIFI_CON_ERROR;
 	}
-	current_status = ESP8266_WIFI_SUCCESS;
-	return current_status;
+	return ESP8266_WIFI_CON_SUCCESS;
 }
 
 /* Start connection to website */
@@ -196,21 +248,20 @@ RETURN_STATUS esp8266_web_connection(void){
 	esp8266_get_connection_command(connection_command, type, remote_ip, remote_port);
 	esp8266_return_string = esp8266_send_command(connection_command); // ,
 	if(strcmp(esp8266_return_string, ESP8266_AT_CONNECT) != 0){
-		current_status = ESP8266_WEB_DISCONNECTED;
-		return current_status;
+		return ESP8266_WEB_DISCONNECTED;
 	}
-	current_status = ESP8266_WEB_CONNECTED;
-	return current_status;
+	return ESP8266_WEB_CONNECTED;
 }
 
 RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
 	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 	///api/sensor/airquality?carbon=10&volatile=10 HTTP/1.1
-	char request[256] = {0};
-	char init_send[64] = {0};
-	char uri[50] = "api/sensor/airquality?";
-	char data[40] = {0};
-	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
+	char request	[256] = {0};
+	char init_send	[64]  = {0};
+	char data		[40]  = {0};
+	char uri		[50]  = "api/sensor/airquality?";
+	char host		[  ]  = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
+
 	sprintf  (data, "carbon=%d&volatile=%d", co2, tvoc);
 	strcat(uri,data);
 
@@ -219,17 +270,14 @@ RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
 
 	esp8266_return_string = esp8266_send_command(init_send);
 	if(strcmp(esp8266_return_string, ESP8266_AT_SEND_OK) != 0){
-		current_status = ESP8266_WEB_REQUEST_ERROR;
-		return current_status;
+		return ESP8266_WEB_REQUEST_ERROR;
 	}
 
 	esp8266_return_string = esp8266_send_data(request);
 	if(strcmp(esp8266_return_string, ESP8266_AT_CLOSED) != 0){
-		current_status = ESP8266_WEB_REQUEST_ERROR;
-		return current_status;
+		return ESP8266_WEB_REQUEST_ERROR;
 	}
-	current_status = ESP8266_WEB_REQUEST_SUCCESS;
-	return current_status;
+	return ESP8266_WEB_REQUEST_SUCCESS;;
 }
 
 /* Initiate CCS811 */
