@@ -10,9 +10,7 @@ const router = express.Router();
 //const AQ = require('../../models/airquality');
 
 const { readLatestEntry, readFromDB, writeToDB } = require('../../database/io');
-//const sensor = require('../../models/sensor');
 
-var counter = 0;
 const airqualityDbName = 'airquality';
 const peopleDbName= 'people';
 /**
@@ -26,14 +24,13 @@ router.get('/', (req, res) => {
 /**
  * This is the endpoint that provides information of the current airquality.
  */
-router.get('/airquality', (req, res) => {
-    readLatestEntry(airqualityDbName)
-    .then(result => {
+router.get('/airquality', async (req, res, next) => {
+    try {
+        const result = await readLatestEntry(airqualityDbName);
         res.set(200).send(result);
-    }).catch(err => {
-        console.log(err);
-        res.set(400).send(err);
-    });
+    } catch (err) {
+        next(err);
+    }
 });
 
 router.get('/test', (req, res) => {

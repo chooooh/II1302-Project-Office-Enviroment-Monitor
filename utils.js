@@ -1,5 +1,15 @@
+/**
+ * @fileoverview This module provides helper functions.
+ * Depdencies are luxon, which provides simple date functions.
+ * @package
+ */
 const { DateTime } = require("luxon");
 
+/**
+ * returns a message indicating that the server has started
+ * @returns {string} message that indicates that the server has
+ * started on a port
+ */
 const getWelcomeMessage = () => {
     const welcomeMessage = "server starting on ";
     return welcomeMessage;
@@ -7,7 +17,7 @@ const getWelcomeMessage = () => {
 
 /**
  * A simple function that returns the current date and time
- * @returns Date and time with custom formatting
+ * @returns {string} Date and time with custom formatting
  */
  const currentDateTime = () => {
     const now = new Date()
@@ -15,5 +25,6 @@ const getWelcomeMessage = () => {
     var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
     return date + "::" + time
 }
+
 
 module.exports = {getWelcomeMessage, currentDateTime};
