@@ -21,10 +21,12 @@ app.use('/api/sensor', sensor);
 // serve the files out of ./public as our main files
 app.use(express.static(`${__dirname}/client/build`));
 
+/*
 app.use((err, req, res, next) => {
     console.log("in error handler");
     console.error(err);
 })
+*/
 
 // get the app environment from Cloud Foundry
 const appEnv = cfenv.getAppEnv();

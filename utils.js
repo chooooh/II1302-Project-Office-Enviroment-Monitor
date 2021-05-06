@@ -40,4 +40,4 @@ const currentDateTime = () => {
 }
 
 
-module.exports = {getWelcomeMessage, currentDateTime};
+module.exports = { getWelcomeMessage, currentDateTime };

@@ -8,6 +8,7 @@
 const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
+//const { v4: uuidv4 } = require('uuid');
 
 const { currentDateTime } = require('../utils');
 const { readLatestEntry, readFromDB, writeToDB } = require('../database/io');
@@ -25,7 +26,7 @@ describe('Make sure read and writes work from cloudant', () => {
         writeToDB(testDbName, {data: "testdata"}, dateTime)
         .then(result => {
             result.should.be.an('object');
-            result.should.include({id: dateTime});
+            result.should.include({ok: true});
             done();
         })
         .catch(err => {
@@ -33,19 +34,13 @@ describe('Make sure read and writes work from cloudant', () => {
         });
     });
 
-    //{"docs":[
-    //  {"_id":"2021/04/30 11:36:25",
-    //  "_rev":"1-22af5ece874c3f504839159abb443691",
-    //  "data":"testdata"}], 
-    //...}
-    //result["docs"][0]["_id"] DATE
-    //result["docs"][0]["data"] DATA
-    it('find the entry with {_id: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
+    it('find the entry with {date: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
         readLatestEntry(testDbName)
         .then(result => {
+            //const isUUID = validate(result.docs[0]["_id"].substr(5));
+            //isUUID.should.be.true(isUUID);
             result.should.be.an('object');
-            result.docs[0].should.include({"_id": dateTime});
-            result.docs[0].should.include({"data": "testdata"});
+            result.docs[0].should.include({"date": dateTime});
             done();
         })
         .catch(err => {
@@ -128,7 +123,7 @@ describe('Sensor API', () => {
             })
         });
         
-        it('It should not POST new people data', (done) => {
+        it('It should not POST new airquality data', (done) => {
             chai.request(host)
                 .post('/api/sensor/airqualit')
                 .send(airquality)
@@ -138,15 +133,4 @@ describe('Sensor API', () => {
                 })
         });
     });
-
-    describe('test to ensure fail', () => {
-        it('should have status 200', (done) => {
-            chai.request(host)
-                .get('/api/sensor/fail')
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    done(err);
-            });
-        });
-    }); 
-})
+});

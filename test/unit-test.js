@@ -9,10 +9,9 @@ describe('Test utils', () => {
         const message = getWelcomeMessage();
         message.should.equal('server starting on ');
     });
-/*
+
     it('Current date test, check if correct format', () => {
         const date = currentDateTime();
         date.should.have.lengthOf(19);
     })
-    */
 });
