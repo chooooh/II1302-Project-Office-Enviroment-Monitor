@@ -117,7 +117,7 @@ describe('Sensor API', () => {
             data: 50
         };
 
-        it('It should POST new people data', (done) => {
+        it('It should POST new airquality data', (done) => {
             chai.request(host)
                 .post('/api/sensor/airquality')
                 .send(airquality)
