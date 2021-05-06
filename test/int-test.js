@@ -41,6 +41,7 @@ describe('Make sure read and writes work from cloudant', () => {
             //isUUID.should.be.true(isUUID);
             result.should.be.an('object');
             result.docs[0].should.include({"date": dateTime});
+            result.docs[0]["data"].should.include({"data": "testdata"});
             done();
         })
         .catch(err => {
@@ -79,42 +80,14 @@ describe('Sensor API', () => {
 
     });
 
-    /*
-    describe('GET /api/sensor/people', () => {
-        it('It should GET a people object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/people")
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.should.be.an('object');
-                    done(err);
-            });
-        });
-
-        it('It should not GET a people object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/peopl")
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-            })
-        });
-    })
-    */
-
     /**
      * Test the POST routes
      */
     describe('POST /api/sensor/airquality', () => {
-        //beforeEach()
-        const airquality = {
-            _id: 'delete',
-            data: 50
-        };
-
+ 
         it('It should POST new airquality data', (done) => {
             chai.request(host)
-                .post('/api/sensor/airquality')
+                .post('/api/sensor/airquality?carbon=50&volatile=50')
                 .send(airquality)
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -130,7 +103,31 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(404);
                     done(err);
-                })
+                });
         });
     });
+    
+    /*
+    describe('GET /api/sensor/people', () => {
+        it('It should GET a people object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/people")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.an('object');
+                    done(err);
+                });
+            });
+            
+            it('It should not GET a people object', (done) => {
+                chai.request(host)
+                .get("/api/sensor/peopl")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+    })
+    */
+
 });
