@@ -119,7 +119,7 @@ void error_handler(void){
 			 display_update();
 
 		case ESP8266_WIFI_CON_ERROR:
-			 display_write_string_no_update("WIFI CON ERROR:", WHITE);
+			 display_string_on_line_no_update("WIFI CON ERROR:", WHITE, 1);
 			 display_string_on_line_no_update(esp8266_return_string, WHITE, 2);
 			 display_update();
 			 break;
@@ -169,10 +169,10 @@ void error_handler(void){
 			display_update();
 			break;
 
-		/* Errors printed, freeze here */
-		while(1){
-			// TODO: BLINK RED LED WHILE RUNNING
-		}
+	}
+	/* Errors printed, freeze here */
+	while(1){
+		// TODO: BLINK RED LED WHILE RUNNING
 	}
 }
 
@@ -184,7 +184,6 @@ void display_startscreen(void){
 						 "Monitor           ", WHITE);
 }
 
-// TODO: make the output be one single string so the display updates smoothly
 void show_measurements(uint16_t co2, uint16_t tVoc){
 
 	/* String buffers */

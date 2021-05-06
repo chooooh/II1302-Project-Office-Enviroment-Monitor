@@ -100,8 +100,10 @@ esp8266_init(void){
 		return ESP8266_AT_ERROR;
 
 	/* Disconnect the esp8266 if it auto connects... */
+	/* NOT NEEDED FOR NOW
 	if(strcmp(esp8266_send_command(ESP8266_AT_CWQAP), ESP8266_AT_OK) != 0)
 		return ESP8266_AT_ERROR;
+	*/
 
 	/* Set the esp8266 to client mode */
 	if(strcmp(esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE), ESP8266_AT_OK) != 0)
