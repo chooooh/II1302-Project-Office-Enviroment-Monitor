@@ -4,47 +4,28 @@
  * sensor model. A helper method providing time and date is also present.
  * @package
  */
-const { currentDateTime } = require("../../utils");
 const express = require('express');
 const router = express.Router();
-//const AQ = require('../../models/airquality');
+const { AirQuality } = require('../../models/airquality');
+const AQInstance = new AirQuality();
 
-const { readLatestEntry, readFromDB, writeToDB } = require('../../database/io');
-
-const airqualityDbName = 'airquality';
-const peopleDbName= 'people';
-/**
- * Route serving the sensor data.
- * @param {string} path 
- */
 router.get('/', (req, res) => {
-    res.status(200).json({"data": ++counter});
+    res.status(200).send("all data?");
 });
 
 /**
- * This is the endpoint that provides information of the current airquality.
+ * This is the endpoint that provides information of the current latest 
+ * noted airquality. Response will contain a json object of the requested
+ * data.
  */
-router.get('/airquality', async (req, res, next) => {
-    try {
-        const result = await readLatestEntry(airqualityDbName);
-        res.set(200).send(result);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.get('/test', (req, res) => {
-    res.set(200).send(process.env.APP_URL);
-});
-
-/*
 router.get('/airquality', (req, res) => {
-    readFromDB("2021-4-20 16:12:14", airqualityDbName)
+    AQInstance.readLatestEntry()
     .then(result => {
         res.set(200).send(result);
-    })
+    }).catch(err => {
+        next(err);
+    });
 });
-*/
 
 /**
  * This is the endpoint that the micro controller will send
@@ -53,8 +34,7 @@ router.get('/airquality', (req, res) => {
  * that writes the data to the cloudant database.
  */
 router.post('/airquality', (req, res) => {
-    const now = currentDateTime();
-    writeToDB(req.query, airqualityDbName, now)
+    AQInstance.writeToDB(req.query)
     .then(result => {
         res.set(200).send(result)
     }).catch(err => {
@@ -62,31 +42,23 @@ router.post('/airquality', (req, res) => {
         res.set(400).send(err);
     });
 });
-
 
 /**
  * This is the endpoint that the micro controller will send
  * HTTP POST requests to with information about how many people
  * that currently are in the room. It will in its turn call
  * a method that writes the data to the cloudant database.
- */
-router.post('/people', (req, res) => {
-    const now = currentDateTime();
-    writeToDB(req.query, peopleDbName, now)
-    .then(result => {
-        res.set(200).send(result)
-    }).catch(err => {
-        console.log(err)
-        res.set(400).send(err);
+ router.post('/peopleintheroom', (req, res) => {
+     const now = currentDateTime();
+     writeToDB(req.query, peopleDbName, now)
+     .then(result => {
+         res.set(200).send(result)
+        }).catch(err => {
+            console.log(err)
+            res.set(400).send(err);
+        });
     });
-});
-/**
- * This is the endpoint that provides information of the current airquality.
- */
- router.get('/people', (req, res) => {
-    res.set(200).send('this is /people');
-});
+    */
 
-
-// Exported functions references to use elsewhere
+// Exports to use elsewhere in the application
 module.exports = router;

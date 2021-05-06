@@ -9,40 +9,50 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
 
-const { readLatestEntry, readFromDB, writeToDB } = require('../database/io.js');
+const { currentDateTime } = require('../utils');
+const { readLatestEntry, readFromDB, writeToDB } = require('../database/io');
 
 const host = process.env.APP_URL || app;
 
-//Assertion Style
 chai.should();
 chai.use(chaiHTTP);
 
-/*
 describe('Make sure read and writes work from cloudant', () => {
-    it('verify that db contains the entry {_id: test}', (done) => {
-        writeToDB({ data: "test" }, testDbName, "test")
-            .then(result => {
-                expect(result).to.be.json;
-                expect(result).to.include({ data: "test" });
-                done();
-            })
-            .catch(err => {
-                done(err);
-            });
+    const testDbName = 'test';
+    const dateTime = currentDateTime();
+
+    it('verifies that the correct db table gets written to', (done) => {
+        writeToDB(testDbName, {data: "testdata"}, dateTime)
+        .then(result => {
+            result.should.be.an('object');
+            result.should.include({id: dateTime});
+            done();
+        })
+        .catch(err => {
+            done(err);
+        });
     });
-    it('retrieve the entry with {_id: test} directly from the db', (done) => {
-        readLatestEntry("test")
-            .then(result => {
-                expect(result).to.be.json;
-                expect(result).to.include({ data: "test" });
-                done();
-            })
-            .catch(err => {
-                done(err);
-            });
+
+    //{"docs":[
+    //  {"_id":"2021/04/30 11:36:25",
+    //  "_rev":"1-22af5ece874c3f504839159abb443691",
+    //  "data":"testdata"}], 
+    //...}
+    //result["docs"][0]["_id"] DATE
+    //result["docs"][0]["data"] DATA
+    it('find the entry with {_id: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
+        readLatestEntry(testDbName)
+        .then(result => {
+            result.should.be.an('object');
+            result.docs[0].should.include({"_id": dateTime});
+            result.docs[0].should.include({"data": "testdata"});
+            done();
+        })
+        .catch(err => {
+            done(err);
+        });
     });
 });
-*/
 
 /**
  * Integration test to make sure that the GET /user route
@@ -74,6 +84,7 @@ describe('Sensor API', () => {
 
     });
 
+    /*
     describe('GET /api/sensor/people', () => {
         it('It should GET a people object', (done) => {
             chai.request(host)
@@ -94,6 +105,7 @@ describe('Sensor API', () => {
             })
         });
     })
+    */
 
     /**
      * Test the POST routes

@@ -1,9 +1,10 @@
 
 import React from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
+
 import './App.css';
 
-import { HomePage } from "./presenters/homePage.js";
+import { CurrentQualityPage } from "./components/presenters/currentQuality"
 
 
 function App() {
@@ -19,10 +20,10 @@ function App() {
     return (
         <div className="App">
         <header className="App-header">
-            <p>
-                <HomePage />
-                {val}
-            </p>
+                <CurrentQualityPage/>
+        
+                   {val}
+               
         </header>
         </div>
     );
