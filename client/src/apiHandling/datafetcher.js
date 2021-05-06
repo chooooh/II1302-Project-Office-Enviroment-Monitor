@@ -1,22 +1,22 @@
-import { parser, parseAll } from '../js/parser'
+
 
 const fetchData = async (route) => {
-    const res = await fetch('/api/sensor/' + route)
-    const json = await res.json()
-    const parsed = parser(json)
-
-    return parsed;
-
+   const res    = await fetch('/api/sensor/' + route);
+   const json   = await res.json();
+   return json;
 };
 
-export const fetchAllData = () => {
-    const airData        =  fetchData("airquality");
-    console.log("BARE EN LOG", airData);
+export const fetchAllData = async () => {
+    const data = await fetchData('airquality');
+    return data;
+    
+    //console.log("AirDATA", airData)
+    //const tempDataPromise       =  fetchData("temperature");
     //const tempData     = await fetchData("temperature");
     //const peopleData   = await fetchData("people");
     //const humidityData = await fetchData("humidity");
 
-    return parseAll(airData)
+    //return parseAll(airData)
     //return parseAll(airData, tempData, peopleData, humidityData);
 };
 

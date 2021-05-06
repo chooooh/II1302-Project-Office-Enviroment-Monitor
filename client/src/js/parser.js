@@ -6,10 +6,11 @@
  * @returns an object which contains the parsed data
  */
 export const parser = (data) => {
-      return  {
-            date: data["docs"][0]["date"],
-            data: data["docs"][0]["data"],
-        }
+    console.log("IN PARSER:" , data["docs"]);
+    return  {
+        date: data["docs"][0]["_id"].substring(11),
+        data: data["docs"][0]["data"],
+    }
     
 };
 

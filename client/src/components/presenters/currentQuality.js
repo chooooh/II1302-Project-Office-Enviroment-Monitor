@@ -1,7 +1,7 @@
 import React from "react";
 import {CurrentQualityView} from '../views/currentQualityView';
 import { fetchAllData } from "../../apiHandling/datafetcher";
-
+import {parser} from "../../js/parser"
 /**
  * This function is responsible for creating a react component and providing it
  * with the data it needs to render. It sends props down to the view and event up to the model.
@@ -26,7 +26,14 @@ export const CurrentQualityPage = () => {
     //Is ran at intial render and each time the state of fetching changes
     //The hook fetches the latest data regarding carbon dioxide levels and when the reading was done
     React.useEffect(() => {
-        setData(fetchAllData());
+        (async () => {
+           let temp = await fetchAllData();
+           console.log("TEMP", temp)
+           if(temp != null){
+               setData(parser(temp))
+           }
+        })();
+     
         const intervalId = setInterval(() => {
           toggle()
         }, 60000);

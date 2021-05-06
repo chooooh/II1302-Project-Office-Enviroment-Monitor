@@ -78,7 +78,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                     <Card.Title style = {cardTextStyle}>Humidity</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.airQualityDate}</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.date}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.humidity + " %" } </ListGroup.Item>
@@ -91,11 +91,11 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                         <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.airQualityDate }</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.date }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.carbon + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.volatileGases + " unit"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.data.carbon + " ppm"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.data.volatile + " unit"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
