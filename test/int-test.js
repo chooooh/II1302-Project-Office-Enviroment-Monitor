@@ -88,7 +88,6 @@ describe('Sensor API', () => {
         it('It should POST new airquality data', (done) => {
             chai.request(host)
                 .post('/api/sensor/airquality?carbon=50&volatile=50')
-                .send(airquality)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.an('object');
@@ -99,7 +98,6 @@ describe('Sensor API', () => {
         it('It should not POST new airquality data', (done) => {
             chai.request(host)
                 .post('/api/sensor/airqualit')
-                .send(airquality)
                 .end((err, response) => {
                     response.should.have.status(404);
                     done(err);
