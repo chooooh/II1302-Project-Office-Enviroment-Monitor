@@ -16,7 +16,6 @@ static uint8_t rx_buffer_index = 0;
 static bool error_flag = false;
 static bool fail_flag = false;
 
-
 void
 init_uart_interrupt(void){
 	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
@@ -26,11 +25,10 @@ init_uart_interrupt(void){
 void
 HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
    if (huart->Instance == UART4) {
       rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to rx_Buffer
-    }
-      HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
+   }
+   HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
 }
 
 /* djb2 hashing algorithm which is used in mapping sent commands to the right ESP8266 response code */
@@ -44,6 +42,8 @@ hash(const char *str) {
     return hash;
 }
 
+
+/* DMA would probably have been a better fit for this...? */
 const char*
 esp8266_send_command(const char* command){
 
@@ -64,10 +64,13 @@ esp8266_send_command(const char* command){
 			fail_flag = true;
 			break;
 		}
-
+		if(strstr(rx_buffer, "rst") != NULL){
+			fail_flag = true;
+			break;
+		}
 	}
 
-	//return evaluate(); would more efficient but not as clear in debugging
+	//return evaluate(); would more efficient but not as clear in debugging//error handling
 	return get_return(command);
 }
 
@@ -91,9 +94,18 @@ esp8266_send_data(const char* data){
 const char*
 esp8266_init(void){
 
+
+	/* Get OK from esp8266 */
+		if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)
+			return ESP8266_AT_ERROR;
+
+	/* Esp8266 sends lots of data when first started */
+
+	HAL_Delay(500);
 	/* Reset the esp8266 */
-	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0)
+	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0){
 		return ESP8266_AT_ERROR;
+	}
 
 	/* Get OK from esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)

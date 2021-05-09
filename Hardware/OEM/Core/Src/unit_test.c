@@ -19,18 +19,20 @@
 #define RUN_ESP8266_TEST
 #define RUN_CCS811_TEST
 #define RUN_BME280_TEST
-
-
+//#undef RUN_ESP8266_TEST
+//#undef RUN_CCS811_TEST
+//#undef RUN_BME280_TEST
 
 void unit_test(void){
 
-/* Set up */
-init_uart_interrupt();
 
 /* Test begin */
 UNITY_BEGIN();
 
 #ifdef RUN_ESP8266_TEST
+
+	/* Set up interrupt for ESP*/
+	init_uart_interrupt();
 
 	/* Test initiation of ESP8266 */
   	RUN_TEST(test_esp8266_init);

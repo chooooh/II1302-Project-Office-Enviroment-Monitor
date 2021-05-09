@@ -40,6 +40,7 @@ void office_environment_monitor(void){
 	display_write_string("STARTED", WHITE);
 	reset_screen_canvas();
 
+
 	/* Connect to WIFI */
 	display_write_string("Connecting to WIFI", WHITE);
 	current_status = esp8266_wifi_start();
@@ -72,15 +73,16 @@ void office_environment_monitor(void){
 	display_write_string("STARTED", WHITE);
 	reset_screen_canvas();
 
-	uint8_t count = 0;
+	/* Loading bar when waiting for some sensor data to be available */
+	display_getting_data_screen();
 
+	uint8_t timer = 0;
 	for(;;){
 
 		// TODO: BLINK GREEN LED WHILE RUNNING
-
 		if(CCS811_data_available() == CCS811_NEW_DATA){
 
-			count++;
+			timer++;
 			CCS811_read_alg_res();
 			temperature = BME280_read_temp();
 			humidity = BME280_read_hum();
@@ -88,13 +90,13 @@ void office_environment_monitor(void){
 			uint16_t co2 = CCS811_get_co2();
 			uint16_t tVoc = CCS811_get_tvoc();
 
-			show_measurements(co2, tVoc);
+			show_measurements(temperature, humidity, co2, tVoc);
 
-			if(count == 60){
-				count = 0;
-				if(esp8266_web_connection() != ESP8266_WEB_CONNECTED)
+			if(timer == 60){
+				timer = 0;
+				if((current_status = esp8266_web_connection()) != ESP8266_WEB_CONNECTED)
 					error_handler();
-				if(esp8266_web_request(co2, tVoc) != ESP8266_WEB_REQUEST_SUCCESS)
+				if((current_status = esp8266_web_request(co2, tVoc)) != ESP8266_WEB_REQUEST_SUCCESS)
 					error_handler();
 			}
 		}
@@ -184,7 +186,35 @@ void display_startscreen(void){
 						 "Monitor           ", WHITE);
 }
 
-void show_measurements(uint16_t co2, uint16_t tVoc){
+void display_getting_data_screen(void){
+
+	uint8_t init_count = 0;
+	uint8_t init_count_limit = 0;
+
+	display_write_string("GETTING DATA", WHITE);
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+
+	/* Loop until sensor data is available */
+	do {
+		if(init_count == 100){
+
+			/* If 18 # have been printed, reset the line and start printing from the beginning of the line */
+			if(init_count_limit == 18){
+				uint16_t y = display_get_y();
+				display_set_position(1, y);
+				display_write_string("                  ", WHITE);
+				display_set_position(1, y);
+				init_count_limit = 0;
+			}
+			display_write_string("#", WHITE);
+			init_count_limit++;
+		}
+		init_count++;
+	} while (CCS811_data_available() == CCS811_NO_NEW_DATA);
+	reset_screen_canvas();
+}
+
+void show_measurements(float temp, float hum, uint16_t co2, uint16_t tVoc){
 
 	/* String buffers */
 	char buffer    [38] = {};
@@ -194,8 +224,8 @@ void show_measurements(uint16_t co2, uint16_t tVoc){
 	char tvocbuffer[19] = {};
 
 	/* Make temperature and humidity output and print on screen */
-	snprintf (tempbuffer, 15, "Temp: %f" , temperature);
-	snprintf (humbuffer,  15, "Hum:  %f" , humidity);
+	snprintf (tempbuffer, 15, "Temp: %f" , temp);
+	snprintf (humbuffer,  15, "Hum:  %f" , hum);
 	sprintf  (buffer, "%s    %s    ", tempbuffer, humbuffer);
 	display_write_string_no_update(buffer, WHITE);
 

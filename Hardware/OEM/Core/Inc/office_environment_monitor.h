@@ -43,7 +43,12 @@ void display_startscreen(void);
 /**
  *
  */
-void show_measurements(uint16_t co2, uint16_t tVoc);
+void display_getting_data_screen(void);
+
+/**
+ *
+ */
+void show_measurements(float temp, float hum, uint16_t co2, uint16_t tVoc);
 
 /**
  *

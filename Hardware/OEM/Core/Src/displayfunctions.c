@@ -108,7 +108,7 @@ HAL_StatusTypeDef command(uint8_t command)
 
 
 /**
- * @brief a function that fills the screen with black pixels (our only known way of "reseting" it) and then reseting the buffer position
+ * @brief a function that fills the screen with black pixels (our only known way of "resetting" it) and then resetting the buffer position
  *
  * @param none
  * @retval none
