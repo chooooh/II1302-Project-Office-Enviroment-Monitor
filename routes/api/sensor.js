@@ -35,6 +35,7 @@ router.post('/', async (req, res) => {
     const {carbon, volatile, temperature, humidity} = req.query;
     const date = currentDateTime();
     try {
+        //const res = await Promise.all([pro1, pro2, pro3]);
         const resA = await writeToDB('airquality', {carbon, volatile}, date)
         const resT = await writeToDB('temperature', {temperature}, date);
         const resH = await writeToDB('humidity', {humidity}, date);
