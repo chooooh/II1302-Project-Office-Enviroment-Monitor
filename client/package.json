@@ -13,6 +13,7 @@
     "web-vitals": "^1.1.1"
   },
   "scripts": {
+    "test-jest": "jest",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -38,6 +39,9 @@
   },
   "proxy": "http://localhost:6001/",
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@babel/preset-react": "^7.13.13",
+    "@testing-library/dom": "^7.30.3",
     "@testing-library/react": "^11.2.6",
     "jest-dom": "^4.0.0",
     "react-test-renderer": "^17.0.2"

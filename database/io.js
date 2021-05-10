@@ -15,7 +15,7 @@ const db = cloudant.db;
  * @param { The path to the table to write to } dest 
  */
 async function writeToDB(targetTable, data, date) {
-   return await db.use(targetTable).insert({data, date}, `${targetTable}:${uuidv4()}`);
+   return await db.use(targetTable).insert({data, date}, `${targetTable}:${date}`);
 }
 
 /**
@@ -24,25 +24,26 @@ async function writeToDB(targetTable, data, date) {
  * @returns A promise including the latest data
  */
 async function readLatestEntry(targetTable) {
-    const latestEntryQuery = {
-        "selector": {
-           "_id": {
-              "$gt": "0"
-           }
-        },
-        "fields": [
-           "_id",
-           "_rev",
-           "data"
-        ],
-        "sort": [
-           {
-              "_id": "desc"
-           }
-        ],
-        "limit":1
-    };
-    return await db.use(targetTable).find(latestEntryQuery);
+   const latestEntryQuery = {
+      "selector": {
+         "_id": {
+            "$gt": "0"
+         }
+      },
+      "fields": [
+         "_id",
+         "_rev",
+         "data",
+         "date"
+      ],
+      "sort": [
+         {
+            "_id": "desc"
+         }
+      ],
+      "limit":1
+   };
+   return await db.use(targetTable).find(latestEntryQuery);
 };
 
 /**

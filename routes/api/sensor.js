@@ -21,16 +21,6 @@ const TempInstance = new Temperature();
 const HumidityInstance = new Humidity();
 const PeopleInstance = new People();
 
-
-var counter = 0;
-
-/**
- * random example
- */
-router.get('/', (req, res) => {
-    res.status(200).json({"data": ++counter});
-});
-
 router.post('/', async (req, res) => {
     const {carbon, volatile, temperature, humidity} = req.query;
     const date = currentDateTime();
@@ -50,13 +40,12 @@ router.post('/', async (req, res) => {
  * noted airquality. Response will contain a json object of the requested
  * data.
  */
-router.get('/airquality', (req, res) => {
+router.get('/airquality', (req, res, next) => {
     AQInstance.readLatestEntry()
     .then(result => {
         res.set(200).send(result);
     }).catch(err => {
-        console.log(err);
-        res.set(400).send(err);
+        next(err);
     });
 });
 

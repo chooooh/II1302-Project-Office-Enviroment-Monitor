@@ -2,16 +2,16 @@
 
 exports[`matches snapshot 1`] = `
 <div
-  className="justify-content-left container"
+  className="container-fluid"
 >
   <nav
     className="navbar navbar-expand navbar-dark bg-dark fixed-top"
   >
     <a
       className="navbar-brand"
-      href="#currentQuality"
+      href="#home"
     >
-      Current Quality
+      Home
     </a>
     <div
       className="mr-auto navbar-nav"
@@ -28,310 +28,98 @@ exports[`matches snapshot 1`] = `
       </a>
       <a
         className="nav-link"
-        data-rb-event-key="#home"
-        href="#home"
+        data-rb-event-key="#currentQuality"
+        href="#currentQuality"
         onClick={[Function]}
         onKeyDown={[Function]}
       >
-        Home
+        Current Quality
       </a>
     </div>
   </nav>
   <div
-    className="row"
+    className="jumbotron"
+    style={
+      Object {
+        "color": "black",
+        "marginTop": "70px",
+      }
+    }
+  >
+    <h1>
+      Office Environment Monitor!
+    </h1>
+    <p>
+      On this page you can find all of the current statistics being monitored.
+      <br />
+      If the number of people displayed on this page is incorrect you can change it to the proper amount below.
+      <br />
+    </p>
+  </div>
+  <div
+    className="container-fluid"
+    data-testid="air-quality-content"
   >
     <div
-      className="text-left col-lg-9"
-      date-testid="page-info"
+      className="spinner-border"
+      data-testid="Spinner"
+      role="status"
+    />
+  </div>
+  <div
+    className="justify-content-center row"
+    style={
+      Object {
+        "margin": "15px",
+      }
+    }
+  >
+    <form
+      className=""
+      data-testid="form-component"
       style={
         Object {
-          "marginBottom": "15px",
-          "paddingTop": "75px",
+          "padding": "10px",
         }
       }
     >
-      On this page you can find all of the current statistics being monitored.
-      <br />
-      If the number of poeple displayed on this page is incorrect you can change it to the proper amount.
-      <br />
-    </div>
-  </div>
-  <div
-    className="row"
-    style={
-      Object {
-        "paddingLeft": "15px",
-      }
-    }
-  >
-    <nav
-      className="nav nav-tabs"
-      onKeyDown={[Function]}
-      role="tablist"
-    >
-      <a
-        aria-controls="uncontrolled-tab-example-tabpane-airQuality"
-        aria-selected={true}
-        className="nav-item nav-link active"
-        data-rb-event-key="airQuality"
-        href="#"
-        id="uncontrolled-tab-example-tab-airQuality"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Air Quality
-      </a>
-      <a
-        aria-controls="uncontrolled-tab-example-tabpane-sound"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="sound"
-        href="#"
-        id="uncontrolled-tab-example-tab-sound"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Sound Level
-      </a>
-      <a
-        aria-controls="uncontrolled-tab-example-tabpane-temperature"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="temperature"
-        href="#"
-        id="uncontrolled-tab-example-tab-temperature"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Temperature
-      </a>
-      <a
-        aria-controls="uncontrolled-tab-example-tabpane-humidity"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="humidity"
-        href="#"
-        id="uncontrolled-tab-example-tab-humidity"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Humidity
-      </a>
-    </nav>
-    <div
-      className="tab-content"
-    >
       <div
-        aria-hidden={false}
-        aria-labelledby="uncontrolled-tab-example-tab-airQuality"
-        className="fade tab-pane active show"
-        id="uncontrolled-tab-example-tabpane-airQuality"
-        role="tabpanel"
-      >
-        <table
-          className="table table-dark table-striped table-bordered table-hover"
-        >
-          <thead>
-            <tr>
-              <th
-                data-testid="date1"
-              >
-                Date
-              </th>
-              <th
-                data-testid="carbon-header"
-              >
-                Carbon dioxide
-              </th>
-              <th
-                data-testid="people1"
-              >
-                #people in room
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td
-                data-testid="actual-date1"
-              />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        className="spinner-border"
+        data-testid="Spinner"
+        role="status"
+      />
       <div
-        aria-hidden={true}
-        aria-labelledby="uncontrolled-tab-example-tab-sound"
-        className="fade tab-pane"
-        id="uncontrolled-tab-example-tabpane-sound"
-        role="tabpanel"
+        className="form-group"
       >
-        <table
-          className="table table-dark table-striped table-bordered table-hover"
+        <label
+          className="form-label"
+          htmlFor="formBasicEmail"
         >
-          <thead>
-            <tr>
-              <th
-                data-testid="date2"
-              >
-                Date
-              </th>
-              <th
-                data-testid="sound-lvl"
-              >
-                Sound level (dBa)
-              </th>
-              <th
-                data-testid="people2"
-              >
-                #people in room
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td
-                data-testid="actual-date2"
-              />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
+          Here you can insert the current number of poeple in the room
+        </label>
+        <input
+          className="form-control"
+          id="formBasicEmail"
+          onChange={[Function]}
+          placeholder="Enter number of people"
+          type="text"
+        />
+        <small
+          className="text-muted form-text"
+        >
+          Ensure that the number is correct.
+        </small>
       </div>
-      <div
-        aria-hidden={true}
-        aria-labelledby="uncontrolled-tab-example-tab-temperature"
-        className="fade tab-pane"
-        id="uncontrolled-tab-example-tabpane-temperature"
-        role="tabpanel"
+      <button
+        className="btn btn-primary"
+        data-testid="submit-button"
+        disabled={false}
+        onClick={[Function]}
+        type="submit"
       >
-        <table
-          className="table table-dark table-striped table-bordered table-hover"
-        >
-          <thead>
-            <tr>
-              <th
-                data-testid="date3"
-              >
-                Date
-              </th>
-              <th
-                data-testid="temp"
-              >
-                temperature
-              </th>
-              <th
-                data-testid="people3"
-              >
-                #people in room
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td
-                data-testid="actual-date3"
-              />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div
-        aria-hidden={true}
-        aria-labelledby="uncontrolled-tab-example-tab-humidity"
-        className="fade tab-pane"
-        id="uncontrolled-tab-example-tabpane-humidity"
-        role="tabpanel"
-      >
-        <table
-          className="table table-dark table-striped table-bordered table-hover"
-        >
-          <thead>
-            <tr>
-              <th
-                data-testid="date4"
-              >
-                Date
-              </th>
-              <th
-                data-testid="humidity"
-              >
-                Humidity
-              </th>
-              <th
-                data-testid="people4"
-              >
-                #people in room
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td
-                data-testid="actual-date4"
-              />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div
-    className="text-left row"
-    style={
-      Object {
-        "paddingTop": "40px",
-      }
-    }
-  >
-    <div
-      className="col"
-    >
-      <form
-        className=""
-      >
-        <div
-          className="form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="formBasicEmail"
-          >
-            Here you can insert the current number of poeple in the room
-          </label>
-          <input
-            className="form-control"
-            id="formBasicEmail"
-            placeholder="Enter number of people"
-            type="people"
-          />
-          <small
-            className="text-muted form-text"
-          >
-            Ensure that the number is correct.
-          </small>
-        </div>
-        <button
-          className="btn btn-primary"
-          data-testid="submit-button"
-          disabled={false}
-          type="submit"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
+        Submit
+      </button>
+    </form>
   </div>
 </div>
 `;

@@ -10,10 +10,10 @@ import { CurrentQualityPage } from "./components/presenters/currentQuality"
 function App() {
     const [val, setVal] = React.useState(0);
     React.useEffect(() => {
-        fetch('/api/sensor')
+        fetch('/api/sensor/airquality')
         .then(res => res.json())
         .then(json => {
-            setVal(json.data);
+            console.log(json);
         })
     }, [])
 
