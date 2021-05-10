@@ -95,7 +95,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.data.carbon + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.data.volatile + " unit"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.data.volatile + " ppb"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
