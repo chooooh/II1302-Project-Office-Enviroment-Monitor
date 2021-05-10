@@ -8,7 +8,8 @@ import {render, cleanup} from '@testing-library/react';
 import renderer from "react-test-renderer";
 
 import {within} from "@testing-library/dom";
-
+import "@babel/plugin-syntax-jsx";
+import "@babel/preset-react";
 //after each test cleanup (prevents rendering the same components multiple times)
 afterEach(cleanup);
 //Try to render the current quality view without crashing
