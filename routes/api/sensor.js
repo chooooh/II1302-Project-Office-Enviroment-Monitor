@@ -4,25 +4,13 @@
  * sensor model. A helper method providing time and date is also present.
  * @package
  */
-require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const cfenv = require('cfenv');
-const appEnv = cfenv.getAppEnv();
 const { AirQuality } = require('../../models/airquality');
 const AQInstance = new AirQuality();
 
-//const { readLatestEntry, readFromDB, writeToDB } = require('../../database/io');
-
-var counter = 0;
-const airqualityDbName = 'airquality';
-const peopleDbName= 'people';
-
-/**
- * random example
- */
 router.get('/', (req, res) => {
-    res.status(200).json({"data": ++counter});
+    res.status(200).send("all data?");
 });
 
 /**
@@ -30,13 +18,12 @@ router.get('/', (req, res) => {
  * noted airquality. Response will contain a json object of the requested
  * data.
  */
-router.get('/airquality', (req, res) => {
+router.get('/airquality', (req, res, next) => {
     AQInstance.readLatestEntry()
     .then(result => {
         res.set(200).send(result);
     }).catch(err => {
-        console.log(err);
-        res.set(400).send(err);
+        next(err);
     });
 });
 
@@ -49,9 +36,8 @@ router.get('/airquality', (req, res) => {
 router.post('/airquality', (req, res) => {
     AQInstance.writeToDB(req.query)
     .then(result => {
-        res.set(200).send(result)
+        res.set(200).send(result);
     }).catch(err => {
-        console.log(err)
         res.set(400).send(err);
     });
 });
@@ -73,13 +59,5 @@ router.post('/airquality', (req, res) => {
     });
     */
 
-/*
- router.get('/peopleintheroom', (req, res) => {
-    const host = appEnv.url;
-    res.set(200).send(host);
-});
-*/
-
-
-// Exports to use elsewhere in the program
+// Exports to use elsewhere in the application
 module.exports = router;

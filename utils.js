@@ -1,4 +1,14 @@
+/**
+ * @fileoverview This module provides helper functions.
+ * Dependecies used are javascript date object.
+ * @package
+ */
 
+/**
+ * returns a message indicating that the server has started
+ * @returns {string} message that indicates that the server has
+ * started on a port
+ */
 const getWelcomeMessage = () => {
     const welcomeMessage = "server starting on ";
     return welcomeMessage;
@@ -6,7 +16,7 @@ const getWelcomeMessage = () => {
 
 /**
  * A simple function that returns the current date and time
- * @returns Date and time with custom formatting
+ * @returns {string} Date and time with custom formatting
  */
 const currentDateTime = () => {
     const now = new Date();
@@ -29,4 +39,5 @@ const currentDateTime = () => {
     return date + " " + time;
 }
 
-module.exports = {getWelcomeMessage, currentDateTime};
+
+module.exports = { getWelcomeMessage, currentDateTime };

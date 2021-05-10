@@ -3,7 +3,9 @@
  * Dependencies are local modules such as utils.
  * @package
  */
+
 const cloudant = require('./setup');
+const { v4: uuidv4 } = require('uuid');
 const db = cloudant.db;
 
 /**
@@ -12,8 +14,8 @@ const db = cloudant.db;
  * @param { The data to be written } data 
  * @param { The path to the table to write to } dest 
  */
-async function writeToDB(targetTable, data, id) {
-    return await db.use(targetTable).insert(data, id);
+async function writeToDB(targetTable, data, date) {
+   return await db.use(targetTable).insert({data, date}, `${targetTable}:${date}`);
 }
 
 /**
@@ -22,25 +24,26 @@ async function writeToDB(targetTable, data, id) {
  * @returns A promise including the latest data
  */
 async function readLatestEntry(targetTable) {
-    const latestEntryQuery = {
-        "selector": {
-           "_id": {
-              "$gt": "0"
-           }
-        },
-        "fields": [
-           "_id",
-           "_rev",
-           "data"
-        ],
-        "sort": [
-           {
-              "_id": "desc"
-           }
-        ],
-        "limit":1
-    };
-    return await db.use(targetTable).find(latestEntryQuery);
+   const latestEntryQuery = {
+      "selector": {
+         "_id": {
+            "$gt": "0"
+         }
+      },
+      "fields": [
+         "_id",
+         "_rev",
+         "data",
+         "date"
+      ],
+      "sort": [
+         {
+            "_id": "desc"
+         }
+      ],
+      "limit":1
+   };
+   return await db.use(targetTable).find(latestEntryQuery);
 };
 
 /**
@@ -49,9 +52,9 @@ async function readLatestEntry(targetTable) {
  * @param { The id to match with a specific entry } id 
  * @param { The name of the table to search from } table
  */
-async function readFromDB(id, targetTable) { //to read multiple entries
+async function readFromDB(targetTable, id) { //to read multiple entries
   return await db.use(targetTable).get(id);
 };
 
-// the functions to be used in the different route files
+// Exports to use elsewhere in the application
 module.exports = { readFromDB, writeToDB, readLatestEntry }
