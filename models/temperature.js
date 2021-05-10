@@ -2,11 +2,17 @@
 const db = require("../database/io");
 const { currentDateTime } = require('../utils');
 
+/**
+ * A model that will handle all data about the temperature in
+ * the room.
+ */
+class Temperature {
 
-class AirQuality {
-
+    /**
+     * Simple constructor that sets the name of the database target
+     */
     constructor() {
-        this.airqualityDBName = 'airquality';
+        this.temperatureDbName = 'temperature';
     };
 
     /**
@@ -14,12 +20,11 @@ class AirQuality {
      * function with nessecary arguments
      * @param {The airquality data recieved from the hardware} data 
      */
-    writeToDB({carbon, volatile}) {
+    writeToDB({temperature}) {
         const data = {
-            carbon,
-            volatile
+            temperature
         };
-        return db.writeToDB(this.airqualityDBName, data, currentDateTime());
+        return db.writeToDB(this.temperatureDbName, data, currentDateTime());
     };
 
     /**
@@ -28,9 +33,9 @@ class AirQuality {
      * @returns A promise including the latest data.
      */
     readLatestEntry() {
-        return db.readLatestEntry(this.airqualityDBName);
+        return db.readLatestEntry(this.temperatureDbName);
     };
 }
 
 // Exports to use elsewhere in the application
-module.exports = { AirQuality }
+module.exports = { Temperature }

@@ -1,5 +1,6 @@
 // Load the Cloudant library.
 const Cloudant = require('@cloudant/cloudant');
+require('dotenv').config();
 
 // Get account details from environment variables
 const url = process.env.cloudant_url;
