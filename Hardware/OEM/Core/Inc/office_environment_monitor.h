@@ -13,7 +13,7 @@
 #include "stdio.h"
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
-#include "disp.h"
+#include "ssd1306.h"
 
 /* Status codes */
 typedef enum

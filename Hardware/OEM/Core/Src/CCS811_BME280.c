@@ -11,7 +11,6 @@
 */
 
 #include "CCS811_BME280.h"
-#include "disp.h"
 
 /* Global variables */
 static uint16_t CO2;
@@ -43,7 +42,6 @@ CCS811_init(void){
 	uint8_t register_value = 0;
 	ENV_SENSOR_STATUS status = CCS811_SUCCESS;
 	HAL_StatusTypeDef temp = HAL_OK;
-	display_set_position(1, (display_get_y() + ROW_SIZE));
 
 	RETRY:
 	HAL_Delay(100);
@@ -58,17 +56,14 @@ CCS811_init(void){
 	/* If we fail here, try again. If the module is connected correctly it should work eventually */
 	if((temp != HAL_OK) ||  (register_value != 0x81)){
 		HAL_Delay(100);
-		display_write_string("##", WHITE);
 		goto RETRY;
 	}
-	display_write_string("##", WHITE);
 
 	/* Reset the device & wait a bit */
 	status = CCS811_reset();
 	if(status != CCS811_SUCCESS)
 		return status;
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
 
 	/* Check for sensor errors */
 	if(CCS811_read_status_error() != 0){
@@ -76,22 +71,17 @@ CCS811_init(void){
 		return CCS811_ERROR;
 	}
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
 
 	/* Check if app is valid */
 	if(CCS811_read_app_valid() != 1)
 		return CCS811_ERROR;
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
-
 
 	/* Write to app start register to start */
 	status = CCS811_app_start();
 	if(status != CCS811_SUCCESS)
 		return status;
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
-
 
 	/* Set drive mode to 1; measurement each second
 	 * mode 2; measurement every 10 seconds
@@ -102,7 +92,6 @@ CCS811_init(void){
 	if(status != CCS811_SUCCESS)
 		return status;
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
 
 	/* Check for sensor errors before exiting */
 	if(CCS811_read_status_error() != 0){
@@ -110,7 +99,6 @@ CCS811_init(void){
 		return CCS811_ERROR;
 	}
 	HAL_Delay(30);
-	display_write_string("##", WHITE);
 
 	return status;
 }

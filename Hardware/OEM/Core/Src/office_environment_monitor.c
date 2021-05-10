@@ -40,7 +40,6 @@ void office_environment_monitor(void){
 	display_write_string("STARTED", WHITE);
 	reset_screen_canvas();
 
-
 	/* Connect to WIFI */
 	display_write_string("Connecting to WIFI", WHITE);
 	current_status = esp8266_wifi_start();
@@ -92,7 +91,7 @@ void office_environment_monitor(void){
 
 			show_measurements(temperature, humidity, co2, tVoc);
 
-			if(timer == 60){
+			if(timer == 10000){
 				timer = 0;
 				if((current_status = esp8266_web_connection()) != ESP8266_WEB_CONNECTED)
 					error_handler();
@@ -252,8 +251,8 @@ RETURN_STATUS esp8266_start(void){
 	if(strcmp(esp8266_return_string, ESP8266_AT_OK) != 0){
 		return ESP8266_START_ERROR;
 	}
-
 	return ESP8266_START_SUCCESS;
+
 }
 
 /* Connects the module to wifi */
@@ -275,7 +274,7 @@ RETURN_STATUS esp8266_web_connection(void){
 	char remote_port[] 		     = "80";
 
 	esp8266_get_connection_command(connection_command, type, remote_ip, remote_port);
-	esp8266_return_string = esp8266_send_command(connection_command); // ,
+	esp8266_return_string = esp8266_send_command(connection_command);
 	if(strcmp(esp8266_return_string, ESP8266_AT_CONNECT) != 0){
 		return ESP8266_WEB_DISCONNECTED;
 	}
@@ -292,7 +291,7 @@ RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
 	char host		[  ]  = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 
 	sprintf  (data, "carbon=%d&volatile=%d", co2, tvoc);
-	strcat(uri,data);
+	strcat   (uri,data);
 
 	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
 	esp8266_get_at_send_command(init_send, len);
@@ -312,10 +311,83 @@ RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
 /* Initiate CCS811 */
 RETURN_STATUS ccs811_start(void){
 
+	// TODO: move init from ccs811 functions since it uses display functions to do the loading animation...
+	/*
 	current_sensor_status = CCS811_init();
 	if(current_sensor_status != CCS811_SUCCESS){
 		return CCS811_START_ERROR;
 	}
+	return CCS811_START_SUCCESS;
+	*/
+	uint8_t register_value = 0;
+	current_sensor_status = CCS811_SUCCESS;
+	HAL_StatusTypeDef hal_status = HAL_OK;
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+
+	RETRY:
+	HAL_Delay(100);
+	register_value = 0;
+	hal_status = HAL_OK;
+
+	/* Read the HW ID register to make sure the sensor is responsive */
+	// i2c mem read here, otherwise i2c seems to break
+	hal_status = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
+
+	/* If we fail here, try again. If the module is connected correctly it should work eventually */
+	if((hal_status != HAL_OK) || (register_value != 0x81)){
+		HAL_Delay(100);
+		display_write_string("##", WHITE);
+		goto RETRY;
+	}
+	display_write_string("##", WHITE);
+
+	/* Reset the device & wait a bit */
+	current_sensor_status = CCS811_reset();
+	if(current_sensor_status != CCS811_SUCCESS)
+		return CCS811_START_ERROR;
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
+	/* Check for sensor errors */
+	if(CCS811_read_status_error() != 0){
+		return CCS811_START_ERROR;
+	}
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
+	/* Check if app is valid */
+	if(CCS811_read_app_valid() != 1)
+		return CCS811_START_ERROR;
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
+
+	/* Write to app start register to start */
+	current_sensor_status = CCS811_app_start();
+	if(current_sensor_status != CCS811_SUCCESS)
+		return CCS811_START_ERROR;
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
+
+	/* Set drive mode to 1; measurement each second
+	 * mode 2; measurement every 10 seconds
+	 * mode 3; measurement every 60 seconds
+	 * mode 4; measurement every 250ms
+	 **/
+	current_sensor_status = CCS811_write_mode(1);
+	if(current_sensor_status != CCS811_SUCCESS)
+		return CCS811_START_ERROR;
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
+	/* Check for sensor errors before exiting */
+	if(CCS811_read_status_error() != 0){
+		return CCS811_START_ERROR;
+	}
+	HAL_Delay(30);
+	display_write_string("##", WHITE);
+
 	return CCS811_START_SUCCESS;
 }
 

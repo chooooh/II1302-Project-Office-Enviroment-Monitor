@@ -96,11 +96,10 @@ esp8266_init(void){
 
 
 	/* Get OK from esp8266 */
-		if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)
-			return ESP8266_AT_ERROR;
+	if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)
+		return ESP8266_AT_ERROR;
 
 	/* Esp8266 sends lots of data when first started */
-
 	HAL_Delay(500);
 	/* Reset the esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT_RST), ESP8266_AT_OK) != 0){

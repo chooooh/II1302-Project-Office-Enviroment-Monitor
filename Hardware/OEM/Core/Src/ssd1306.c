@@ -6,7 +6,7 @@
  *              Jonatan Lundqvist Silins, jonls@kth.se
  */
 
-#include <disp.h>
+#include <ssd1306.h>
 #include "i2c.h"
 #include "fonts.h"
 #include "stdio.h"
