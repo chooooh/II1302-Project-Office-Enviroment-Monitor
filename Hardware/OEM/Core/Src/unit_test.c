@@ -15,13 +15,17 @@
 #include "stdio.h"
 #include "ESP8266.h"
 #include "CCS811_BME280.h"
+#include "ssd1306.h"
 
+#define RUN_SSD1306_TEST
 #define RUN_ESP8266_TEST
 #define RUN_CCS811_TEST
 #define RUN_BME280_TEST
+//#undef RUN_SSD1306_TEST
 //#undef RUN_ESP8266_TEST
 //#undef RUN_CCS811_TEST
 //#undef RUN_BME280_TEST
+
 
 void unit_test(void){
 
@@ -29,6 +33,16 @@ void unit_test(void){
 /* Test begin */
 UNITY_BEGIN();
 
+/* Run test for display
+ * Writing to the display is not tested	*/
+#ifdef RUN_SSD1306_TEST
+
+	/* Display init test */
+	RUN_TEST(test_display_init);
+
+#endif
+
+/* Run test for ESP8266 */
 #ifdef RUN_ESP8266_TEST
 
 	/* Set up interrupt for ESP*/
@@ -49,15 +63,22 @@ UNITY_BEGIN();
 
 #endif
 
+/* Run test for CCS811
+ * Does not test reading the values, since these vary depending on environment	*/
 #ifdef RUN_CCS811_TEST
 
     /* Test initiation of CCS811 */
     RUN_TEST(test_CCS811_init);
+
 #endif
 
+/* Run test for BME280
+ * Does not test reading the values, since these vary depending on environment	*/
 #ifdef RUN_BME280_TEST
+
     /* Test initiation of BME280 */
     RUN_TEST(test_BME280_init);
+
 #endif
 
 /* Test end*/
@@ -121,4 +142,9 @@ void test_esp8266_at_send(char* init_send){
 
 void test_esp8266_send_data(char* request) {
 	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CLOSED, esp8266_send_data(request));
+}
+
+void test_display_init(void){
+	display_init();
+	TEST_ASSERT_EQUAL_UINT(HAL_OK, display_get_init_status());
 }

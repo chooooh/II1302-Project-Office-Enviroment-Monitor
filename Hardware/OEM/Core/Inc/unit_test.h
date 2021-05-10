@@ -22,5 +22,6 @@ void test_esp8266_web_connection(void);
 void test_esp8266_web_request(void);
 void test_esp8266_at_send(char*);
 void test_esp8266_send_data(char*);
+void test_display_init(void);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef*);
 

@@ -48,7 +48,7 @@ display_get_y(void){
  */
 uint16_t
 display_get_x(void){
-	return display.thisY;
+	return display.thisX;
 }
 
 HAL_StatusTypeDef
@@ -321,7 +321,7 @@ void display_string_on_line(const char *str, Display_ColourDef colour, uint8_t L
 	display_set_position(1, Line * ROW_SIZE);
 	HAL_Delay(10);
 	display_write_string(str, colour);
-	}
+}
 
 void display_string_on_line_no_update(const char *str, Display_ColourDef colour, uint8_t Line)
 {

@@ -13,6 +13,8 @@
 
 #include "office_environment_monitor.h"
 
+#define CCS811_BME280_SEND_INTERVAL 30
+
 /* Current return statuses */
 static RETURN_STATUS 	 current_status;			// return status for functions within this program
 static ENV_SENSOR_STATUS current_sensor_status; // return status for environmental sensor functions
@@ -91,11 +93,11 @@ void office_environment_monitor(void){
 
 			show_measurements(temperature, humidity, co2, tVoc);
 
-			if(timer == 10000){
+			if(timer == CCS811_BME280_SEND_INTERVAL){
 				timer = 0;
 				if((current_status = esp8266_web_connection()) != ESP8266_WEB_CONNECTED)
 					error_handler();
-				if((current_status = esp8266_web_request(co2, tVoc)) != ESP8266_WEB_REQUEST_SUCCESS)
+				if((current_status = esp8266_web_request(co2, tVoc, temperature, humidity)) != ESP8266_WEB_REQUEST_SUCCESS)
 					error_handler();
 			}
 		}
@@ -176,7 +178,6 @@ void error_handler(void){
 		// TODO: BLINK RED LED WHILE RUNNING
 	}
 }
-
 
 void display_startscreen(void){
 	display_set_position(1, (display_get_y() + ROW_SIZE));
@@ -281,16 +282,16 @@ RETURN_STATUS esp8266_web_connection(void){
 	return ESP8266_WEB_CONNECTED;
 }
 
-RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
+RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc, float temp, float hum){
 	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 	///api/sensor/airquality?carbon=10&volatile=10 HTTP/1.1
-	char request	[256] = {0};
+	char request	[512] = {0};
 	char init_send	[64]  = {0};
-	char data		[40]  = {0};
-	char uri		[50]  = "api/sensor/airquality?";
+	char data		[100]  = {0};
+	char uri		[50]  = "/api/sensor?";
 	char host		[  ]  = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 
-	sprintf  (data, "carbon=%d&volatile=%d", co2, tvoc);
+	sprintf  (data, "carbon=%d&volatile=%d&temperature=%f&humidity=%f", co2, tvoc, temp, hum);
 	strcat   (uri,data);
 
 	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
@@ -311,14 +312,6 @@ RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc){
 /* Initiate CCS811 */
 RETURN_STATUS ccs811_start(void){
 
-	// TODO: move init from ccs811 functions since it uses display functions to do the loading animation...
-	/*
-	current_sensor_status = CCS811_init();
-	if(current_sensor_status != CCS811_SUCCESS){
-		return CCS811_START_ERROR;
-	}
-	return CCS811_START_SUCCESS;
-	*/
 	uint8_t register_value = 0;
 	current_sensor_status = CCS811_SUCCESS;
 	HAL_StatusTypeDef hal_status = HAL_OK;

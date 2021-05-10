@@ -88,7 +88,7 @@ RETURN_STATUS esp8266_web_connection(void);
 /**
  *
  */
-RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc);
+RETURN_STATUS esp8266_web_request(uint16_t co2, uint16_t tvoc, float temp, float hum);
 
 /**
  *
