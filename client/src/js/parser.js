@@ -1,10 +1,17 @@
-
 /**
- * The functions parses the data it is given to a simple object
+ * The functions parses the data which is fetched from four different routes
+ * into one object which will contain all data related to Air Quality.
+ * This parsed object is later sent down from the presenter to the view. 
  * 
  * 
- * @param {*} data the data to be parsed contains aqData, humidityData, peopleData and tempData
- * @returns an object which contains the parsed data
+ * @param {Object} data the data to be parsed contains aqData, humidityData, peopleData and tempData
+ * data = {
+ *      aqData,
+ *      humidityData,
+ *      peopleData,
+ *      tempData,
+ * }
+ * @returns an object which contains all data related to Air Quality.
  */
 export const parser = (data) => {
     console.log("IN PARSER:" , data["docs"]);
@@ -25,30 +32,3 @@ export const parser = (data) => {
     }
     
 };
-
-export const parseAll = (airQuality, tempData, peopleData, humidityData) => {
-    
-       return  {
-            airQualityDate: airQuality.date,
-            carbon: airQuality.data 
-        }
-    
-};
-
-/*
-export const parseAll = (airQuality, tempData, peopleData, humidityData) => {
-    (
-        data = {
-            airQualityDate: airQuality.date,
-            volatile: airQuality.data.volatile,
-            carbon: airQuality.data.carbon,
-            temperatureDate: tempData.date,
-            temperature: tempData.data,
-            peopleDate: peopleData.date,
-            people: peopleData.data,
-            humidityDate: humidityData.date,
-            humidity: humidityData.data
-        }
-    )
-};
-*/

@@ -34,8 +34,5 @@ export const fetchAllData = async () => {
         peopleData,
         humidityData
     })
-
-    //return parseAll(airData)
-    //return parseAll(airData, tempData, peopleData, humidityData);
 };
 

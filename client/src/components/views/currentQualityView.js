@@ -36,10 +36,12 @@ const fontSize = {
 };
 
 /**
- * Functions which dictates the layout of the UI. It uses bootstrap components and styling.
- * Props are given by the presenter. See currentQuality.js
- * The function uses react such as state variables to keep track of the view state.
- * @param {*} param0 
+ * This Component is the View component. It dictates the layout of UI and presents
+ * All data is received from its corresponding presenter, currentQuality.js
+ * 
+ * @param {Object} data,  Object containing all Air Quality related data,
+ * @param {Integer} numberOfPeople,  the number of people present in the room,
+ * @param {callback} onSubmit,  submits the user input (number of people in the room),  
  * @returns 
  */
 export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
@@ -115,7 +117,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 </Card>
                 </Col>
             </Row>
-                <Button variant="primary">History</Button>
+                <Button data-testid = "history-button" variant="primary">History</Button>
             </Card.Body>
             <Card.Footer className="text-muted">{"Last fetch: " + lastFetch}</Card.Footer>
             </Card>}
