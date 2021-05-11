@@ -121,7 +121,7 @@ describe("Testing the carbon, people, volatile gases, humidity and temperature p
 
 /**
  * This test ensures that if the data prop, which is passed down from the presenter to the view, is null
- * then a bootstrap spinner component is rendered instead.
+ * then a bootstrap spinner component is rendered instead of the main card component.
  */
 test('Spinner is rendered instead of the main Card component', () => {
     const data = null;
@@ -132,7 +132,7 @@ test('Spinner is rendered instead of the main Card component', () => {
 });
 
 /**
- * This test ensures that if the people data is null than a spinner is rendered instead of the entire
+ * This test ensures that if the people data is null then a spinner is rendered instead of the entire
  * boostrap form component.
  */
 test('Spinner is rendered instead of the Form component', () => {
