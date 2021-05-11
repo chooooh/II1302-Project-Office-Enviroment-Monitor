@@ -32,35 +32,15 @@ it("renders button text correctly", () => {
     expect(getByTestId("submit-button")).toHaveTextContent("Submit");
 })
 
-//This test ensures that the table header date is correctly rendered
-describe("Testing the date prop in each card", () => {
-    const data = {
-        date: "2021-04-28"
-    }
-    //This test ensures that the table header date1 is correctly rendered
-    it("renders Humidity date  correctly", () => {
-        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("date-humidity")).toHaveTextContent("Measured: 2021-04-28");
-    })
-    //This test ensures that the table header date2 is correctly rendered
-    it("renders Temperature Date  correctly", () => {
-        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("date-temperature")).toHaveTextContent("Measured: 2021-04-28");
-    })
-    //This test ensures that the table header date3 is correctly rendered
-    it("renders Air-quality date correctly", () => {
-        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("date-air-quality")).toHaveTextContent("Measured: 2021-04-28");
-    })
-})
-
 
 //This test ensures that all date columns in each table displays the value they have been given.
-describe("Testing the date prop and that it renders correctly on all places", () => {
+describe("Ensuring that date is rendered correctly on all places", () => {
     //Object to be passed as prop when rendering the entire CurrentQualityViewComponent
-    //the data.date is used to display the date of the most recent reading
+    //the different dates are used as a timestamp to show when the different reading were done.
     const data = {
-        date: "2021-04-28"
+        airQualityDate:  "2021-04-28",
+        humidityDate:    "2022-04-28",
+        temperatureDate: "2023-04-28" 
     }
 
     it("Renders the air quality date correctly", () => {
@@ -69,11 +49,11 @@ describe("Testing the date prop and that it renders correctly on all places", ()
     })
     it("Renders the humidity date correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("date-humidity")).toHaveTextContent("2021-04-28");
+        expect(getByTestId("date-humidity")).toHaveTextContent("2022-04-28");
     })
     it("Renders the temperature date correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("date-temperature")).toHaveTextContent("2021-04-28");
+        expect(getByTestId("date-temperature")).toHaveTextContent("2023-04-28");
     })
 })
 
@@ -82,8 +62,7 @@ describe("Testing the date prop and that it renders correctly on all places", ()
 describe("Testing the carbon, people, volatile gases, humidity and temperature props are correctly displayed", () => {
     const data = {
         carbon: "10",
-        volatileGases: 12,
-        people: 15,
+        volatile: 12,
         humidity: 30,
         temperature: 24
     }
@@ -94,7 +73,7 @@ describe("Testing the carbon, people, volatile gases, humidity and temperature p
     })
     it("Renders the given volatile gases correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("Volatile gases: 12 unit");
+        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("Volatile gases: 12 ppb");
     })
     it("Renders the given temperature correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
@@ -103,10 +82,6 @@ describe("Testing the carbon, people, volatile gases, humidity and temperature p
     it("Renders the given humidity correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
         expect(getByTestId("actual-humidity")).toHaveTextContent("30 %");
-    })
-    it("Renders the given people correctly", () => {
-        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("people")).toHaveTextContent("Present people: 15");
     })
 })
 

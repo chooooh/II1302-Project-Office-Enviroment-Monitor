@@ -19,8 +19,8 @@ const fetchData = async (route) => {
  */
 export const fetchAllData = async () => {
 
-    const data         = await fetchData('airquality');
-    console.log("data", data)
+    const aqData         = await fetchData('airquality');
+    console.log("data", aqData)
     const tempData     = await fetchData("temperature");
     console.log("TEMPERATURE", tempData);
     
@@ -29,7 +29,7 @@ export const fetchAllData = async () => {
     const humidityData = await fetchData("humidity");
     console.log("TEMPERATURE", humidityData);
     return ({
-        data,
+        aqData,
         tempData,
         peopleData,
         humidityData
