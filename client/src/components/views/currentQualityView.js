@@ -37,12 +37,19 @@ const fontSize = {
 
 /**
  * This Component is the View component. It dictates the layout of UI and presents
- * All data is received from its corresponding presenter, currentQuality.js
+ * All data it has received from its corresponding presenter, currentQuality.js
  * 
- * @param {Object} data,  Object containing all Air Quality related data,
- * @param {Integer} numberOfPeople,  the number of people present in the room,
- * @param {callback} onSubmit,  submits the user input (number of people in the room),  
- * @returns 
+ * @param {Object} data, Object containing all Air Quality related data,
+ * @param {String} data.airQualityDate, the date and time which states when carbon and volatile was measured.
+ * @param {String} data.carbon,  the current carbon value measured in ppm
+ * @param {String} data.volatile, the current amount of volatile gases in the room measured in ppb.
+ * @param {String} data.temperatureDate, the date and time which states when temperature was measured.
+ * @param {String} data.temperature, the current temperature in the room measured in celcius.
+ * @param {String} data.humidityDate, the date and time of when the humidity was measured.
+ * @param {String} data.humidity, the current humidity in the room measured in %.
+ * @param {Integer} numberOfPeople,  the number of people present in the room.
+ * @param {callback} onSubmit,  submits the user input (number of people in the room).  
+ * @returns the html document.
  */
 export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
     console.log("DATA", data)

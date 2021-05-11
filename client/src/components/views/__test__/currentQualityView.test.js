@@ -89,7 +89,6 @@ describe("Ensuring that date is rendered correctly on all places", () => {
     })
 })
 
-
 /**
  * This test ensures that all measured values, such as carbon, volatile, temperature and humidity 
  * which are fetched from the database are correctly rendered in the view and on the correct places.

@@ -18,16 +18,11 @@ const fetchData = async (route) => {
  * @returns an object which contains all data
  */
 export const fetchAllData = async () => {
-
     const aqData         = await fetchData('airquality');
-    console.log("data", aqData)
-    const tempData     = await fetchData("temperature");
-    console.log("TEMPERATURE", tempData);
-    
-    const peopleData   = await fetchData("people");
-    console.log("peopleData", peopleData);
-    const humidityData = await fetchData("humidity");
-    console.log("TEMPERATURE", humidityData);
+    const tempData       = await fetchData("temperature"); 
+    const peopleData     = await fetchData("people");
+    const humidityData   = await fetchData("humidity");
+
     return ({
         aqData,
         tempData,
