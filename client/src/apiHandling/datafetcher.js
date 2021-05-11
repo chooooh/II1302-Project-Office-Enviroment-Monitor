@@ -1,20 +1,39 @@
 
-
+/**
+ * Function that fetches data from the api at the specified route '/api/sensor/...'
+ * 
+ * @param {String} route, the final keyword of the route address. 
+ * @returns an object which contains the data fetched from the specified route
+ */
 const fetchData = async (route) => {
+   console.log("HERE", route)
    const res    = await fetch('/api/sensor/' + route);
    const json   = await res.json();
    return json;
 };
 
+/**
+ * Function which utilises the fetchData function to fetch four
+ * types of data. Temperature, Humidity, Carbon And Volatile
+ * @returns an object which contains all data
+ */
 export const fetchAllData = async () => {
-    const data = await fetchData('airquality');
-    return data;
+
+    const data         = await fetchData('airquality');
+    console.log("data", data)
+    const tempData     = await fetchData("temperature");
+    console.log("TEMPERATURE", tempData);
     
-    //console.log("AirDATA", airData)
-    //const tempDataPromise       =  fetchData("temperature");
-    //const tempData     = await fetchData("temperature");
-    //const peopleData   = await fetchData("people");
-    //const humidityData = await fetchData("humidity");
+    const peopleData   = await fetchData("people");
+    console.log("peopleData", peopleData);
+    const humidityData = await fetchData("humidity");
+    console.log("TEMPERATURE", humidityData);
+    return ({
+        data,
+        tempData,
+        peopleData,
+        humidityData
+    })
 
     //return parseAll(airData)
     //return parseAll(airData, tempData, peopleData, humidityData);

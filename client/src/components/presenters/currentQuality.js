@@ -36,7 +36,7 @@ export const CurrentQualityPage = () => {
      
         const intervalId = setInterval(() => {
           toggle()
-        }, 3600000 );
+        }, 10000 );
 
         return () => clearInterval(intervalId)
 
