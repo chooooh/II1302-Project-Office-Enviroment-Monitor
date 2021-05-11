@@ -1,7 +1,12 @@
 /**
 ******************************************************************************
 @brief functions for the ESP8266 wifi-module
-@details
+@details The functions implemented here should be everything needed to
+		 use the ESP8266 wifi-module with the Nucleo 476RG board.
+		 For each command sent the esp8266 response is returned as a string.
+		 Most basic AT commands for the module are implemented. The main purpose
+		 of the code is to support the office environment program, thus the code
+		 leaves some functionalities of the ESP unimplemented.
 @file ESP8266.c
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
@@ -31,7 +36,8 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
    HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
 }
 
-/* djb2 hashing algorithm which is used in mapping sent commands to the right ESP8266 response code */
+/* djb2 hashing algorithm which is used in mapping sent commands to the right ESP8266 response code.
+   an alternative to using this would be to use some enums or defines instead	 	 	 	 	 	 	 	 */
 const unsigned long
 hash(const char *str) {
     unsigned long hash = 5381;

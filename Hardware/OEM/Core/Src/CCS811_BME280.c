@@ -377,18 +377,6 @@ BME280_read_register16(uint8_t reg_addr, uint16_t* buffer)
 }
 
 ENV_SENSOR_STATUS
-BME280_read_range(uint16_t reg_addr, uint8_t* buffer, uint16_t size){
-	HAL_StatusTypeDef status = HAL_OK;
-	reg_addr = reg_addr | (BME280_ADDR << 8);
-
-	status = HAL_I2C_Master_Receive(&hi2c1, reg_addr, buffer, size, HAL_MAX_DELAY);
-	if(status != HAL_OK)
-		 return BME280_I2C_ERROR;
-
-	return BME280_SUCCESS;
-}
-
-ENV_SENSOR_STATUS
 BME280_write_register(uint8_t reg_addr, uint8_t* buffer, uint8_t size){
 
 	HAL_StatusTypeDef status = HAL_OK;
