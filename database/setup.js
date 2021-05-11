@@ -1,5 +1,9 @@
+/**
+ * @fileoverview This file setups the database connection for Cloudant
+ * Dependencies are Express, cfenv (IBM Cloud), and local modules such as utils.
+ */
+
 // Load the Cloudant library.
-require('dotenv').config()
 const Cloudant = require('@cloudant/cloudant');
 require('dotenv').config();
 

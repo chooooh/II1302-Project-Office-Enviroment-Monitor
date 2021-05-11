@@ -1,18 +1,18 @@
+
 /**
  * @fileoverview This file handles database calls. 
  * Dependencies are local modules such as utils.
- * @package
  */
 
 const cloudant = require('./setup');
-const { v4: uuidv4 } = require('uuid');
 const db = cloudant.db;
 
 /**
  * This function recieves data and a destination and writes it 
  * the cloudant database.
- * @param { The data to be written } data 
- * @param { The path to the table to write to } dest 
+ * @param { string } targetTable 
+ * @param { Object } data 
+ * @returns { Promise } Promise object that represents the result of the database call.
  */
 async function writeToDB(targetTable, data, date) {
    return await db.use(targetTable).insert({data, date}, `${targetTable}:${date}`);
@@ -20,8 +20,8 @@ async function writeToDB(targetTable, data, date) {
 
 /**
  * This function takes a table and returns the latest entry.
- * @param { String } targetTable The table to read from
- * @returns A promise including the latest data
+ * @param { String } targetTable The table to read from.
+ * @returns { Promise } Promise containing the latest data.
  */
 async function readLatestEntry(targetTable) {
    const latestEntryQuery = {
@@ -48,11 +48,13 @@ async function readLatestEntry(targetTable) {
 
 /**
  * This async function searches for the entry that has the corresponding
- * id in the specified cloudant table. Returns all matching id's.
- * @param { The id to match with a specific entry } id 
- * @param { The name of the table to search from } table
+ * id in the specified cloudant table. Returns all matching id.
+ * @param { string } targetTable Name of the Cloudant datbase table to read from.
+ * @param { string } id The document with corresponding id to read.
+ * @returns { Promise } Promise object that represents the result of
+ * the cloudant response of the write operation
  */
-async function readFromDB(targetTable, id) { //to read multiple entries
+async function readFromDB(targetTable, id) {
   return await db.use(targetTable).get(id);
 };
 

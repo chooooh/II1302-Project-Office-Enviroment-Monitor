@@ -2,8 +2,9 @@
  * @fileoverview This file implements the integration tests. The scope
  * is primarily the routes and database functions.
  * Dependencies are server app instance, chai, chai-http that handles allows
- * http test requests
- * @package
+ * http test requests.
+ * TODO
+ *  - ta bort alla förutom 1 404 tester
  */
 const chai = require('chai');
 const chaiHTTP = require('chai-http')
@@ -13,11 +14,16 @@ const app = require('../app');
 const { currentDateTime } = require('../utils');
 const { readLatestEntry, readFromDB, writeToDB } = require('../database/io');
 
+// Either perform tests on test deploy site or app instance.
 const host = process.env.APP_URL || app;
 
+// Uses the "should" interface.
 chai.should();
 chai.use(chaiHTTP);
 
+/**
+ * Performs database tests.
+ */
 describe('Make sure read and writes work from cloudant', () => {
     const testDbName = 'test';
     const dateTime = currentDateTime();
@@ -77,7 +83,73 @@ describe('Sensor API', () => {
                     done(err);
             })
         });
+    });
 
+    describe('GET /api/sensor/temperature', () => {
+        it('It should GET a temperature object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/temperature")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.a('object');
+                    done(err);
+            });
+        });
+
+        it('It should not GET an object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/temper")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+
+        // lägg till en för 400
+    });
+
+    describe('GET /api/sensor/humidity', () => {
+        it('It should GET a humidity object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/humidity")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.a('object');
+                    done(err);
+            });
+        });
+
+        it('It should not GET an object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/humid")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+        // lägg till en för 400
+    });
+    
+    describe('GET /api/sensor/people', () => {
+        it('It should GET a people object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/people")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.should.be.a('object');
+                    done(err);
+            });
+        });
+
+        it('It should not GET an object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/peopl")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+        // lägg till en för 400
     });
 
     /**

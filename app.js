@@ -2,7 +2,8 @@
 /**
  * @fileoverview This file is the server. It is also designated as starting point
  * for IBM Cloud.
- * Dependencies are Express, cfenv (IBM Cloud), and local modules such as utils.
+ * Dependencies are Express, cfenv (IBM Cloud), and local modules such as utils
+ * and the route api/sensor
  * @package
  */
 
@@ -21,10 +22,10 @@ app.use('/api/sensor', sensor);
 // serve the files out of ./public as our main files
 app.use(express.static(`${__dirname}/client/build`));
 
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(500);
-    res.json({error: err});
+app.use((error, req, res, next) => {
+    if (!error.statusCode) error.statusCode = 500;
+
+    return res.status(error.statusCode).json({error: error.toString()});
 });
 
 // get the app environment from Cloud Foundry

@@ -1,9 +1,15 @@
-const { doesNotMatch } = require('assert');
-const assert = require('assert');
+/**
+ * @fileoverview This module contains unit tests. 
+ * Dependecies are chai, and tested modules.
+ */
+
+// Testing framework
 const chai = require('chai');
+const { getWelcomeMessage, currentDateTime } = require('../utils');
+
+// Uses the "should" interface
 chai.should();
 
-const { getWelcomeMessage, currentDateTime } = require('../utils');
 describe('Test utils', () => {
     it('Welcome Message', () => {
         const message = getWelcomeMessage();

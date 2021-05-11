@@ -39,5 +39,4 @@ const currentDateTime = () => {
     return date + " " + time;
 }
 
-
 module.exports = { getWelcomeMessage, currentDateTime };

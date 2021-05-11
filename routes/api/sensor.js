@@ -1,7 +1,9 @@
+
 /**
  * @fileoverview This file serves the routes for the sensor api.
- * Dependencies are Express, and the local module sensor, that is the
- * sensor model. A helper method providing time and date is also present.
+ * Dependencies are Express, and the models for our data.
+ * A helper method from utils providing time and date is also
+ * used.
  * @package
  */
 const express = require('express');
@@ -16,20 +18,32 @@ const { People } = require('../../models/people');
 const { writeToDB } = require('../../database/io');
 
 //Class instances
-const AQInstance = new AirQuality();
+const airQualityInstance = new AirQuality();
 const TempInstance = new Temperature();
 const HumidityInstance = new Humidity();
 const PeopleInstance = new People();
 
-router.post('/', async (req, res) => {
+/**
+ * This endpoint allows the micro controller simultaneously send all latest
+ * sensor data.
+ * TODO
+ *  - 339 vid undefined
+ *  {"error":{"message":"repsonse is not defined","stack":"ReferenceError: repsonse is not defined\n 
+    at C:\\Users\\choh-\\OneDrive\\Dokument\\Skolan\\II1302 Projekt och Projektmetoder\\project\\II1302-Project-
+    Office-Enviroment-Monitor\\routes\\api\\sensor.js:45:27\n   
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)"}} 
+ */
+router.post('/', async (req, res, next) => {
     const {carbon, volatile, temperature, humidity} = req.query;
     const date = currentDateTime();
     try {
-        //const res = await Promise.all([pro1, pro2, pro3]);
-        const resA = await writeToDB('airquality', {carbon, volatile}, date)
-        const resT = await writeToDB('temperature', {temperature}, date);
-        const resH = await writeToDB('humidity', {humidity}, date);
-        res.set(200).send({resA, resT, resH});
+        const response = await Promise.all([
+            await writeToDB('airquality', {carbon, volatile}, date),
+            await writeToDB('temperature', {temperature}, date),
+            await writeToDB('humidity', {humidity}, date)
+        ]);
+        //POST /api/sensor?carbon=10&volatile=20&temperature=30&humidity=40 HTTP/1.1
+        res.set(200).send(response);
     } catch (err) {
         next(err);
     }
@@ -40,13 +54,14 @@ router.post('/', async (req, res) => {
  * noted airquality. Response will contain a json object of the requested
  * data.
  */
-router.get('/airquality', (req, res, next) => {
-    AQInstance.readLatestEntry()
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        next(err);
-    });
+router.get('/airquality', async (req, res, next) => {
+    const result = await airQualityInstance.readLatestEntry()
+    .catch((error) => {
+        //korrekt error?
+        error.statusCode = 400;
+        next(error);
+    })
+    return res.status(200).json(result);
 });
 
 /**
@@ -55,13 +70,14 @@ router.get('/airquality', (req, res, next) => {
  * air quality in a room. It will in its turn call a method
  * that writes the data to the cloudant database.
  */
-router.post('/airquality', (req, res) => {
-    AQInstance.writeToDB(req.query)
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        res.set(400).send(err);
+router.post('/airquality', async (req, res, next) => {
+    const result = await airQualityInstance.writeToDB(req.query)
+    .catch((error) => {
+        //korrekt error?
+        error.statusCode = 400;
+        next(error);
     });
+    return res.status(200).json(result);
 });
 
 /**
@@ -69,14 +85,14 @@ router.post('/airquality', (req, res) => {
  * registered temperature. Response will contain a json object of the
  * requested data.
  */
- router.get('/temperature', (req, res) => {
-    TempInstance.readLatestEntry()
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        console.log(err);
-        res.set(400).send(err);
-    });
+ router.get('/temperature', async (req, res, next) => {
+    const response = await TempInstance.readLatestEntry()
+    .catch(error => {
+        //korrekt error?
+        error.statusCode = 400;
+        next(error);
+    })
+    return res.status(200).json(response);
 });
 
 /**
@@ -85,13 +101,14 @@ router.post('/airquality', (req, res) => {
  * temperature in a room. It will in its turn call the
  * temperature model for further processing.
  */
- router.post('/temperature', (req, res) => {
-    TempInstance.writeToDB(req.query)
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        res.set(400).send(err);
-    });
+ router.post('/temperature', async (req, res, next) => {
+    const response = await TempInstance.writeToDB(req.query)
+    .catch(error => {
+        //korrekt error?
+        error.statusCode = 400;
+        next(error);
+    })
+    return res.status(200).json(response);
 });
 
 /**
@@ -99,7 +116,7 @@ router.post('/airquality', (req, res) => {
  * registered humidity. Response will contain a json object of the
  * requested data.
  */
- router.get('/humidity', (req, res) => {
+ router.get('/humidity', async (req, res, next) => {
     HumidityInstance.readLatestEntry()
     .then(result => {
         res.set(200).send(result);
@@ -115,7 +132,7 @@ router.post('/airquality', (req, res) => {
  * humidity in a room. It will in its turn call the
  * humidity model for further processing.
  */
- router.post('/humidity', (req, res) => {
+ router.post('/humidity', async (req, res, next) => {
     HumidityInstance.writeToDB(req.query)
     .then(result => {
         res.set(200).send(result);
@@ -129,14 +146,13 @@ router.post('/airquality', (req, res) => {
  * registered people in the room. Response will contain a json object 
  * of the requested data.
  */
- router.get('/people', (req, res) => {
-    PeopleInstance.readLatestEntry()
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        console.log(err);
-        res.set(400).send(err);
-    });
+ router.get('/people', async (req, res, next) => {
+    const result = await PeopleInstance.readLatestEntry()
+    .catch(error => {
+        res.statusCode = 400;
+        next(error);
+    })
+    return res.status(200).json(result);
 });
 
 /**
@@ -145,13 +161,13 @@ router.post('/airquality', (req, res) => {
  * amount of people in a room. It will in its turn call the
  * people model for further processing.
  */
- router.post('/people', (req, res) => {
-    PeopleInstance.writeToDB(req.query)
-    .then(result => {
-        res.set(200).send(result);
-    }).catch(err => {
-        res.set(400).send(err);
-    });
+ router.post('/people', async (req, res, next) => {
+    const result = await PeopleInstance.writeToDB(req.query)
+    .catch(error => {
+        res.statusCode = 400;
+        next(error);
+    })
+    return res.status(200).json(result);
 });
 
 

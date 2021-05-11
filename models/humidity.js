@@ -1,4 +1,10 @@
 
+/**
+ * @fileoverview This file holds the model for humidity, 
+ * which has different database calling functions.
+ * Dependencies are the cloudant instance (db) and 
+ * a time and date function from utils.
+ */
 
 const db = require("../database/io");
 const { currentDateTime } = require('../utils');
@@ -10,31 +16,35 @@ const { currentDateTime } = require('../utils');
 class Humidity {
 
     /**
-     * Simple constructor that sets the name of the database target
+     * Constructor that sets the name of the database target table.
      */
     constructor() {
-        this.humidityDbName = 'humidity';
+        /** @private @const {string} */
+        this.humidityDbName_ = 'humidity';
     };
 
     /**
-     * This function recieves data and calls the correct database
-     * function with nessecary arguments
-     * @param {The airquality data recieved from the hardware} data 
+     * This function recieves a data object and writes calls a write method 
+     * in the database file.
+     * @param { String } humidity the humidity value measured
+     * @returns { Promise } Promise object that represents the result of
+     * the cloudant response of the write operation.
      */
     writeToDB({humidity}) {
         const data = {
             humidity
         };
-        return db.writeToDB(this.humidityDbName, data, currentDateTime());
+        return db.writeToDB(this.humidityDbName_, data, currentDateTime());
     };
 
     /**
-     * This function takes a table and returns the latest entry.
-     * @param { String } targetTable The table to read from.
-     * @returns A promise including the latest data.
+     * This function calls the database file to read the latest document 
+     * written to the humidity table.
+     * @returns { Promise } Promise object that represents the latest 
+     * document.
      */
     readLatestEntry() {
-        return db.readLatestEntry(this.humidityDbName);
+        return db.readLatestEntry(this.humidityDbName_);
     };
 }
 
