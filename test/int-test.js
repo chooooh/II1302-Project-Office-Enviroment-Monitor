@@ -43,8 +43,6 @@ describe('Make sure read and writes work from cloudant', () => {
     it('find the entry with {date: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
         readLatestEntry(testDbName)
         .then(result => {
-            //const isUUID = validate(result.docs[0]["_id"].substr(5));
-            //isUUID.should.be.true(isUUID);
             result.should.be.an('object');
             result.docs[0].should.include({"date": dateTime});
             result.docs[0]["data"].should.include({"data": "testdata"});
@@ -64,6 +62,17 @@ describe('Sensor API', () => {
     /**
      * Test the GET routes
      */
+    describe('GET 404 route', () => {
+        it('It should not GET an object', (done) => {
+            chai.request(host)
+                .get("/api/sensor/nonexistentroute")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                    done(err);
+            })
+        });
+    })
+
     describe('GET /api/sensor/airquality', () => {
         it('It should GET an airquality object', (done) => {
             chai.request(host)
@@ -71,17 +80,9 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
+                    response.body.docs[0].data.should.include.all.keys(['carbon', 'volatile']);
                     done(err);
             });
-        });
-
-        it('It should not GET an object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/airqualit")
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-            })
         });
     });
 
@@ -92,19 +93,10 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
+                    response.body.docs[0].data.should.include.all.keys(['temperature']);
                     done(err);
             });
         });
-
-        it('It should not GET an object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/temper")
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-            })
-        });
-
         // lägg till en för 400
     });
 
@@ -115,17 +107,9 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
+                    response.body.docs[0].data.should.include.all.keys(['humidity']);
                     done(err);
             });
-        });
-
-        it('It should not GET an object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/humid")
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-            })
         });
         // lägg till en för 400
     });
@@ -137,17 +121,9 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
+                    //response.body.docs[0].data.should.include.all.keys(['people']);
                     done(err);
             });
-        });
-
-        it('It should not GET an object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/peopl")
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-            })
         });
         // lägg till en för 400
     });
@@ -156,7 +132,6 @@ describe('Sensor API', () => {
      * Test the POST routes
      */
     describe('POST /api/sensor/airquality', () => {
- 
         it('It should POST new airquality data', (done) => {
             chai.request(host)
                 .post('/api/sensor/airquality?carbon=50&volatile=50')
@@ -165,15 +140,6 @@ describe('Sensor API', () => {
                     response.should.be.an('object');
                     done(err);
             })
-        });
-        
-        it('It should not POST new airquality data', (done) => {
-            chai.request(host)
-                .post('/api/sensor/airqualit')
-                .end((err, response) => {
-                    response.should.have.status(404);
-                    done(err);
-                });
         });
     });
     
