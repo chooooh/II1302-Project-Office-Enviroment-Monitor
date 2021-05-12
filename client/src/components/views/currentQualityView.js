@@ -37,7 +37,8 @@ const fontSize = {
 
 /**
  * This Component is the View component. It dictates the layout of UI and presents
- * All data it has received from its corresponding presenter, currentQuality.js
+ * all data it receives from its corresponding presenter, currentQuality.js.
+ * This component also reacts to user actions such as button clicks and user input. 
  * 
  * @param {Object} data, Object containing all Air Quality related data,
  * @param {String} data.airQualityDate, the date and time which states when carbon and volatile was measured.
