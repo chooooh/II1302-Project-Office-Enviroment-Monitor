@@ -26,7 +26,10 @@ init_uart_interrupt(void){
 	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
 }
 
-/* Probably not the most efficient solution */
+/* Probably not the most efficient solution
+ * each time a byte is received, it is put into the rx_buffer
+ * the rx_buffer is used to check for different responses from the esp8266
+ */
 void
 HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -145,7 +148,8 @@ esp8266_init(void){
 const char*
 esp8266_wifi_init(void){
 
-	HAL_Delay(1000);
+	/* We do a little waiting */
+	HAL_Delay(100);
 
 	/* Buffers */
 	char wifi_command[256] = {0};

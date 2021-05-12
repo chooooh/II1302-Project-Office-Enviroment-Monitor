@@ -1,7 +1,10 @@
 /**
 ******************************************************************************
 @brief functions for the environmental sensors, CCS811 & BME280.
-@details bla bla bla
+@details The functions implemented here should be everything needed to
+		 use the CCS811 & BME280 sensors with the Nucleo 476RG board.
+		 The designed functions are to be used in the office environment
+		 project, but could also be implemented in other projects.
 @file CCS811_BME280.c
 @author  Sebastian Divander,       sdiv@kth.se
 @author  Jonatan Lundqvist Silins, jonls@kth.se
@@ -53,7 +56,7 @@ CCS811_init(void){
 	// mem read here, otherwise i2c seems to break
 	temp = HAL_I2C_Mem_Read(&hi2c1, CCS811_ADDR, 0x20, 1, &register_value, 1, 500);
 
-	/* If we fail here, try again. If the module is connected correctly it should work eventually */
+	/* If we fail here, try again. If the module is connected correctly it should work eventually, might be some internal problem... */
 	if((temp != HAL_OK) ||  (register_value != 0x81)){
 		HAL_Delay(100);
 		goto RETRY;
@@ -324,31 +327,6 @@ BME280_init(void){
 	if(status != BME280_SUCCESS)
 		return status;
 
-/*
-	// read status 0xF3 ?
-	HAL_Delay(100);
-
-	//Read temp first to set t_fine
-	float temp = BME280_read_temp();
-
-	HAL_Delay(100);
-
-	// Read humidity
-	float hum = BME280_read_hum();
-
-
-	while(1){
-		CCS811_read_alg_res();
-		printf("CO2: %dppm\ntVoc: %dppb\n", CO2, tVOC);
-		HAL_Delay(500);
-		temp = BME280_read_temp();
-		HAL_Delay(500);
-		hum = BME280_read_hum();
-		CCS811_set_temp_hum(temp, hum);
-		printf("temp: %f\nhum: %f\n", temp, hum);
-		printf("----------------------------\n");
-	}
-*/
 	return status;
 }
 
@@ -563,5 +541,3 @@ BME280_read_hum(void){
 
 	return (float)(var1>>12) / 1024.0;
 }
-
-

@@ -21,6 +21,8 @@
 #define RUN_ESP8266_TEST
 #define RUN_CCS811_TEST
 #define RUN_BME280_TEST
+
+/* Undefine here to exclude some select test */
 //#undef RUN_SSD1306_TEST
 //#undef RUN_ESP8266_TEST
 //#undef RUN_CCS811_TEST

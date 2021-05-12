@@ -1,9 +1,24 @@
 /**
 ******************************************************************************
 @brief header for the ESP8266 wifi-module functions
-@details This header has all the necessary commands and functions to use the
-		 ESP8266 wifi-module, including relevant AT-commands and functions
-		 to use them in regards to the Office Environment Monitor project.
+@details This header contains documentation for the functions found in the
+ 	 	 corresponding c file. All used AT commands can be found here, with
+ 	 	 a short description of their function.
+
+ 	 	 Note that for connecting the ESP8266 to wifi, you need to add two
+ 	 	 variables called "SSID" and "PWD", these should be of type char*.
+ 	 	 Preferably these can be put in a header file, which is added to
+ 	 	 your .gitignore if the project is public on github.
+ 	 	 The header could look something like this:
+
+ 	 	 #ifndef INC_LOGIN_H_
+		 #define INC_LOGIN_H_
+
+		 static const char SSID[] = "#Telia-7B6E70";
+		 static const char PWD[]  = "*K64Z&8r*xC@ewG6";
+
+		 #endif
+
 @file ESP8266.h
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
@@ -26,7 +41,7 @@
 /* djb2 hash keys
  * Each key maps to corresponding AT command string
  */
-typedef enum COMMAND_KEYS {
+typedef enum {
 	ESP8266_AT_KEY 						= 2088901425,
 	ESP8266_AT_RST_KEY	 				= 617536853,
 	ESP8266_AT_GMR_KEY	 				= 604273922,
@@ -43,7 +58,7 @@ typedef enum COMMAND_KEYS {
 
 /*----------Strings------------*/
 
-/* ESP8266 response codes */
+/* ESP8266 response codes as strings */
 static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";
 static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
@@ -180,12 +195,13 @@ static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
 
 
 /*============================================================================
-								FUNCTIONS FOR ESP8266
+							FUNCTIONS FOR ESP8266
 ==============================================================================*/
 
 
 /**
- * @brief assemble the command for connection to AP
+ * @brief assemble the command for connection to AP. Uses the SSID and PWD variables
+ * 		  stored in the login.h header.
  * @param char* buffer, where the command is stored into
  * @return void
  */
@@ -205,7 +221,14 @@ esp8266_get_connection_command(char* buffer, char* connection_type,
 							   char* remote_ip, char* remote_port);
 
 /**
- * @brief assemble the CIPSEND command with length of request
+ * @brief assemble the CIPSEND command with length of request.
+ * 		  The esp8266 should be connected to some website before using this.
+ *
+ * 		  Usage:
+ *		  esp8266_get_at_send_command(a_buffer_for_the_command, length_of_your_http_request);
+ * 		  esp8266_at_send(a_buffer_for_the_command);
+ * 		  esp8266_send_data(buffer_with_http_request);
+ *
  * @param char* buffer, where the command is stored
  * @param uint8_t len, length of the command
  * @return void
@@ -217,9 +240,9 @@ esp8266_get_at_send_command(char* buffer, uint8_t len);
 /**
  * @brief assemble the HTTP request to send
  * @param char* buffer, where the command is stored
- * @param const char*, type of the HTTP request
- * @param char* uri, URI for the request
- * @param char* host, host adress for the request
+ * @param const char*, type of the HTTP request,   EXAMPLE: POST or GET
+ * @param char* uri, URI for the request, 		   EXAMPLE: google.com/index
+ * @param char* host, host adress for the request, EXAMPLE: google.com
  * @return uint8_t, length of the request
  */
 uint8_t
@@ -244,7 +267,7 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /**
  * @brief send command to ESP8266
  * @param char* command to send
- * @return ESP8266 response
+ * @return const char*, ESP8266 response string
  *
  * Usage: if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT) != 0))
  * 		  	{ error handling }
@@ -256,29 +279,41 @@ esp8266_send_command(const char*);
  * @brief send data to ESP8266, this is used after calling cipsend
  * where the length of the data that will be sent has been specified.
  * @param char* data to send
- * @return ESP8266 response
+ * @return const char*, ESP8266 response string
  */
 const char*
 esp8266_send_data(const char*);
 
 /**
- * @brief initiate the ESP8266, performs all necessary commands
+ * @brief initiate the ESP8266, performs all necessary commands to start using the
+ * 		  device. It also verifies that the setting was set.
+ * 		  Settings are: station mode (cwmode=1), single connection mode (cipmux=0)
  * @param void
- * @return ESP8266 response, either OK or ERROR
+ * @return const char*, ESP8266 response string, either "OK" or "ERROR"
  */
 const char*
 esp8266_init(void);
 
 /**
- * @brief initiate a wifi connection
+ * @brief initiate a wifi connection, uses the esp8266_get_wifi_command function, so make sure
+ * 		  that SSID and PWD variables are present and correct.
  * @param void
- * @return ESP8266 response
+ * @return const char*, ESP8266 response string.
+ * Possible return strings:
+ * 		 					"WIFI CONNECTED"
+ *	 						"wrong password"
+ * 							"cannot find AP"
+ * 							"connection failed"
+ * 							"error"
  */
 const char*
 esp8266_wifi_init(void);
 
 /**
- * @brief get hash number for string
+ * @brief get hash number for string. The hash number corresponds to a
+ * 		  specific command. This is used to determine the possible return values for the command
+ * 		  that was sent. There is generally no need for the user to call this function.
+ * 		  The hash keys that are implemented can be found in the typedef enum initialized as KEYS.
  * @param const char* string to get hash number for
  * @return const unsigned long the hash number
  */
@@ -286,8 +321,8 @@ const unsigned long
 hash(const char*);
 
 /**
- * @brief Evaluate ESP8266 response, if any flags were set return "ERROR" else "OK".
- * Used for applicable AT commands that only return basic responses.
+ * @brief Evaluate ESP8266 response, if any global flags were set return "ERROR" else "OK".
+ * Used for applicable AT commands that only need to return basic responses.
  * @return char* "OK" or "ERROR"
  */
 const char*
@@ -296,7 +331,7 @@ evaluate(void);
 /**
  * @brief matches command to ESP8266 return type. Looks up the hash of the command, and then looks for
  * the ESP8266 response which should be returned.
- * @param char* command to match to a return type
+ * @param char* command to match to a return type. The command needs to be in the typedef enum (KEYS)
  * @return char* return ESP8266 response depending on command and its outcome
  */
 const char*
