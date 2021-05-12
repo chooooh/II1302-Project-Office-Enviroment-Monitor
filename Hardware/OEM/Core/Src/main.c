@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -36,7 +37,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define RUN_UNIT_TEST
-//#undef RUN_UNIT_TEST
+#undef RUN_UNIT_TEST
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -99,6 +100,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_UART4_Init();
+  MX_I2C3_Init();
+  MX_I2C2_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   #ifdef RUN_UNIT_TEST
   	  unit_test();
@@ -159,8 +163,12 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_I2C1
+                              |RCC_PERIPHCLK_I2C2|RCC_PERIPHCLK_I2C3;
   PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_SYSCLK;
+  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+  PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_PCLK1;
+  PeriphClkInit.I2c3ClockSelection = RCC_I2C3CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

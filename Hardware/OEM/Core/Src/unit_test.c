@@ -11,27 +11,96 @@
 */
 
 #include "unit_test.h"
+#include "usart.h"
+#include "stdio.h"
+#include "ESP8266.h"
+#include "CCS811_BME280.h"
+#include "ssd1306.h"
 
-void setUp(void){
+#define RUN_SSD1306_TEST
+#define RUN_ESP8266_TEST
+#define RUN_CCS811_TEST
+#define RUN_BME280_TEST
+//#undef RUN_SSD1306_TEST
+//#undef RUN_ESP8266_TEST
+//#undef RUN_CCS811_TEST
+//#undef RUN_BME280_TEST
+
+
+void unit_test(void){
+
+
+/* Test begin */
+UNITY_BEGIN();
+
+/* Run test for display
+ * Writing to the display is not tested	*/
+#ifdef RUN_SSD1306_TEST
+
+	/* Display init test */
+	RUN_TEST(test_display_init);
+
+#endif
+
+/* Run test for ESP8266 */
+#ifdef RUN_ESP8266_TEST
+
+	/* Set up interrupt for ESP*/
+	init_uart_interrupt();
+
+	/* Test initiation of ESP8266 */
+  	RUN_TEST(test_esp8266_init);
+
+    /* Test connecting to wifi */
+    RUN_TEST(test_esp8266_wifi_connect);
+
+    /* Test connecting to a website */
+    RUN_TEST(test_esp8266_web_connection);
+
+    /* Test making a http web request to connected website */
+    RUN_TEST(test_esp8266_web_request);
+    HAL_Delay(2000);
+
+#endif
+
+/* Run test for CCS811
+ * Does not test reading the values, since these vary depending on environment	*/
+#ifdef RUN_CCS811_TEST
+
+    /* Test initiation of CCS811 */
+    RUN_TEST(test_CCS811_init);
+
+#endif
+
+/* Run test for BME280
+ * Does not test reading the values, since these vary depending on environment	*/
+#ifdef RUN_BME280_TEST
+
+    /* Test initiation of BME280 */
+    RUN_TEST(test_BME280_init);
+
+#endif
+
+/* Test end*/
+UNITY_END();
 }
 
-void tearDown(void){
+/* Setup */
+void setUp(void){}
+
+/* Teardown */
+void tearDown(void){}
+
+void test_BME280_init(void){
+	TEST_ASSERT_EQUAL_UINT(BME280_SUCCESS, BME280_init());
 }
 
 void test_esp8266_init(void){
-	RUN_TEST(test_esp8266_at_rst);
-	RUN_TEST(test_esp8266_at);
-	RUN_TEST(test_esp8266_at_cwqap);
-	RUN_TEST(test_esp8266_at_cwmode_1);
-	RUN_TEST(test_esp8266_at_cwmode_1_verify);
-	RUN_TEST(test_esp8266_at_cipmux_set_single);
-	RUN_TEST(test_esp8266_at_cipmux_verify);
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_init());
 }
 
 void test_esp8266_wifi_connect(void){
-	char wifi_command[256] = {0};
-	esp8266_get_wifi_command(wifi_command);
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(wifi_command));
+	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_wifi_init());
 }
 
 void test_esp8266_web_connection(void){
@@ -47,11 +116,11 @@ void test_esp8266_web_request(void){
 	//"GET /api/sensor HTTP/1.1\r\nHost: ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net\r\nConnection: close\r\n\r\n";
 	char request[256] = {0};
 	char init_send[64] = {0};
-	char uri[] = "/api/sensor/peopleintheroom?data=5";
+	char uri[] = "/api/sensor/airquality?data=22335";
 	//char uri[] = "/api/sensor";
 	char host[] = "ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net";
 
-//	uint8_t len = esp8266_http_get_request(request, HTTP_GET, uri, host);
+	//	uint8_t len = esp8266_http_get_request(request, HTTP_GET, uri, host);
 	uint8_t len = esp8266_http_get_request(request, HTTP_POST, uri, host);
 	esp8266_get_at_send_command(init_send, len);
 
@@ -59,62 +128,12 @@ void test_esp8266_web_request(void){
 	test_esp8266_send_data(request);
 }
 
-void unit_test(void){
-
-	/* Set up */
-	init_uart_interrupt();
-
-	/* Test begin */
-	UNITY_BEGIN();
-
-	/* Test initiation of ESP8266 */
-	RUN_TEST(test_esp8266_init);
-	HAL_Delay(2000);
-
-	/* Test connecting to wifi */
-	RUN_TEST(test_esp8266_wifi_connect);
-	RUN_TEST(test_esp8266_at_cwjap_verify);
-
-	/* Test connecting to a website */
-	RUN_TEST(test_esp8266_web_connection);
-
-	/* Test making a http web request to connected website */
-	RUN_TEST(test_esp8266_web_request);
-
-	/* Test end*/
-	UNITY_END();
-}
-
-void test_esp8266_at_rst(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_RST));
-}
-
-void test_esp8266_at(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT));
-}
-
-void test_esp8266_at_cwqap(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWQAP));
-}
-
-void test_esp8266_at_cwmode_1(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE));
-}
-
-void test_esp8266_at_cwmode_1_verify(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CWMODE_1, esp8266_send_command(ESP8266_AT_CWMODE_TEST));
+void test_CCS811_init(void){
+	TEST_ASSERT_EQUAL_UINT(CCS811_SUCCESS, CCS811_init());
 }
 
 void test_esp8266_at_cwjap_verify(void){
 	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(ESP8266_AT_CWJAP_TEST));
-}
-
-void test_esp8266_at_cipmux_set_single(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_OK, esp8266_send_command(ESP8266_AT_CIPMUX_SINGLE));
-}
-
-void test_esp8266_at_cipmux_verify(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CIPMUX_0, esp8266_send_command(ESP8266_AT_CIPMUX_TEST));
 }
 
 void test_esp8266_at_send(char* init_send){
@@ -123,4 +142,9 @@ void test_esp8266_at_send(char* init_send){
 
 void test_esp8266_send_data(char* request) {
 	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_CLOSED, esp8266_send_data(request));
+}
+
+void test_display_init(void){
+	display_init();
+	TEST_ASSERT_EQUAL_UINT(HAL_OK, display_get_init_status());
 }

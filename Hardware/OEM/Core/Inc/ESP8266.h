@@ -18,7 +18,8 @@
 #include <login.h>
 
 /*----------Defines------------*/
-#define RX_BUFFER_SIZE 4096
+#define RX_BUFFER_SIZE 			4096
+
 
 /*----------Enums------------*/
 
@@ -48,6 +49,7 @@ static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
 static const char ESP8266_AT_ERROR[] 			 = "ERROR";
 static const char ESP8266_AT_FAIL[] 			 = "FAIL";
+static const char ESP8266_AT_READY[] 			 = "ready\r\n";
 static const char ESP8266_AT_GOT_IP[] 			 = "WIFI GOT IP";
 static const char ESP8266_AT_WIFI_CONNECTED[] 	 = "WIFI CONNECTED";
 static const char ESP8266_AT_WIFI_DISCONNECTED[] = "WIFI DISCONNECTED";
@@ -65,7 +67,7 @@ static const char ESP8266_AT_CWJAP_3[]			 = "CWJAP:3";
 static const char ESP8266_AT_CWJAP_4[]			 = "CWJAP:4";
 static const char ESP8266_AT_TIMEOUT[]			 = "connection timeout";
 static const char ESP8266_AT_WRONG_PWD[]		 = "wrong password";
-static const char ESP8266_AT_NO_TARGET[]	     = "cannot find the target AP";
+static const char ESP8266_AT_NO_TARGET[]	     = "cannot find AP";
 static const char ESP8266_AT_CONNECTION_FAIL[]	 = "connection failed";
 static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
 static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
@@ -183,31 +185,45 @@ static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
 
 
 /**
- * @brief build the command for connection to AP
+ * @brief assemble the command for connection to AP
  * @param char* buffer, where the command is stored into
  * @return void
  */
 void
-esp8266_get_wifi_command(char*);
+esp8266_get_wifi_command(char* buffer);
 
 /**
- * @brief build the command for connection to a website
- * @param char* ref, where the command is stored into
+ * @brief assemble the command for connection to a website
+ * @param char* buffer, where the command is stored into
  * @param char* connection_type, type of connection "TCP", "UDP" or "SSL"
  * @param char* remote_ip, the ip to connect to, can also be a url
  * @param char* remote_port, port to connect
  * @return void
  */
 void
-esp8266_get_connection_command(char* ref, char* connection_type,
+esp8266_get_connection_command(char* buffer, char* connection_type,
 							   char* remote_ip, char* remote_port);
 
-
+/**
+ * @brief assemble the CIPSEND command with length of request
+ * @param char* buffer, where the command is stored
+ * @param uint8_t len, length of the command
+ * @return void
+ */
 void
-esp8266_get_at_send_command(char*, uint8_t);
+esp8266_get_at_send_command(char* buffer, uint8_t len);
 
+
+/**
+ * @brief assemble the HTTP request to send
+ * @param char* buffer, where the command is stored
+ * @param const char*, type of the HTTP request
+ * @param char* uri, URI for the request
+ * @param char* host, host adress for the request
+ * @return uint8_t, length of the request
+ */
 uint8_t
-esp8266_http_get_request(char*, const char*, char*, char*);
+esp8266_http_get_request(char* buffer, const char* http_type, char* uri, char* host);
 
 /**
  * @brief start RX interrupt for UART4
@@ -229,6 +245,9 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
  * @brief send command to ESP8266
  * @param char* command to send
  * @return ESP8266 response
+ *
+ * Usage: if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT) != 0))
+ * 		  	{ error handling }
  */
 const char*
 esp8266_send_command(const char*);
@@ -241,6 +260,22 @@ esp8266_send_command(const char*);
  */
 const char*
 esp8266_send_data(const char*);
+
+/**
+ * @brief initiate the ESP8266, performs all necessary commands
+ * @param void
+ * @return ESP8266 response, either OK or ERROR
+ */
+const char*
+esp8266_init(void);
+
+/**
+ * @brief initiate a wifi connection
+ * @param void
+ * @return ESP8266 response
+ */
+const char*
+esp8266_wifi_init(void);
 
 /**
  * @brief get hash number for string
