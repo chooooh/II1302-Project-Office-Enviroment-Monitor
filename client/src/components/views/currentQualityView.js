@@ -36,11 +36,21 @@ const fontSize = {
 };
 
 /**
- * Functions which dictates the layout of the UI. It uses bootstrap components and styling.
- * Props are given by the presenter. See currentQuality.js
- * The function uses react such as state variables to keep track of the view state.
- * @param {*} param0 
- * @returns 
+ * This Component is the View component. It dictates the layout of UI and presents
+ * all data it receives from its corresponding presenter, currentQuality.js.
+ * This component also reacts to user actions such as button clicks and user input. 
+ * 
+ * @param {Object} data, Object containing all Air Quality related data,
+ * @param {String} data.airQualityDate, the date and time which states when carbon and volatile was measured.
+ * @param {String} data.carbon,  the current carbon value measured in ppm
+ * @param {String} data.volatile, the current amount of volatile gases in the room measured in ppb.
+ * @param {String} data.temperatureDate, the date and time which states when temperature was measured.
+ * @param {String} data.temperature, the current temperature in the room measured in celcius.
+ * @param {String} data.humidityDate, the date and time of when the humidity was measured.
+ * @param {String} data.humidity, the current humidity in the room measured in %.
+ * @param {Integer} numberOfPeople,  the number of people present in the room.
+ * @param {callback} onSubmit,  submits the user input (number of people in the room).  
+ * @returns the html document.
  */
 export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
     console.log("DATA", data)
@@ -78,7 +88,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                     <Card.Title style = {cardTextStyle}>Humidity</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.date}</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.humidityDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.humidity + " %" } </ListGroup.Item>
@@ -91,11 +101,11 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Card border = "success">
                     <Card.Body>
                         <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.date }</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.airQualityDate }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.data.carbon + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.data.volatile + " ppb"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.carbon + " ppm"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.volatile + " ppb"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -105,7 +115,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Card border = "success" >
                     <Card.Body>
                     <Card.Title style = {cardTextStyle}>Temperature</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.date}</Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.temperatureDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{data.temperature + " C"}</ListGroup.Item>
@@ -115,7 +125,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 </Card>
                 </Col>
             </Row>
-                <Button variant="primary">History</Button>
+                <Button data-testid = "history-button" variant="primary">History</Button>
             </Card.Body>
             <Card.Footer className="text-muted">{"Last fetch: " + lastFetch}</Card.Footer>
             </Card>}

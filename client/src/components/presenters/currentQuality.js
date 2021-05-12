@@ -3,10 +3,12 @@ import {CurrentQualityView} from '../views/currentQualityView';
 import { fetchAllData } from "../../apiHandling/datafetcher";
 import {parser} from "../../js/parser"
 /**
- * This function is responsible for creating a react component and providing it
- * with the data it needs to render. It sends props down to the view and event up to the model.
- * 
- * @returns A React funtional component, specifically the currentQuality component
+ * This is the presenter of current quality view component. 
+ * It is responsible for creating the view and providing it with the props it needs to render.
+ * It also reacts to events which occur in the view. 
+ * This component also fetches data from the database on a timer using react hooks. The data is parsed
+ * by the parser.js. The parsed object is sent down to the view and rendered by the view. 
+ * @returns {React.element}, the created currentQualityView. 
  */
 export const CurrentQualityPage = () => {
     //State variabel which holds the data fetched from the database
@@ -36,7 +38,7 @@ export const CurrentQualityPage = () => {
      
         const intervalId = setInterval(() => {
           toggle()
-        }, 3600000 );
+        }, 10000 );
 
         return () => clearInterval(intervalId)
 
