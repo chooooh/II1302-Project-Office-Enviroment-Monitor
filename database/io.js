@@ -24,6 +24,7 @@ async function writeToDB(targetTable, data, date) {
  * @returns { Promise } Promise containing the latest data.
  */
 async function readLatestEntry(targetTable) {
+   console.log("Read latest entry")
    const latestEntryQuery = {
       "selector": {
          "_id": {

@@ -26,11 +26,11 @@ export const parser = (data) => {
 
     return  {
         airQualityDate:     aqData["docs"][0]["date"],
-        carbon:             Number.parseFloat(aqData["docs"][0]["data"].carbon).toFixed(0),
-        volatile:           Number.parseFloat(aqData["docs"][0]["data"].volatile).toFixed(0),
+        carbon:             aqData["docs"][0]["data"].carbon,
+        volatile:           aqData["docs"][0]["data"].volatile,
         temperatureDate:    temperature["docs"][0]["date"],
-        temperature:        Number.parseFloat(temperature["docs"][0]["data"].temperature).toFixed(2),
+        temperature:        temperature["docs"][0]["data"].temperature,
         humidityDate:       humidity["docs"][0]["date"],
-        humidity:           Number.parseFloat(humidity["docs"][0]["data"].humidity).toFixed(2),       
+        humidity:           humidity["docs"][0]["data"].humidity,      
     }
 };

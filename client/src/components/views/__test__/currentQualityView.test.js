@@ -102,19 +102,19 @@ describe("Testing the carbon, people, volatile gases, humidity and temperature p
     }
     it("Renders the given carbon correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-carbon")).toHaveTextContent("Carbon: 10 ppm");
+        expect(getByTestId("actual-carbon")).toHaveTextContent("10");
     })
     it("Renders the given volatile gases correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("Volatile gases: 12 ppb");
+        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("12");
     })
     it("Renders the given temperature correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-temperature")).toHaveTextContent("24 C");
+        expect(getByTestId("actual-temperature")).toHaveTextContent("24");
     })
     it("Renders the given humidity correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
-        expect(getByTestId("actual-humidity")).toHaveTextContent("30 %");
+        expect(getByTestId("actual-humidity")).toHaveTextContent("30");
     })
 })
 

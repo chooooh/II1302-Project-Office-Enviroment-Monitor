@@ -58,7 +58,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
 
     const textInput = React.createRef(); 
     const [peeps, setPeople] = React.useState(null);
-
+    console.log("in the view component")
     return (
         <Container fluid>
             <Navbar bg="dark" variant="dark" fixed = "top">
@@ -89,7 +89,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.humidityDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{data.humidity + " %" } </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{Number.parseFloat(data.humidity).toFixed(2) + " %" } </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -102,8 +102,8 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.airQualityDate }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + data.carbon + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + data.volatile + " ppb"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + Number.parseFloat(data.carbon).toFixed(0) + " ppm"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + Number.parseFloat(data.volatile).toFixed(0) + " ppb"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -116,7 +116,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.temperatureDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{data.temperature + " C"}</ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{Number.parseFloat(data.temperature).toFixed(2) + " C"}</ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
