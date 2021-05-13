@@ -17,20 +17,20 @@
  * @returns {Object} an object which contains all data related to Air Quality.
  */
 export const parser = (data) => {
-    console.log("IN PARSER:" , data["docs"]);
-
     const temperature = data.tempData;
     const people = data.peopleData;
     const humidity = data.humidityData;
     const aqData = data.aqData;
 
+    console.log("In Parser arg", data)
+
     return  {
         airQualityDate:     aqData["docs"][0]["date"],
-        carbon:             aqData["docs"][0]["data"].carbon,
-        volatile:           aqData["docs"][0]["data"].volatile,
+        carbon:             Number.parseFloat(aqData["docs"][0]["data"].carbon).toFixed(0),
+        volatile:           Number.parseFloat(aqData["docs"][0]["data"].volatile).toFixed(0),
         temperatureDate:    temperature["docs"][0]["date"],
-        temperature:        temperature["docs"][0]["data"].temperature,
+        temperature:        Number.parseFloat(temperature["docs"][0]["data"].temperature).toFixed(2),
         humidityDate:       humidity["docs"][0]["date"],
-        humidity:           humidity["docs"][0]["data"].humidity,       
+        humidity:           Number.parseFloat(humidity["docs"][0]["data"].humidity).toFixed(2),       
     }
 };

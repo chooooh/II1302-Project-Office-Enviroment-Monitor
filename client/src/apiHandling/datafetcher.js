@@ -6,7 +6,6 @@
  * @returns an object which contains the data fetched from the specified route
  */
 const fetchData = async (route) => {
-   console.log("HERE", route)
    const res    = await fetch('/api/sensor/' + route);
    const json   = await res.json();
    return json;

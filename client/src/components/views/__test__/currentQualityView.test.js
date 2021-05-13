@@ -100,7 +100,6 @@ describe("Testing the carbon, people, volatile gases, humidity and temperature p
         humidity: 30,
         temperature: 24
     }
-
     it("Renders the given carbon correctly", () => {
         const {getByTestId} = render(<CurrentQualityView data = {data}/>);
         expect(getByTestId("actual-carbon")).toHaveTextContent("Carbon: 10 ppm");

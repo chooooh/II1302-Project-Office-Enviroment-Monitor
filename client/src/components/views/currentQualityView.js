@@ -53,8 +53,6 @@ const fontSize = {
  * @returns the html document.
  */
 export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
-    console.log("DATA", data)
-
     let lastFetch = null;
     if (data != null) lastFetch = currentDateTime(); 
 
