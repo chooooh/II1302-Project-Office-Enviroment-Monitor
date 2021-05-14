@@ -70,7 +70,7 @@ describe("Ensuring that date is rendered correctly on all places", () => {
     //Object to be passed as prop when rendering the entire CurrentQualityViewComponent
     //the different dates are used as a timestamp to show when the different reading were done.
     const data = {
-        airQualityDate:  "2021-04-28",
+        gasesDate:  "2021-04-28",
         humidityDate:    "2022-04-28",
         temperatureDate: "2023-04-28" 
     }
@@ -90,12 +90,40 @@ describe("Ensuring that date is rendered correctly on all places", () => {
 })
 
 /**
+ * This test is written to ensure that if the data regarding volatile gases, carbon
+ * humidity and temperature, are not numbers then the view displays N/A instead
+ */
+describe("This test ensures that carbon, temperature, humidity and volatile gases receives the correct values and renders correctly", () => {
+    const data = {
+        carbon: "String",
+        volatile: "String",
+        humidity: "String",
+        temperature: "String"
+    }
+    it("Renders the given carbon correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-carbon")).toHaveTextContent("N/A");
+    })
+    it("Renders the given volatile gases correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-volatile-gases")).toHaveTextContent("N/A");
+    })
+    it("Renders the given temperature correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-temperature")).toHaveTextContent("N/A");
+    })
+    it("Renders the given humidity correctly", () => {
+        const {getByTestId} = render(<CurrentQualityView data = {data}/>);
+        expect(getByTestId("actual-humidity")).toHaveTextContent("N/A");
+    })
+})
+/**
  * This test ensures that all measured values, such as carbon, volatile, temperature and humidity 
  * which are fetched from the database are correctly rendered in the view and on the correct places.
  */
-describe("Testing the carbon, people, volatile gases, humidity and temperature props are correctly displayed", () => {
+ describe("This test ensures that carbon, temperature, humidity and volatile gases renders N/A when they dont contain values", () => {
     const data = {
-        carbon: "10",
+        carbon: 10,
         volatile: 12,
         humidity: 30,
         temperature: 24

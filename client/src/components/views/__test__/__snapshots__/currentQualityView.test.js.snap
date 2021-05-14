@@ -95,7 +95,7 @@ exports[`matches snapshot 1`] = `
           className="form-label"
           htmlFor="formBasicEmail"
         >
-          Here you can insert the current number of poeple in the room
+          Here you can insert the current number of people in the room
         </label>
         <input
           className="form-control"
