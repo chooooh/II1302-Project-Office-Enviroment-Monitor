@@ -13,7 +13,6 @@
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "test-jest": "jest",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

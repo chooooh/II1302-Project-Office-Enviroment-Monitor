@@ -40,15 +40,17 @@ const PeopleInstance = new People();
 router.post('/', async (req, res, next) => {
     const {carbon, volatile, temperature, humidity} = req.query;
     const date = currentDateTime();
-    const result = await Promise.all([
-        await AirQualityInstance.writeToDB('airquality', {carbon, volatile}, date),
-        await TempInstance.writeToDB('temperature', {temperature}, date),
-        await HumidityInstance.writeToDB('humidity', {humidity}, date)
-    ]).catch(error => {
+    try {
+        const response = await Promise.all([
+            await GasesInstance.writeToDB({carbon, volatile}, date),
+            await TempInstance.writeToDB({temperature}, date),
+            await HumidityInstance.writeToDB({humidity}, date)
+        ])
+        return res.status(200).json(response);
+    } catch (error) {
         next(error);
-    });
+    }
         //POST /api/sensor?carbon=10&volatile=20&temperature=30&humidity=40 HTTP/1.1
-    res.set(200).json(result);
 });
 
 /* ---------------------- GASES ---------------------- */
@@ -93,8 +95,8 @@ router.post('/gases', async (req, res, next) => {
  router.post('/temperature', async (req, res, next) => {
     const response = await TempInstance.writeToDB(req.query)
     .catch(error => {
-        next(error);
-    })
+        return next(error);
+    });
     return res.status(200).json(response);
 });
 
@@ -122,7 +124,7 @@ router.post('/gases', async (req, res, next) => {
  router.post('/humidity', async (req, res, next) => {
     const response = await HumidityInstance.writeToDB(req.query)
     .catch(error => {
-        next(error);
+        return next(error);
     });
     return res.status(200).json(response);
 });
@@ -151,7 +153,7 @@ router.post('/gases', async (req, res, next) => {
  router.post('/people', async (req, res, next) => {
     const response = await PeopleInstance.writeToDB(req.query)
     .catch(error => {
-        next(error);
+        return next(error);
     });
     return res.status(200).json(response);
 });

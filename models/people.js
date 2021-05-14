@@ -34,7 +34,7 @@ class People {
      */
     writeToDB({people}) {
         if (!people) {
-            throw new ApplicationError("400", "Invalid parameters");
+            return Promise.reject(new ApplicationError("400", "Invalid parameters"));
         } 
         const data = {
             people

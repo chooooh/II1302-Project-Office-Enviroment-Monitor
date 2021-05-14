@@ -34,7 +34,7 @@ class Temperature {
      */
     writeToDB({temperature}) {
         if (!temperature) { 
-            throw new ApplicationError("400", "Invalid parameters");
+            return Promise.reject(new ApplicationError("400", "Invalid parameters"));
         } 
         const data = {
             temperature

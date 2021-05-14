@@ -24,12 +24,10 @@ app.use(express.static(`${__dirname}/client/build`));
 
 app.use((error, req, res, next) => {
     if (!error.statusCode) error.statusCode = 500;
-
     return res.status(error.statusCode).json({
         name: error.name,
         message: error.message,
         stack: error.stack,
-
     });
 });
 
@@ -44,4 +42,5 @@ if (!module.parent) {
         console.log(message.getWelcomeMessage() + appEnv.url);
     })
 }
+// Exports to use elsewhere in the application
 module.exports = app;

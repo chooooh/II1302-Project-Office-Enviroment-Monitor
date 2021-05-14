@@ -30,19 +30,21 @@
      * the cloudant response of the write operation.
      */
     writeToDB({carbon, volatile}) {
-        if (!carbon || !volatile)  { //if one or both are falsy throw error
-            throw new ApplicationError("400", "Invalid parameters");
-        }   
+        if (!carbon || !volatile) {
+            return Promise.reject(new ApplicationError("400", "Invalid parameters"));
+        }
+
+        const dateTime = currentDateTime();
         const data = {
             carbon,
             volatile
         }   
-        return db.writeToDB(this.gasesDBName_, data, currentDateTime());
+        return db.writeToDB(this.gasesDBName_, data, dateTime);
     };
  
     /**
      * This function calls the database file to read the latest document 
-     * written to the airquality table.
+     * written to the gases table.
      * @returns { Promise } Promise object that represents the latest 
      * document.
      */

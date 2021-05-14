@@ -33,12 +33,14 @@ class Humidity {
      */
     writeToDB({humidity}) {
         if (!humidity) {
-            throw new ApplicationError("400", "Invalid parameters");
+            return Promise.reject(new ApplicationError("400", "Invalid parameters"));
         } 
+
+        const dateTime = currentDateTime();
         const data = {
             humidity
         };
-        return db.writeToDB(this.humidityDbName_, data, currentDateTime());
+        return db.writeToDB(this.humidityDbName_, data, dateTime);
     };
 
     /**

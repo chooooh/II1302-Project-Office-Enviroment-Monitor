@@ -5,6 +5,7 @@
  */
 
 const cloudant = require('./setup');
+const { ApplicationError } = require('../errors/applicationError');
 const db = cloudant.db;
 
 /**

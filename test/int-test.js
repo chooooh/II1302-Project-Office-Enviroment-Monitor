@@ -24,15 +24,15 @@ chai.use(chaiHTTP);
 /**
  * Performs database tests.
  */
-describe('Make sure read and writes work from cloudant', () => {
+describe('Cloudant testing', () => {
     const testDbName = 'test';
     const dateTime = currentDateTime();
 
     it('verifies that the correct db table gets written to', (done) => {
         writeToDB(testDbName, {data: "testdata"}, dateTime)
-        .then(result => {
-            result.should.be.an('object');
-            result.should.include({ok: true});
+        .then(response => {
+            response.should.be.an('object');
+            response.should.include({ok: true});
             done();
         })
         .catch(err => {
@@ -42,14 +42,23 @@ describe('Make sure read and writes work from cloudant', () => {
 
     it('find the entry with {date: dateTime, data: "testdata"} from the db, written in previous test', (done) => {
         readLatestEntry(testDbName)
-        .then(result => {
-            result.should.be.an('object');
-            result.docs[0].should.include({"date": dateTime});
-            result.docs[0]["data"].should.include({"data": "testdata"});
+        .then(response => {
+            response.should.be.an('object');
+            response.docs[0].should.include({"date": dateTime});
+            response.docs[0]["data"].should.include({"data": "testdata"});
             done();
         })
         .catch(err => {
             done(err);
+        });
+    });
+
+    it('should throw an error for duplicate id\'s', (done) => {
+        writeToDB(testDbName, {data: "testdata"}, dateTime)
+        .catch(err => {
+            err.statusCode.should.not.equal('200');
+            err.reason.should.include("Document update conflict");
+            done();
         });
     });
 });
@@ -59,107 +68,117 @@ describe('Make sure read and writes work from cloudant', () => {
  * is reachable.
  */
 describe('Sensor API', () => {
-    /**
-     * Test the GET routes
-     */
-    describe('GET 404 route', () => {
-        it('It should not GET an object', (done) => {
-            chai.request(host)
+
+    describe('GET Routes', () => {
+
+        describe('GET 404 route', () => {
+            it('It should not GET an object', (done) => {
+                chai.request(host)
                 .get("/api/sensor/nonexistentroute")
                 .end((err, response) => {
                     response.should.have.status(404);
                     done(err);
+                });
             });
         });
-    });
 
-    describe('GET /api/sensor/gases', () => {
-        it('It should GET an gas object', (done) => {
-            chai.request(host)
+        describe('GET /api/sensor/gases', () => {
+            it('It should GET a gas object', (done) => {
+                chai.request(host)
                 .get("/api/sensor/gases")
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
                     response.body.data.should.include.all.keys(['carbon', 'volatile']);
                     done(err);
+                });
             });
         });
-    });
 
-    describe('GET /api/sensor/temperature', () => {
-        it('It should GET a temperature object', (done) => {
-            chai.request(host)
+        describe('GET /api/sensor/temperature', () => {
+            it('It should GET a temperature object', (done) => {
+                chai.request(host)
                 .get("/api/sensor/temperature")
                 .end((err, response) => {
                     response.should.have.status(200);
-                    response.should.be.a('object');
+                    response.should.have.a('object')
                     response.body.data.should.include.all.keys(['temperature']);
                     done(err);
+                });
             });
         });
-        // lägg till en för 400
-    });
 
-    describe('GET /api/sensor/humidity', () => {
-        it('It should GET a humidity object', (done) => {
-            chai.request(host)
+        describe('GET /api/sensor/humidity', () => {
+            it('It should GET a humidity object', (done) => {
+                chai.request(host)
                 .get("/api/sensor/humidity")
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
                     response.body.data.should.include.all.keys(['humidity']);
                     done(err);
+                });
             });
         });
-        // lägg till en för 400
-    });
-    
-    /*
-    describe('GET /api/sensor/people', () => {
-        it('It should GET a people object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/people")
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.should.be.a('object');
-                    //response.body.docs[0].data.should.include.all.keys(['people']);
-                    done(err);
-            });
-        });
-        // lägg till en för 400
     });
 
-    describe('POST /api/sensor/', () => {
-        it('it should not POST new data', (done) => {
-            chai.request(host)
-                .post('/api/sensor/?qwoe=23')
-                .end((err, res) => {
-                    console.log(err);
-                    done(err);
-                })
-        })
-    });
-    
-    describe('GET /api/sensor/people', () => {
-        it('It should GET a people object', (done) => {
-            chai.request(host)
-                .get("/api/sensor/people")
+   
+    describe('POST routes', () => {
+
+        describe('POST /api/sensor/gases', () => {
+            it('it should throw an error, invalid params', (done) => {
+                chai.request(host)
+                .post("/api/sensor/gases/?wrong=10&params=10")
                 .end((err, response) => {
-                    response.should.have.status(200);
-                    response.should.be.an('object');
+                    response.should.have.status(400);
                     done(err);
                 });
             });
-            
-            it('It should not GET a people object', (done) => {
+        });
+        describe('POST /api/sensor/gases', () => {
+            it('it should throw an error, one invalid param', (done) => {
                 chai.request(host)
-                .get("/api/sensor/peopl")
+                .post("/api/sensor/gases/?carbon=50&wrongparam=2002")
                 .end((err, response) => {
-                    response.should.have.status(404);
+                    response.should.have.status(400);
                     done(err);
+                });
+            });
+        });
+
+        describe('POST /api/sensor/temperature', () => {
+            it('it should throw an error, invalid params', (done) => {
+                chai.request(host)
+                .post("/api/sensor/temperature/?wrongparam=2002")
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done(err);
+                });
             })
         });
-    })
-    */
+
+        describe('POST /api/sensor/humidity', () => {
+            it('it should throw an error, invalid params', (done) => {
+                chai.request(host)
+                .post("/api/sensor/humidity/?wrongparam=2002")
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done(err);
+                });
+            });
+        });
+
+        describe('POST /api/sensor/', () => {
+            it('it should throw an error, invalid params', (done) => {
+                chai.request(host)
+                .post("/api/sensor/?wrongparam=2002")
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done(err);
+                });
+            });
+        });
+
+    });
 
 });
