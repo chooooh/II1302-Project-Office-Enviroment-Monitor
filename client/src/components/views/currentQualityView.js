@@ -34,6 +34,19 @@ const fontSize = {
     fontSize: '17px',
     fontWeight: 'bold',
 };
+/**
+ * Functions that helps determine if the argument num
+ * is a number or NaN
+ * 
+ * @param {Object} num, is either a number NaN
+ * @returns true if arg is a number, else false
+ */
+const isNumber = (num) => {
+    if(num/2) {
+        return true
+    }
+    return false
+}
 
 /**
  * This Component is the View component. It dictates the layout of UI and presents
@@ -53,13 +66,26 @@ const fontSize = {
  * @returns jsx
  */
 export const CurrentQualityView = ({data, fetchTime, numberOfPeople, onSubmit}) => {  
-  
+    let temperature     = null;
+    let humidity        = null;
+    let people          = null;
+    let volatile        = null;
+    let carbon          = null;
+
     let lastFetch = null;
     if (data != null) lastFetch = currentDateTime(); 
 
+    if(data != null) {
+        temperature     = Number.parseFloat(data.temperature).toFixed(2);
+        humidity        = Number.parseFloat(data.humidity).toFixed(2);
+        volatile        = Number.parseFloat(data.volatile).toFixed(0);
+        carbon          = Number.parseFloat(data.carbon).toFixed(0);
+    }
+
+    console.log("HUM", humidity)
+
     const textInput = React.createRef(); 
     const [peeps, setPeople] = React.useState(null);
-
 
     console.log("in the view component")
     return (
@@ -92,7 +118,7 @@ export const CurrentQualityView = ({data, fetchTime, numberOfPeople, onSubmit}) 
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-humidity">{"Measured: " + data.humidityDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{Number.parseFloat(data.humidity).toFixed(2) + " %" } </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-humidity" style = {fontSize}>{isNumber(humidity) ? humidity + "%" : "N/A"} </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -105,8 +131,8 @@ export const CurrentQualityView = ({data, fetchTime, numberOfPeople, onSubmit}) 
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.gasesDate }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + Number.parseFloat(data.carbon).toFixed(0) + " ppm"}  </ListGroup.Item>
-                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{"Volatile gases: " + Number.parseFloat(data.volatile).toFixed(0) + " ppb"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{isNumber(carbon) ? "Carbon: " + carbon + " ppm" : "N/A"}  </ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-volatile-gases" style = {fontSize}>{isNumber(volatile) ? "Volatile gases: " + volatile + " ppb" : "N/A"}  </ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>
@@ -119,7 +145,7 @@ export const CurrentQualityView = ({data, fetchTime, numberOfPeople, onSubmit}) 
                         <Card.Subtitle className="mb-2 text-muted" data-testid = "date-temperature">{"Measured: " + data.temperatureDate}</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
-                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{Number.parseFloat(data.temperature).toFixed(2) + " C"}</ListGroup.Item>
+                                <ListGroup.Item data-testid = "actual-temperature" style = {fontSize}>{isNumber(temperature) ? temperature + " C" : "N/A"}</ListGroup.Item>
                             </ListGroup>
                         </Card.Text>
                     </Card.Body>

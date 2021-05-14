@@ -55,7 +55,6 @@ export const parser = (data) => {
         volatile = data.gases["data"].volatile;
         gasesDate = data.gases["date"];
     }
-    console.log("In Parser arg", data)
 
     return  {
         people,
