@@ -39,4 +39,8 @@ const currentDateTime = () => {
     return date + " " + time;
 }
 
-module.exports = { getWelcomeMessage, currentDateTime };
+const parseRes = (data) => {
+    return data["docs"][0];
+}
+
+module.exports = { getWelcomeMessage, currentDateTime, parseRes };

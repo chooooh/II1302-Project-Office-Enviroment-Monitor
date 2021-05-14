@@ -25,7 +25,12 @@ app.use(express.static(`${__dirname}/client/build`));
 app.use((error, req, res, next) => {
     if (!error.statusCode) error.statusCode = 500;
 
-    return res.status(error.statusCode).json({error: error.toString()});
+    return res.status(error.statusCode).json({
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+
+    });
 });
 
 // get the app environment from Cloud Foundry

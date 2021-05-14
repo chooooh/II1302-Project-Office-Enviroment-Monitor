@@ -7,6 +7,7 @@
  */
 
 const db = require("../database/io");
+const { ApplicationError } = require('../errors/applicationError');
 const { currentDateTime } = require('../utils');
 
 /**
@@ -31,6 +32,9 @@ class Humidity {
      * the cloudant response of the write operation.
      */
     writeToDB({humidity}) {
+        if (!humidity) {
+            throw new ApplicationError("400", "Invalid parameters");
+        } 
         const data = {
             humidity
         };

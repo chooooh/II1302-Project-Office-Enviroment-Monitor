@@ -69,18 +69,18 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(404);
                     done(err);
-            })
+            });
         });
-    })
+    });
 
-    describe('GET /api/sensor/airquality', () => {
-        it('It should GET an airquality object', (done) => {
+    describe('GET /api/sensor/gases', () => {
+        it('It should GET an gas object', (done) => {
             chai.request(host)
-                .get("/api/sensor/airquality")
+                .get("/api/sensor/gases")
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
-                    response.body.docs[0].data.should.include.all.keys(['carbon', 'volatile']);
+                    response.body.data.should.include.all.keys(['carbon', 'volatile']);
                     done(err);
             });
         });
@@ -93,7 +93,7 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
-                    response.body.docs[0].data.should.include.all.keys(['temperature']);
+                    response.body.data.should.include.all.keys(['temperature']);
                     done(err);
             });
         });
@@ -107,13 +107,14 @@ describe('Sensor API', () => {
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.should.be.a('object');
-                    response.body.docs[0].data.should.include.all.keys(['humidity']);
+                    response.body.data.should.include.all.keys(['humidity']);
                     done(err);
             });
         });
         // lägg till en för 400
     });
     
+    /*
     describe('GET /api/sensor/people', () => {
         it('It should GET a people object', (done) => {
             chai.request(host)
@@ -128,22 +129,17 @@ describe('Sensor API', () => {
         // lägg till en för 400
     });
 
-    /**
-     * Test the POST routes
-     */
-    describe('POST /api/sensor/airquality', () => {
-        it('It should POST new airquality data', (done) => {
+    describe('POST /api/sensor/', () => {
+        it('it should not POST new data', (done) => {
             chai.request(host)
-                .post('/api/sensor/airquality?carbon=50&volatile=50')
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.should.be.an('object');
+                .post('/api/sensor/?qwoe=23')
+                .end((err, res) => {
+                    console.log(err);
                     done(err);
-            })
-        });
+                })
+        })
     });
     
-    /*
     describe('GET /api/sensor/people', () => {
         it('It should GET a people object', (done) => {
             chai.request(host)

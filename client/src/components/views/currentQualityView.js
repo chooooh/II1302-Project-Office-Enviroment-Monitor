@@ -13,7 +13,7 @@ import {
         Container
     } from 'react-bootstrap';                   // import bootstrap components
 import 'bootstrap/dist/css/bootstrap.min.css'   // import bootstrap css
-import {currentDateTime} from '../../utils.js'  //import function which returns current date and time from utils
+import {currentDateTime} from '../../utils/utils.js'  //import function which returns current date and time from utils
 
 //Objects defining css styling for the Bootstrap components
 const formStyle = {
@@ -50,14 +50,17 @@ const fontSize = {
  * @param {String} data.humidity, the current humidity in the room measured in %.
  * @param {Integer} numberOfPeople,  the number of people present in the room.
  * @param {callback} onSubmit,  submits the user input (number of people in the room).  
- * @returns the html document.
+ * @returns jsx
  */
-export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {  
+export const CurrentQualityView = ({data, fetchTime, numberOfPeople, onSubmit}) => {  
+  
     let lastFetch = null;
     if (data != null) lastFetch = currentDateTime(); 
 
     const textInput = React.createRef(); 
     const [peeps, setPeople] = React.useState(null);
+
+
     console.log("in the view component")
     return (
         <Container fluid>
@@ -78,7 +81,7 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
             <Container fluid data-testid = "air-quality-content">
             {data == null ? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>
             :<Card className="text-center">
-            <Card.Header style = {cardTextStyle}>Current Quality</Card.Header>
+            <Card.Header style = {cardTextStyle}>Current Air Quality</Card.Header>
             <Card.Body>
                 <Card.Title style = {cardTextStyle}>The current measurements are displayed here</Card.Title>
                 <Row style = {rowStyle}>
@@ -98,8 +101,8 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
                 <Col>
                 <Card border = "success">
                     <Card.Body>
-                        <Card.Title style = {cardTextStyle}>Air Quality</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.airQualityDate }</Card.Subtitle>
+                        <Card.Title style = {cardTextStyle}>Gases</Card.Title>
+                        <Card.Subtitle className="mb-2 text-muted" data-testid = "date-air-quality">{"Measured: " + data.gasesDate }</Card.Subtitle>
                         <Card.Text style = {cardTextStyle}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item data-testid = "actual-carbon" style = {fontSize}>{"Carbon: " + Number.parseFloat(data.carbon).toFixed(0) + " ppm"}  </ListGroup.Item>
@@ -125,14 +128,14 @@ export const CurrentQualityView = ({data, numberOfPeople, onSubmit}) => {
             </Row>
                 <Button data-testid = "history-button" variant="primary">History</Button>
             </Card.Body>
-            <Card.Footer className="text-muted">{"Last fetch: " + lastFetch}</Card.Footer>
+            {fetchTime ? <Card.Footer className="text-muted">{"Last fetch: " + fetchTime}</Card.Footer> : <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner>}
             </Card>}
             </Container>
             <Row style = {rowStyle} className = "justify-content-center">
                 <Form style = {formStyle} data-testid = "form-component">
                 {data == null? <Spinner data-testid = "Spinner" animation="border" role="status"></Spinner> :<Form.Label data-testid = "people">{"Present people: " +  numberOfPeople }</Form.Label>}
                     <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Here you can insert the current number of poeple in the room</Form.Label>
+                        <Form.Label>Here you can insert the current number of people in the room</Form.Label>
                         <Form.Control placeholder="Enter number of people" ref = {textInput}  onChange = {() => { setPeople(textInput.current.value); console.log(textInput.current.value) }} type = "text"/>
                         <Form.Text className="text-muted">
                         Ensure that the number is correct.

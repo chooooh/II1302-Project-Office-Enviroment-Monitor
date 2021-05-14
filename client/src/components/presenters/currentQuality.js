@@ -1,7 +1,8 @@
 import React from "react";
 import {CurrentQualityView} from '../views/currentQualityView';
 import { fetchAllData } from "../../apiHandling/datafetcher";
-import {parser} from "../../js/parser"
+import {parser} from "../../utils/parser"
+import {currentDateTime} from '../../utils/utils.js'  //import function which returns current date and time from utils
 /**
  * This is the presenter of current quality view component. 
  * It is responsible for creating the view and providing it with the props it needs to render.
@@ -13,10 +14,13 @@ import {parser} from "../../js/parser"
 export const CurrentQualityPage = () => {
     //State variabel which holds the data fetched from the database
     const [data, setData] = React.useState(null);
-    //
+    //state variabel which is used to trigger a fetch of data
     const [fetching, setShouldFetch] = React.useState(false);
-    //
+    //state variabel keeping track of the number of people in the room
     const [numberOfPeople, setPeople] = React.useState(false);
+    //state variabel which keeps track of the current date and time and the last fetch of data
+    const [fetchTime, setFetchTime] = React.useState(null);
+
     /**
      * A toggle funciton, this function toggles the value of the state variabel fetching
      * The purpose of the function is to trigger a new fetch of data from the database
@@ -32,7 +36,10 @@ export const CurrentQualityPage = () => {
            let temp = await fetchAllData();
            console.log("TEMP", temp)
            if(temp != null){
+               //set the data received
                setData(parser(temp))
+               //set the date and time of this fetch
+               setFetchTime(currentDateTime())
            }
         })();
      
@@ -48,6 +55,7 @@ export const CurrentQualityPage = () => {
     React.createElement(CurrentQualityView, 
         {
             data,
+            fetchTime,
             numberOfPeople, 
             onSubmit: (amount) => {
                 console.log("Amount", amount);

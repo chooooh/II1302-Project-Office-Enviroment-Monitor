@@ -6,9 +6,15 @@
  * @returns an object which contains the data fetched from the specified route
  */
 const fetchData = async (route) => {
-   const res    = await fetch('/api/sensor/' + route);
-   const json   = await res.json();
-   return json;
+    try{
+        const res    = await fetch('/api/sensor/' + route);
+        const json   = await res.json();
+        console.log("JSON", json)
+        return json;
+    }catch(exception){
+        console.log("Error", exception.message)
+        return null
+    }
 };
 
 /**
@@ -17,13 +23,13 @@ const fetchData = async (route) => {
  * @returns an object which contains all data
  */
 export const fetchAllData = async () => {
-    const aqData         = await fetchData('airquality');
     const tempData       = await fetchData("temperature"); 
     const peopleData     = await fetchData("people");
     const humidityData   = await fetchData("humidity");
+    const gases          = await fetchData('gases');
 
     return ({
-        aqData,
+        gases,
         tempData,
         peopleData,
         humidityData

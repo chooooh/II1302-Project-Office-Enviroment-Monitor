@@ -7,6 +7,7 @@
  * a time and date function from utils.
  */
 const db = require("../database/io");
+const { ApplicationError } = require('../errors/applicationError');
 const { currentDateTime } = require('../utils');
 
 /**
@@ -32,6 +33,9 @@ class People {
      * the cloudant response of the write operation.
      */
     writeToDB({people}) {
+        if (!people) {
+            throw new ApplicationError("400", "Invalid parameters");
+        } 
         const data = {
             people
         };
