@@ -3,22 +3,19 @@
  * is primarily the routes and database functions.
  * Dependencies are server app instance, chai, chai-http that handles allows
  * http test requests.
- * TODO
- *  - ta bort alla förutom 1 404 tester
  */
-const chai = require('chai');
 const chaiHTTP = require('chai-http')
 const app = require('../app');
-//const { v4: uuidv4 } = require('uuid');
 
+const chai = require('chai');
+chai.should();
 const { currentDateTime } = require('../utils');
-const { readLatestEntry, readFromDB, writeToDB } = require('../database/io');
+const { readLatestEntry, writeToDB } = require('../database/io');
 
 // Either perform tests on test deploy site or app instance.
 const host = process.env.APP_URL || app;
 
 // Uses the "should" interface.
-chai.should();
 chai.use(chaiHTTP);
 
 /**
@@ -28,7 +25,7 @@ describe('Cloudant testing', () => {
     const testDbName = 'test';
     const dateTime = currentDateTime();
 
-    it('verifies that the correct db table gets written to', (done) => {
+    it('verifies that the a db can be written to', (done) => {
         writeToDB(testDbName, {data: "testdata"}, dateTime)
         .then(response => {
             response.should.be.an('object');

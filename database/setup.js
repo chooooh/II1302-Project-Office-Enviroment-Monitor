@@ -17,4 +17,5 @@ const cloudant = process.env.VCAP_SERVICES ?
     Cloudant({ vcapServices: JSON.parse(process.env.VCAP_SERVICES) })
     : Cloudant({ url, username, password });
 
+// Exports to use elsewhere in the application
 module.exports = cloudant;

@@ -5,7 +5,6 @@
  */
 
 const cloudant = require('./setup');
-const { ApplicationError } = require('../errors/applicationError');
 const db = cloudant.db;
 
 /**
@@ -54,8 +53,8 @@ async function readLatestEntry(targetDB) {
  * the cloudant response of the write operation
  */
 async function readFromDB(targetDB, id) {
-  return await db.use(targetDB).get(id);
+    return await db.use(targetDB).get(id);
 };
 
 // Exports to use elsewhere in the application
-module.exports = { readFromDB, writeToDB, readLatestEntry }
+module.exports = { writeToDB, readLatestEntry }

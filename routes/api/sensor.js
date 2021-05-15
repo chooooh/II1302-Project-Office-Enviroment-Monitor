@@ -11,15 +11,12 @@ const router = express.Router();
 const { currentDateTime, parseRes } = require('../../utils');
 
 //Classes
-const { AirQuality } = require('../../models/airquality');
 const { Temperature } = require('../../models/temperature');
 const { Humidity } = require('../../models/humidity');
 const { People } = require('../../models/people');
 const { Gases } = require('../../models/gases');
-const { writeToDB } = require('../../database/io');
 
 //Class instances
-const AirQualityInstance = new AirQuality();
 const TempInstance = new Temperature();
 const HumidityInstance = new Humidity();
 const GasesInstance = new Gases();
@@ -59,7 +56,7 @@ router.get('/gases', async (req, res, next) => {
     const response = await GasesInstance.readLatestEntry()
     .catch((error) => {
         next(error);
-    })
+    });
     return res.status(200).json(parseRes(response));
 });
 
