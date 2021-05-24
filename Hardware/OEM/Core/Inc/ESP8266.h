@@ -95,8 +95,6 @@ static const char HTTP_HOST[]	 		         = "Host: ";
 static const char HTTP_CONNECTION_CLOSE[]	     = "Connection: close";
 static const char CRLF[] 						 = "\r\n";
 
-/* rx recieve buffer for handling all the ESP8266 data it sends back */
-char rx_buffer[RX_BUFFER_SIZE];
 
 /* AT Commands for the ESP8266, see
  * https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf
