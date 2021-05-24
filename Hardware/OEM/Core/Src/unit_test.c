@@ -47,6 +47,9 @@ UNITY_BEGIN();
 /* Run test for ESP8266 */
 #ifdef RUN_ESP8266_TEST
 
+	/* Init should be here, else it will break the esp when first plugging it in */
+	MX_UART4_Init();
+
 	/* Set up interrupt for ESP*/
 	init_uart_interrupt();
 

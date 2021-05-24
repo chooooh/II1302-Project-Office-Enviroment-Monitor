@@ -244,6 +244,9 @@ void show_measurements(float temp, float hum, uint16_t co2, uint16_t tVoc){
 /* Initiates the wifi module */
 RETURN_STATUS esp8266_start(void){
 
+	/* Init should be here, else it will break the esp when first plugging it in */
+	MX_UART4_Init();
+
 	/* Enable interrupts for UART4 */
 	init_uart_interrupt();
 
@@ -265,6 +268,55 @@ RETURN_STATUS esp8266_wifi_start(void){
 		return ESP8266_WIFI_CON_ERROR;
 	}
 	return ESP8266_WIFI_CON_SUCCESS;
+
+	/* This code can be used to get an animation, but it is not very reliable, havent figured out why tho
+	uint8_t init_count = 0;
+	uint8_t init_count_limit = 0;
+	char wifi_command[256] = {0};
+
+	// Build the command
+	esp8266_get_wifi_command(wifi_command);
+
+	esp8266_clear();
+	HAL_Delay(100);
+	transmit(wifi_command);
+
+	display_set_position(1, (display_get_y() + ROW_SIZE));
+
+	// Loop until sensor data is available
+	do {
+		if(init_count == 200){
+			// If 18 # have been printed, reset the line and start printing from the beginning of the line
+			if(init_count_limit == 18){
+				uint16_t y = display_get_y();
+				display_set_position(1, y);
+				display_write_string("                  ", WHITE);
+				display_set_position(1, y);
+				init_count_limit = 0;
+			}
+				display_write_string("#", WHITE);
+				init_count_limit++;
+		}
+		if(strstr(rx_buffer, ESP8266_AT_ERROR) != NULL){
+			break;
+		}
+
+		if(strstr(rx_buffer, ESP8266_AT_FAIL) != NULL){
+			break;
+		}
+
+		init_count++;
+	}while (strstr(rx_buffer, ESP8266_AT_OK_TERMINATOR) == NULL);
+
+	esp8266_return_string = get_return(wifi_command);
+
+	reset_screen_canvas();
+
+	if(strcmp(esp8266_return_string, ESP8266_AT_WIFI_CONNECTED) != 0){
+			return ESP8266_WIFI_CON_ERROR;
+	}
+	return ESP8266_WIFI_CON_SUCCESS;
+	*/
 }
 
 /* Start connection to website */
@@ -329,7 +381,6 @@ RETURN_STATUS ccs811_start(void){
 	/* If we fail here, try again. If the module is connected correctly it should work eventually */
 	if((hal_status != HAL_OK) || (register_value != 0x81)){
 		HAL_Delay(100);
-		display_write_string("##", WHITE);
 		goto RETRY;
 	}
 	display_write_string("##", WHITE);
@@ -394,4 +445,6 @@ RETURN_STATUS bme280_start(void){
 	return BME280_START_SUCCESS;
 }
 
-
+void transmit(const char* command){
+	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
+}

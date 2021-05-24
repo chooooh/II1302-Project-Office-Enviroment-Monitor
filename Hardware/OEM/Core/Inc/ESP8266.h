@@ -14,8 +14,8 @@
  	 	 #ifndef INC_LOGIN_H_
 		 #define INC_LOGIN_H_
 
-		 static const char SSID[] = "#Telia-7B6E70";
-		 static const char PWD[]  = "*K64Z&8r*xC@ewG6";
+		 static const char SSID[] = "One Plus 5";
+		 static const char PWD[]  = "password";
 
 		 #endif
 
@@ -39,7 +39,7 @@
 /*----------Enums------------*/
 
 /* djb2 hash keys
- * Each key maps to corresponding AT command string
+ * Each key maps to corresponding AT command, see below for these
  */
 typedef enum {
 	ESP8266_AT_KEY 						= 2088901425,
@@ -88,7 +88,6 @@ static const char ESP8266_AT_CIPMUX_0[]	 		 = "CIPMUX:0";
 static const char ESP8266_AT_CIPMUX_1[]	 		 = "CIPMUX:1";
 
 /* HTTP request strings*/
-// TODO: these should probably be hard coded as full requests later
 static const char HTTP_GET[]	 		 		 = "GET ";
 static const char HTTP_POST[]	 		 		 = "POST ";
 static const char HTTP_VERSION[]	 		     = "HTTP/1.1";
@@ -96,6 +95,8 @@ static const char HTTP_HOST[]	 		         = "Host: ";
 static const char HTTP_CONNECTION_CLOSE[]	     = "Connection: close";
 static const char CRLF[] 						 = "\r\n";
 
+/* rx recieve buffer for handling all the ESP8266 data it sends back */
+char rx_buffer[RX_BUFFER_SIZE];
 
 /* AT Commands for the ESP8266, see
  * https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf
@@ -139,14 +140,15 @@ static const char ESP8266_AT_CWMODE_TEST[]			= "AT+CWMODE_CUR?\r\n";
 
 /*Sets the wifi-mode to station.
  * The module will work as client.
- * Note: setting not saved in flash...
+ * Note: setting not saved in flash... so this should be configured 
+ * after a restart
  */
 static const char ESP8266_AT_CWMODE_STATION_MODE[]	= "AT+CWMODE=1\r\n";
 
-/*Query the AP for connections*/
+/*Query the AP for current connection */
 static const char ESP8266_AT_CWJAP_TEST[]			= "AT+CWJAP?\r\n";
 
-/*Sets a connection to an AP
+/*Sets a connection to an Access point
  *
  * Command format: AT+CWJAP_CUR=<ssid>,<pwd>
  * <ssid>: the SSID of the target AP.
@@ -158,6 +160,7 @@ static const char ESP8266_AT_CWJAP_TEST[]			= "AT+CWJAP?\r\n";
  * wrong password
  * cannot find the target AP
  * connection failed
+ *
  */
 static const char ESP8266_AT_CWJAP_SET[]			= "AT+CWJAP="; // add "ssid","pwd" + CRLF
 
@@ -166,14 +169,19 @@ static const char ESP8266_AT_CWQAP[]				= "AT+CWQAP\r\n";
 
 /* Disable auto connect to AP
  * Writes to flash...
- * This setting is necessary when testing
+ * This command seems somewhat broken when running it 
+ * on the L476rg. Not sure if it is even needed, but 
+ * it can be used to prevent auto connections when 
+ * initializing the module. 
  */
 static const char ESP8266_AT_CWAUTOCONN[]			= "AT+CWAUTOCONN=0";
 
 /* Set single connection */
 static const char ESP8266_AT_CIPMUX_SINGLE[]		= "AT+CIPMUX=0\r\n";
 
-/* Query CIPMUX setting */
+/* Query CIPMUX setting 
+ * Used to make sure we have the right setting...
+ */
 static const char ESP8266_AT_CIPMUX_TEST[]			= "AT+CIPMUX?\r\n";
 
 /* Establishes TCP connection
@@ -183,13 +191,24 @@ static const char ESP8266_AT_CIPMUX_TEST[]			= "AT+CIPMUX?\r\n";
  * AT+CIPSTART=<type>,<remote	IP>,<remote	port>[,<TCP	keep alive>]
  *
  * Example: AT+CIPSTART="TCP","iot.espressif.cn",8000
+ * 
+ * Note, the quotation marks are important...
  */
 static const char ESP8266_AT_START[]				= "AT+CIPSTART=";
 
 /* Disconnect a connection */
 static const char ESP8266_AT_STOP[]					= "AT+CIPCLOSE=0";
 
-/* Send data of desired length */
+/* Send data of desired length,
+ * this command should be followed by the request
+ * that you want to send. 
+ * 
+ * 1. make connection
+ * 2. calculate length of request/data to send 
+ * 3. call cipsend with the length
+ * 4. send data
+ *
+ */
 static const char ESP8266_AT_SEND[]					= "AT+CIPSEND=";
 
 
@@ -336,3 +355,12 @@ evaluate(void);
  */
 const char*
 get_return(const char*);
+
+/**
+ * @brief clear all flags, and the rx buffer
+ * @param void
+ * @return void
+ */
+void
+esp8266_clear(void);
+

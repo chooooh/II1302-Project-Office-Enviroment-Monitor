@@ -118,3 +118,5 @@ RETURN_STATUS ccs811_start(void);
  * @return RETURN_STATUS, either BME280_START_ERROR or BME280_START_SUCCESS.
  */
 RETURN_STATUS bme280_start(void);
+
+void transmit(const char* command);
