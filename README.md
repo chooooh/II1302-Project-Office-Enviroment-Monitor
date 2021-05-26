@@ -1,5 +1,7 @@
 # II1302-Project-Office-Enviroment-Monitor
 
+Demo found here: https://ii1302-project-office-enviroment-monitor.eu-gb.mybluemix.net/
+
 ## Run web app in development
 ### Required
 - Node.Js
