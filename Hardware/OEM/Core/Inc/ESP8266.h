@@ -25,40 +25,18 @@
 @version 1.0
 *******************************************************************************/
 
-/*----------Includes------------*/
 #include <usart.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <login.h>
 
-/*----------Defines------------*/
 #define RX_BUFFER_SIZE 			4096
 
+/* ESP8266 response codes as strings.
+   These are all the implemented statuses that can
+   be returned when issuing a command to the ESP8266 */
 
-/*----------Enums------------*/
-
-/* djb2 hash keys
- * Each key maps to corresponding AT command, see below for these
- */
-typedef enum {
-	ESP8266_AT_KEY 						= 2088901425,
-	ESP8266_AT_RST_KEY	 				= 617536853,
-	ESP8266_AT_GMR_KEY	 				= 604273922,
-	ESP8266_AT_CWMODE_STATION_MODE_KEY 	= 608151977,
-	ESP8266_AT_CWMODE_TEST_KEY			= 4116713283,
-	ESP8266_AT_CWQAP_KEY				= 445513592,
-	ESP8266_AT_CWJAP_TEST_KEY			= 1543153456,
-	ESP8266_AT_CWJAP_SET_KEY 			= 2616259383,
-	ESP8266_AT_CIPMUX_KEY				= 423755967,
-	ESP8266_AT_CIPMUX_TEST_KEY			= 3657056785,
-	ESP8266_AT_START_KEY				= 3889879756,
-	ESP8266_AT_SEND_KEY					= 898252904
-} KEYS;
-
-/*----------Strings------------*/
-
-/* ESP8266 response codes as strings */
 static const char ESP8266_NOT_IMPLEMENTED[]		 = "NOT IMPLEMENTED";
 static const char ESP8266_AT_OK_TERMINATOR[]     = "OK\r\n";
 static const char ESP8266_AT_OK[] 				 = "OK";
@@ -95,6 +73,23 @@ static const char HTTP_HOST[]	 		         = "Host: ";
 static const char HTTP_CONNECTION_CLOSE[]	     = "Connection: close";
 static const char CRLF[] 						 = "\r\n";
 
+/* djb2 hash keys
+ * Each key maps to corresponding AT command, see below for these
+ */
+typedef enum {
+	ESP8266_AT_KEY 						= 2088901425,
+	ESP8266_AT_RST_KEY	 				= 617536853,
+	ESP8266_AT_GMR_KEY	 				= 604273922,
+	ESP8266_AT_CWMODE_STATION_MODE_KEY 	= 608151977,
+	ESP8266_AT_CWMODE_TEST_KEY			= 4116713283,
+	ESP8266_AT_CWQAP_KEY				= 445513592,
+	ESP8266_AT_CWJAP_TEST_KEY			= 1543153456,
+	ESP8266_AT_CWJAP_SET_KEY 			= 2616259383,
+	ESP8266_AT_CIPMUX_KEY				= 423755967,
+	ESP8266_AT_CIPMUX_TEST_KEY			= 3657056785,
+	ESP8266_AT_START_KEY				= 3889879756,
+	ESP8266_AT_SEND_KEY					= 898252904
+} KEYS;
 
 /* AT Commands for the ESP8266, see
  * https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf
@@ -303,7 +298,7 @@ esp8266_send_data(const char*);
 
 /**
  * @brief initiate the ESP8266, performs all necessary commands to start using the
- * 		  device. It also verifies that the setting was set.
+ * 		  device. It also verifies that the settings were set.
  * 		  Settings are: station mode (cwmode=1), single connection mode (cipmux=0)
  * @param void
  * @return const char*, ESP8266 response string, either "OK" or "ERROR"

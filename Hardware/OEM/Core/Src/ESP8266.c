@@ -7,6 +7,15 @@
 		 Most basic AT commands for the module are implemented. The main purpose
 		 of the code is to support the office environment program, thus the code
 		 leaves some functionalities of the ESP unimplemented.
+
+		 Functions for easily initiating the module and connecting it to wifi are
+		 present. But for connecting to a website, and sending data by using for
+		 example HTTP requests, some user code is needed. The user needs to define
+		 the website to connect to, and then supply the data to send. There are
+		 helper functions which do all the work such as formatting and sending the
+		 actual data. To see some examples of how the functions should be used,
+		 see the unit_test.c file.
+
 @file ESP8266.c
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
@@ -23,7 +32,7 @@ static char rx_buffer[RX_BUFFER_SIZE]; //rx recieve buffer for handling all the 
 
 void
 init_uart_interrupt(void){
-	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
+	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);	// change &huart4 to whatever handler you need
 }
 
 /* Probably not the most efficient solution
@@ -33,7 +42,7 @@ init_uart_interrupt(void){
 void
 HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-   if (huart->Instance == UART4) {
+   if (huart->Instance == UART4) {					 // change UART4 to whatever handler you are using
       rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to rx_Buffer
    }
    HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
@@ -99,6 +108,13 @@ esp8266_send_data(const char* data){
 const char*
 esp8266_init(void){
 
+	/* Init the uart to use here*/
+	MX_UART4_Init();
+	HAL_Delay(100);
+
+	/* Enable interrupts for UART4 */
+	init_uart_interrupt();
+	HAL_Delay(100);
 
 	/* Get OK from esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)

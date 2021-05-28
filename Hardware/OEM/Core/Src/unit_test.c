@@ -22,12 +22,13 @@
 #define RUN_CCS811_TEST
 #define RUN_BME280_TEST
 
-/* Undefine here to exclude some select test */
-//#undef RUN_SSD1306_TEST
-//#undef RUN_ESP8266_TEST
-//#undef RUN_CCS811_TEST
-//#undef RUN_BME280_TEST
-
+///////////////////////////////////////////////////
+// Undefine here to exclude some select test
+// #undef RUN_ESP8266_TEST
+   #undef RUN_SSD1306_TEST
+   #undef RUN_CCS811_TEST
+   #undef RUN_BME280_TEST
+///////////////////////////////////////////////////
 
 void unit_test(void){
 
@@ -47,7 +48,9 @@ UNITY_BEGIN();
 /* Run test for ESP8266 */
 #ifdef RUN_ESP8266_TEST
 
-	/* Init should be here, else it will break the esp when first plugging it in */
+	/* Init should be here, else it will break the esp when first plugging it in.
+	   This init is for UART4 and needs to be changed if the module is connected
+	   on different pins 														 */
 	MX_UART4_Init();
 
 	/* Set up interrupt for ESP*/
@@ -135,10 +138,6 @@ void test_esp8266_web_request(void){
 
 void test_CCS811_init(void){
 	TEST_ASSERT_EQUAL_UINT(CCS811_SUCCESS, CCS811_init());
-}
-
-void test_esp8266_at_cwjap_verify(void){
-	TEST_ASSERT_EQUAL_STRING(ESP8266_AT_WIFI_CONNECTED, esp8266_send_command(ESP8266_AT_CWJAP_TEST));
 }
 
 void test_esp8266_at_send(char* init_send){

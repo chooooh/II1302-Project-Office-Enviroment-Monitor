@@ -244,12 +244,6 @@ void show_measurements(float temp, float hum, uint16_t co2, uint16_t tVoc){
 /* Initiates the wifi module */
 RETURN_STATUS esp8266_start(void){
 
-	/* Init should be here, else it will break the esp when first plugging it in */
-	MX_UART4_Init();
-
-	/* Enable interrupts for UART4 */
-	init_uart_interrupt();
-
 	/* Module needs to return OK else an error has occurred */
 	esp8266_return_string = esp8266_init();
 	if(strcmp(esp8266_return_string, ESP8266_AT_OK) != 0){
