@@ -7,6 +7,15 @@
 		 Most basic AT commands for the module are implemented. The main purpose
 		 of the code is to support the office environment program, thus the code
 		 leaves some functionalities of the ESP unimplemented.
+
+		 Functions for easily initiating the module and connecting it to wifi are
+		 present. But for connecting to a website, and sending data by using for
+		 example HTTP requests, some user code is needed. The user needs to define
+		 the website to connect to, and then supply the data to send. There are
+		 helper functions which do all the work such as formatting and sending the
+		 actual data. To see some examples of how the functions should be used,
+		 see the unit_test.c file.
+
 @file ESP8266.c
 @author  Jonatan Lundqvist Silins, jonls@kth.se
 @date 06-04-2021
@@ -16,21 +25,24 @@
 
 /* Global variables */
 static uint8_t rx_variable;
-static char rx_buffer[RX_BUFFER_SIZE];
 static uint8_t rx_buffer_index = 0;
 static bool error_flag = false;
 static bool fail_flag = false;
+static char rx_buffer[RX_BUFFER_SIZE]; //rx recieve buffer for handling all the ESP8266 data it sends back
 
 void
 init_uart_interrupt(void){
-	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);
+	HAL_UART_Receive_IT(&huart4, &rx_variable, 1);	// change &huart4 to whatever handler you need
 }
 
-/* Probably not the most efficient solution */
+/* Probably not the most efficient solution
+ * each time a byte is received, it is put into the rx_buffer
+ * the rx_buffer is used to check for different responses from the esp8266
+ */
 void
 HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-   if (huart->Instance == UART4) {
+   if (huart->Instance == UART4) {					 // change UART4 to whatever handler you are using
       rx_buffer[rx_buffer_index++] = rx_variable;    // Add 1 byte to rx_Buffer
    }
    HAL_UART_Receive_IT(&huart4, &rx_variable, 1); // Clear flags and read next byte
@@ -53,11 +65,7 @@ hash(const char *str) {
 const char*
 esp8266_send_command(const char* command){
 
-	rx_buffer_index = 0;
-	error_flag = false;
-	fail_flag = false;
-
-	memset(rx_buffer, 0, RX_BUFFER_SIZE);
+	esp8266_clear();
 	HAL_UART_Transmit(&huart4, (uint8_t*) command, strlen(command), 100);
 
 	// wait for OK or ERROR/FAIL
@@ -100,6 +108,13 @@ esp8266_send_data(const char* data){
 const char*
 esp8266_init(void){
 
+	/* Init the uart to use here*/
+	MX_UART4_Init();
+	HAL_Delay(100);
+
+	/* Enable interrupts for UART4 */
+	init_uart_interrupt();
+	HAL_Delay(100);
 
 	/* Get OK from esp8266 */
 	if(strcmp(esp8266_send_command(ESP8266_AT), ESP8266_AT_OK) != 0)
@@ -117,10 +132,13 @@ esp8266_init(void){
 		return ESP8266_AT_ERROR;
 
 	/* Disconnect the esp8266 if it auto connects... */
-	/* NOT NEEDED FOR NOW
-	if(strcmp(esp8266_send_command(ESP8266_AT_CWQAP), ESP8266_AT_OK) != 0)
-		return ESP8266_AT_ERROR;
-	*/
+	/* seems to break the module when ran quickly, not sure why so just
+	 * leave it out. If the module does autoconnect, send ESP8266_AT_CWAUTOCONN.
+	 * The autoconn command also seems to be problematic though...
+	 *
+	 *  if(strcmp(esp8266_send_command(ESP8266_AT_CWQAP), ESP8266_AT_OK) != 0)
+	 *	  return ESP8266_AT_ERROR;
+	 */
 
 	/* Set the esp8266 to client mode */
 	if(strcmp(esp8266_send_command(ESP8266_AT_CWMODE_STATION_MODE), ESP8266_AT_OK) != 0)
@@ -145,7 +163,8 @@ esp8266_init(void){
 const char*
 esp8266_wifi_init(void){
 
-	HAL_Delay(1000);
+	/* We do a little waiting */
+	HAL_Delay(100);
 
 	/* Buffers */
 	char wifi_command[256] = {0};
@@ -155,6 +174,14 @@ esp8266_wifi_init(void){
 
 	/* Connect and return result */
 	return esp8266_send_command(wifi_command);
+}
+
+void
+esp8266_clear(void){
+	rx_buffer_index = 0;
+	error_flag = false;
+	fail_flag = false;
+	memset(rx_buffer, 0, RX_BUFFER_SIZE);
 }
 
 void
@@ -174,8 +201,8 @@ esp8266_get_at_send_command(char* ref, uint8_t len){
 
 uint8_t
 esp8266_http_get_request(char* ref, const char* http_type, char* uri, char* host){
-	sprintf(ref, "%s%s %s\r\n%s%s\r\n%s\r\n\r\n", http_type, uri, HTTP_VERSION, HTTP_HOST, host, HTTP_CONNECTION_CLOSE);
-	return (strlen(ref));
+	sprintf(ref, "%s%s %s\r\n%s%s\r\n%s\r\n\r\n", http_type, uri, HTTP_VERSION, HTTP_HOST, host, HTTP_CONNECTION_CLOSE); // formatting and concatenating http request
+	return (strlen(ref)); // return the length of the request, the length needs to be specified before data can be sent
 }
 
 /* Returns the ESP8266 response code that is in the rx_buffer as a string,
@@ -185,6 +212,9 @@ esp8266_http_get_request(char* ref, const char* http_type, char* uri, char* host
 const char*
 get_return(const char* command){
 
+	/* Check for commands that might contain different data than predefined settings,
+	 * such as commands that connect to an access point, holds a http request, etc
+	 */
 	if(strstr(command, ESP8266_AT_CWJAP_SET) != NULL)
 		command = ESP8266_AT_CWJAP_SET;
 	else if(strstr(command, ESP8266_AT_START) != NULL)
@@ -280,3 +310,5 @@ evaluate(void){
 		return ESP8266_AT_ERROR;
 	return ESP8266_AT_OK;
 }
+
+
